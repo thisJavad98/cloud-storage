@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow } from "../../components/Icons";
+import { notifyError, notifySuccess } from "../../lib/toast";
 import { formatAuthError, signup } from "../../services/auth";
 
 export default function SignupPage() {
@@ -13,18 +14,17 @@ export default function SignupPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
   async function handleSubmit(event) {
     event.preventDefault();
-    setError("");
     setLoading(true);
 
     try {
       await signup({ email, password, fullName });
+      notifySuccess("ثبت‌نام با موفقیت انجام شد");
       router.push("/dashboard");
     } catch (err) {
-      setError(formatAuthError(err));
+      notifyError(formatAuthError(err));
     } finally {
       setLoading(false);
     }
@@ -38,11 +38,13 @@ export default function SignupPage() {
         </div>
 
         <section className="rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
-          <div className="mb-6 flex items-center justify-start gap-2">
-            <h1 className="text-2xl font-extrabold text-cs-ink">ثبت‌نام</h1>
+          <div className="mb-6 flex items-center gap-3">
+            <h1 className="text-2xl font-extrabold leading-none text-cs-ink">
+              ثبت‌نام
+            </h1>
             <Link
               href="/login"
-              className="inline-flex size-9 items-center justify-center rounded-full text-cs-blue"
+              className="inline-flex size-9 shrink-0 items-center justify-center rounded-full text-cs-blue"
               aria-label="بازگشت"
             >
               <IconArrow className="size-5" />
@@ -98,12 +100,6 @@ export default function SignupPage() {
               />
             </label>
 
-            {error ? (
-              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm leading-6 text-red-600">
-                {error}
-              </p>
-            ) : null}
-
             <button
               type="submit"
               disabled={loading}
@@ -113,7 +109,7 @@ export default function SignupPage() {
             </button>
           </form>
 
-          <p className="mt-5 text-center text-sm text-cs-muted">
+          <p className="mt-5 text-center text-sm leading-7 text-cs-muted">
             حساب دارید؟{" "}
             <Link href="/login" className="font-bold text-cs-blue">
               ورود

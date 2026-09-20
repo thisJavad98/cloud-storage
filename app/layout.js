@@ -1,4 +1,5 @@
 import { Vazirmatn } from "next/font/google";
+import AppToaster from "../components/AppToaster";
 import "./globals.css";
 
 const vazirmatn = Vazirmatn({
@@ -24,7 +25,10 @@ export default function RootLayout({ children }) {
       dir="rtl"
       className={`${vazirmatn.variable} h-full antialiased`}
     >
-      <body className="min-h-full font-sans text-cs-ink">{children}</body>
+      <body className="min-h-full font-sans text-cs-ink">
+        {children}
+        <AppToaster />
+      </body>
     </html>
   );
 }

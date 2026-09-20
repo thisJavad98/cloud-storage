@@ -102,3 +102,67 @@ body {
   background-image: radial-gradient(rgba(31, 79, 196, 0.06) 1px, transparent 1px);
   background-size: 14px 14px;
 }
+
+/* Icon + Persian label spacing helpers */
+.icon-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  line-height: 1.5;
+}
+
+.icon-label > svg,
+.icon-label > .icon-slot {
+  flex-shrink: 0;
+}
+
+.search-field {
+  padding-inline-start: 1rem;
+  padding-inline-end: 3.25rem;
+}
+
+.search-field-icon {
+  inset-inline-end: 1rem;
+}
+
+/* React Toastify — RTL / Vazirmatn */
+.Toastify__toast-container {
+  width: min(92vw, 360px);
+  padding: 0.75rem;
+  z-index: 9999;
+}
+
+.Toastify__toast,
+.cs-toast {
+  font-family: var(--font-vazirmatn), Tahoma, sans-serif !important;
+  border-radius: 1rem !important;
+  min-height: 52px;
+  box-shadow: 0 12px 28px rgba(26, 31, 54, 0.16) !important;
+  direction: rtl;
+  text-align: right;
+}
+
+.cs-toast-body,
+.Toastify__toast-body {
+  font-size: 0.875rem;
+  font-weight: 600;
+  line-height: 1.7;
+  padding: 0.15rem 0.1rem;
+  margin: 0;
+  gap: 0.65rem;
+}
+
+.Toastify__toast-icon {
+  margin-inline: 0 0.35rem !important;
+  width: 1.25rem !important;
+}
+
+.Toastify__close-button {
+  align-self: center !important;
+  margin-inline-start: 0.35rem;
+  opacity: 0.85;
+}
+
+.Toastify__progress-bar {
+  height: 3px;
+}

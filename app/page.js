@@ -23,10 +23,10 @@ export default function IntroPage() {
 
         <Link
           href="/login"
-          className="animate-fade-up-delay-2 mt-auto inline-flex h-14 w-full items-center justify-between rounded-2xl bg-white px-5 text-cs-blue shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:bg-white/95"
+          className="animate-fade-up-delay-2 mt-auto inline-flex h-14 w-full items-center justify-between gap-3 rounded-2xl bg-white px-5 text-cs-blue shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:bg-white/95"
         >
-          <span className="text-base font-bold">شروع</span>
-          <span className="inline-flex size-9 items-center justify-center rounded-full bg-cs-blue/10 text-cs-blue">
+          <span className="text-base font-bold leading-none">شروع</span>
+          <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-cs-blue/10 text-cs-blue">
             <IconArrow className="size-5" />
           </span>
         </Link>
