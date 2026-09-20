@@ -231,7 +231,7 @@ export default function DashboardPage() {
               پوشه‌های من
             </h3>
             <Link
-              href="/files"
+              href="/folders"
               className="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold leading-5 text-cs-blue"
             >
               <span>بیشتر</span>
@@ -241,9 +241,10 @@ export default function DashboardPage() {
 
           <div className="grid grid-cols-2 gap-3">
             {(folders.length ? folders.slice(0, 4) : []).map((folder) => (
-              <article
+              <Link
                 key={folder.id}
-                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
+                href={`/folders/${folder.id}`}
+                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
                   <IconFolder className="size-7 text-cs-folder" />
@@ -254,11 +255,11 @@ export default function DashboardPage() {
                 <p className="mt-1 text-xs leading-5 text-cs-muted">
                   {toPersianDigits(folder.fileCount ?? 0)} فایل
                 </p>
-              </article>
+              </Link>
             ))}
             {!folders.length ? (
               <article className="col-span-2 rounded-2xl bg-white p-4 text-center text-sm leading-7 text-cs-muted shadow-sm ring-1 ring-cs-line">
-                هنوز پوشه‌ای ندارید
+                هنوز پوشه‌ای ندارید — از بخش پوشه‌ها بسازید
               </article>
             ) : null}
           </div>

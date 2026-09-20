@@ -3,13 +3,14 @@
 import { useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import ConfirmModal from "./ConfirmModal";
-import { IconFolder, IconLogout, IconUpload } from "./Icons";
+import { IconFolder, IconFolders, IconLogout, IconUpload } from "./Icons";
 import { clearSession } from "../lib/session";
 import { notifyInfo } from "../lib/toast";
 
 const items = [
   { id: "files", href: "/dashboard", icon: IconFolder, label: "فایل‌ها" },
   { id: "manage", href: "/files", icon: IconUpload, label: "مدیریت" },
+  { id: "folders", href: "/folders", icon: IconFolders, label: "پوشه‌ها" },
   { id: "logout", href: "/login", icon: IconLogout, label: "خروج", logout: true },
 ];
 
@@ -36,19 +37,27 @@ export default function BottomNav({ activeId }) {
     router.push("/login");
   }
 
+  function isActive(item) {
+    if (item.logout) return false;
+    if (activeId === item.id) return true;
+    if (item.id === "folders" && pathname.startsWith("/folders")) return true;
+    if (item.id === "manage" && pathname.startsWith("/files")) return true;
+    if (
+      item.id === "files" &&
+      pathname === "/dashboard"
+    ) {
+      return true;
+    }
+    return false;
+  }
+
   return (
     <>
-      <nav className="fixed bottom-0 left-1/2 z-20 w-full max-w-[390px] -translate-x-1/2 border-t border-cs-line bg-white/95 px-8 py-3 backdrop-blur">
+      <nav className="fixed bottom-0 left-1/2 z-20 w-full max-w-[390px] -translate-x-1/2 border-t border-cs-line bg-white/95 px-5 py-3 backdrop-blur">
         <div className="flex items-center justify-between">
           {items.map((item) => {
             const Icon = item.icon;
-            const active =
-              !item.logout &&
-              (activeId === item.id ||
-                (item.href === "/files" && pathname.startsWith("/files")) ||
-                (item.href === "/dashboard" &&
-                  item.id === "files" &&
-                  pathname === "/dashboard"));
+            const active = isActive(item);
             return (
               <button
                 key={item.id}

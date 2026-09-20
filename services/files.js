@@ -14,8 +14,11 @@ export async function listFiles(params = {}) {
   const query = new URLSearchParams();
 
   if (params.search) query.set("search", params.search);
-  if (params.folderId !== undefined && params.folderId !== null) {
-    query.set("folderId", params.folderId);
+  if (params.folderId !== undefined) {
+    query.set(
+      "folderId",
+      params.folderId === null ? "root" : String(params.folderId)
+    );
   }
   if (params.trashed) query.set("trashed", "true");
   if (params.limit) query.set("limit", String(params.limit));
@@ -83,13 +86,30 @@ export async function deleteFile(id) {
   return payload.data;
 }
 
-export async function listFolders() {
+export async function listFolders(params = {}) {
   const token = requireToken();
-  const payload = await apiRequest("/files/folders", {
+  const query = new URLSearchParams();
+  if (params.parentId !== undefined) {
+    query.set(
+      "parentId",
+      params.parentId === null ? "root" : String(params.parentId)
+    );
+  }
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  const payload = await apiRequest(`/files/folders${suffix}`, {
     method: "GET",
     token,
   });
   return payload.data.folders;
+}
+
+export async function getFolder(id) {
+  const token = requireToken();
+  const payload = await apiRequest(`/files/folders/${id}`, {
+    method: "GET",
+    token,
+  });
+  return payload.data.folder;
 }
 
 export async function createFolder({ name, parentId } = {}) {
@@ -100,6 +120,25 @@ export async function createFolder({ name, parentId } = {}) {
     token,
   });
   return payload.data.folder;
+}
+
+export async function updateFolder(id, { name }) {
+  const token = requireToken();
+  const payload = await apiRequest(`/files/folders/${id}`, {
+    method: "PATCH",
+    body: { name },
+    token,
+  });
+  return payload.data.folder;
+}
+
+export async function deleteFolder(id) {
+  const token = requireToken();
+  const payload = await apiRequest(`/files/folders/${id}`, {
+    method: "DELETE",
+    token,
+  });
+  return payload.data;
 }
 
 export async function downloadFile(id, fileName) {

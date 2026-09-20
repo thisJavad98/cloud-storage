@@ -123,7 +123,35 @@ export function IconDots({ className = "size-5" }) {
 export function IconFolder({ className = "size-6" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="currentColor" aria-hidden="true">
-      <path d="M3 7.5A2.5 2.5 0 0 1 5.5 5H9l2 2h7.5A2.5 2.5 0 0 1 21 9.5v7A2.5 2.5 0 0 1 18.5 19h-13A2.5 2.5 0 0 1 3 16.5v-9Z" />
+      <path d="M3.2 8.1A2.3 2.3 0 0 1 5.5 5.8H9.1l1.7 1.7h7.7a2.3 2.3 0 0 1 2.3 2.3v7.4a2.3 2.3 0 0 1-2.3 2.3H5.5a2.3 2.3 0 0 1-2.3-2.3V8.1Z" />
+    </svg>
+  );
+}
+
+export function IconFolders({ className = "size-6" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <path
+        d="M8.2 5.5h3.4l1.2 1.2H19a1.7 1.7 0 0 1 1.7 1.7v1.1"
+        stroke="currentColor"
+        strokeWidth="1.85"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.5"
+      />
+      <path
+        d="M3.5 9.4c0-1 .8-1.8 1.8-1.8h3.6l1.5 1.5h8.3c1 0 1.8.8 1.8 1.8v6.6c0 1-.8 1.8-1.8 1.8H5.3c-1 0-1.8-.8-1.8-1.8V9.4Z"
+        stroke="currentColor"
+        strokeWidth="1.85"
+        strokeLinejoin="round"
+      />
+      <path
+        d="M3.5 11.3h13.5"
+        stroke="currentColor"
+        strokeWidth="1.55"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
     </svg>
   );
 }
