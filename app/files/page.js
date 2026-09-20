@@ -5,7 +5,6 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
-import UploadModal from "../../components/UploadModal";
 import {
   FileGlyph,
   IconArrow,
@@ -17,6 +16,7 @@ import {
   IconTrash,
 } from "../../components/Icons";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
+import { openUploadModal } from "../../lib/upload";
 import {
   notifyError,
   notifyInfo,
@@ -79,7 +79,6 @@ export default function FilesPage() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState("");
-  const [uploadOpen, setUploadOpen] = useState(false);
   const [menuId, setMenuId] = useState("");
   const [renameId, setRenameId] = useState("");
   const [renameValue, setRenameValue] = useState("");
@@ -406,7 +405,9 @@ export default function FilesPage() {
                 </p>
                 <button
                   type="button"
-                  onClick={() => setUploadOpen(true)}
+                  onClick={() =>
+                    document.querySelector('[aria-label="آپلود فایل"]')?.click()
+                  }
                   className="icon-label mx-auto mt-4 h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
                 >
                   <IconPlus className="size-5 shrink-0" />
@@ -419,15 +420,7 @@ export default function FilesPage() {
 
         <BottomNav
           activeId="manage"
-          onUpload={() => setUploadOpen(true)}
-          uploadLabel="آپلود فایل"
-        />
-
-        <UploadModal
-          open={uploadOpen}
-          onClose={() => setUploadOpen(false)}
-          defaultFolderId={null}
-          onSuccess={refresh}
+          onUploadSuccess={refresh}
         />
 
         <ConfirmModal

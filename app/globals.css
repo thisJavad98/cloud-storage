@@ -84,7 +84,8 @@ body {
   min-height: 100dvh;
   margin-inline: auto;
   position: relative;
-  overflow: hidden;
+  overflow-x: hidden;
+  overflow-y: visible;
 }
 
 .hex-pattern {

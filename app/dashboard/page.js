@@ -4,7 +4,6 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
-import UploadModal from "../../components/UploadModal";
 import {
   FileGlyph,
   IconDots,
@@ -66,7 +65,6 @@ export default function DashboardPage() {
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [uploadOpen, setUploadOpen] = useState(false);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -297,17 +295,7 @@ export default function DashboardPage() {
           </div>
         </section>
 
-        <BottomNav
-          activeId="files"
-          onUpload={() => setUploadOpen(true)}
-          uploadLabel="آپلود فایل"
-        />
-
-        <UploadModal
-          open={uploadOpen}
-          onClose={() => setUploadOpen(false)}
-          onSuccess={refresh}
-        />
+        <BottomNav activeId="files" onUploadSuccess={refresh} />
       </div>
     </main>
   );
