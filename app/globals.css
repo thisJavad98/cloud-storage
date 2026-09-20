@@ -54,12 +54,18 @@ html[data-theme="dark"] {
   --color-cs-file-orange: var(--cs-file-orange);
   --color-cs-file-blue: var(--cs-file-blue);
   --font-sans: var(--font-vazirmatn);
+  --font-brand: var(--font-brand);
 }
 
 body {
   background: var(--cs-surface);
   color: var(--cs-ink);
   font-family: var(--font-vazirmatn), Tahoma, sans-serif;
+}
+
+.font-brand {
+  font-family: var(--font-brand), var(--font-vazirmatn), Tahoma, sans-serif;
+  letter-spacing: 0.02em;
 }
 
 @keyframes fade-up {

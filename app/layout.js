@@ -1,4 +1,4 @@
-import { Vazirmatn } from "next/font/google";
+import { Lalezar, Vazirmatn } from "next/font/google";
 import AppToaster from "../components/AppToaster";
 import Providers from "../components/Providers";
 import { APP_TAGLINE, APP_TITLE } from "../lib/brand";
@@ -8,6 +8,12 @@ const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
   subsets: ["arabic", "latin"],
   weight: ["400", "500", "600", "700", "800"],
+});
+
+const brandFont = Lalezar({
+  variable: "--font-brand",
+  subsets: ["arabic", "latin"],
+  weight: "400",
 });
 
 export const metadata = {
@@ -29,7 +35,7 @@ export default function RootLayout({ children }) {
       lang="fa"
       dir="rtl"
       data-theme="light"
-      className={`${vazirmatn.variable} h-full antialiased`}
+      className={`${vazirmatn.variable} ${brandFont.variable} h-full antialiased`}
       suppressHydrationWarning
     >
       <body className="min-h-full font-sans text-cs-ink">

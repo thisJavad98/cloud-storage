@@ -22,7 +22,11 @@ export default function AppBrand({
     size === "lg" ? "size-11" : size === "sm" ? "size-8" : "size-9";
 
   const nameClass =
-    size === "lg" ? "text-lg" : size === "sm" ? "text-[11px]" : "text-sm";
+    size === "lg"
+      ? "text-[1.65rem] leading-none"
+      : size === "sm"
+        ? "text-sm leading-none"
+        : "text-base leading-none";
 
   return (
     <div
@@ -41,8 +45,8 @@ export default function AppBrand({
         />
       ) : null}
       <span
-        className={`${nameClass} font-extrabold tracking-tight ${textClass} ${
-          stacked ? "text-center leading-none" : ""
+        className={`font-brand ${nameClass} ${textClass} ${
+          stacked ? "text-center" : ""
         }`}
       >
         {brandName}
