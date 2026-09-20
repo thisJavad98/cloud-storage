@@ -157,21 +157,20 @@ export default function ProfilePage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="flex items-center gap-3 px-5 pt-6">
-          <Link
-            href="/dashboard"
-            className="inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-blue shadow-sm ring-1 ring-cs-line"
-            aria-label={t("common.back")}
-          >
-            <IconArrow className="size-5" />
-          </Link>
-          <div className="min-w-0 flex-1 text-center">
+        <header className="relative flex items-center justify-center px-5 pt-6">
+          <div className="min-w-0 flex-1 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-lg font-extrabold text-cs-ink">
               {t("profile.title")}
             </h1>
           </div>
-          <span className="size-10" aria-hidden="true" />
+          <Link
+            href="/dashboard"
+            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-blue shadow-sm ring-1 ring-cs-line"
+            aria-label={t("common.back")}
+          >
+            <IconArrow className="size-5 rotate-180" />
+          </Link>
         </header>
 
         <section className="flex flex-col items-center px-5 pt-8">

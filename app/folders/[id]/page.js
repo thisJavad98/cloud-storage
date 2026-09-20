@@ -260,15 +260,8 @@ export default function FolderDetailPage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="flex items-center justify-between gap-3 px-5 pt-6">
-          <Link
-            href="/folders"
-            className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label={t("common.back")}
-          >
-            <IconArrow className="size-5" />
-          </Link>
-          <div className="min-w-0 flex-1 text-center">
+        <header className="relative flex items-center justify-center px-5 pt-6">
+          <div className="min-w-0 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 truncate text-base font-extrabold leading-7 text-cs-ink">
               {folder.name}
@@ -278,7 +271,13 @@ export default function FolderDetailPage() {
               {t("common.file")}
             </p>
           </div>
-          <div className="size-10" aria-hidden="true" />
+          <Link
+            href="/folders"
+            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+            aria-label={t("common.back")}
+          >
+            <IconArrow className="size-5 rotate-180" />
+          </Link>
         </header>
 
         <section className="px-5 pt-5">

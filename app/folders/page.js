@@ -8,6 +8,7 @@ import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
 import AppBrand from "../../components/AppBrand";
 import {
+  IconArrow,
   IconEdit,
   IconFolder,
   IconPlus,
@@ -164,22 +165,28 @@ export default function FoldersManagePage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-28">
-        <header className="flex items-center justify-between gap-3 px-5 pt-6">
-          <div className="size-10" aria-hidden="true" />
-          <div className="min-w-0 flex-1 text-center">
+        <header className="relative flex items-center justify-center px-5 pt-6">
+          <button
+            type="button"
+            onClick={() => setShowCreate((v) => !v)}
+            className="absolute left-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm"
+            aria-label={t("folders.newFolder")}
+          >
+            <IconPlus className="size-5" />
+          </button>
+          <div className="min-w-0 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
               {t("folders.title")}
             </h1>
           </div>
-          <button
-            type="button"
-            onClick={() => setShowCreate((v) => !v)}
-            className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm"
-            aria-label={t("folders.newFolder")}
+          <Link
+            href="/dashboard"
+            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+            aria-label={t("common.back")}
           >
-            <IconPlus className="size-5" />
-          </button>
+            <IconArrow className="size-5 rotate-180" />
+          </Link>
         </header>
 
         <div className="px-5 pt-5">

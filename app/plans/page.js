@@ -33,22 +33,11 @@ export default function PlansPage() {
         }`}
       >
         <header
-          className={`animate-fade-in flex items-center justify-between gap-3 px-5 pt-6 ${
+          className={`animate-fade-in relative flex items-center justify-center px-5 pt-6 ${
             authed ? "" : "text-white"
           }`}
         >
-          <Link
-            href={backHref}
-            className={`inline-flex size-10 shrink-0 items-center justify-center rounded-full shadow-sm ring-1 transition hover:scale-105 ${
-              authed
-                ? "bg-white text-cs-ink ring-cs-line"
-                : "bg-white/15 text-white ring-white/20 backdrop-blur-[2px]"
-            }`}
-            aria-label={t("common.back")}
-          >
-            <IconArrow className="size-5" />
-          </Link>
-          <div className="min-w-0 flex-1 text-center">
+          <div className="min-w-0 px-12 text-center">
             <AppBrand
               size="sm"
               showLogo={false}
@@ -63,7 +52,17 @@ export default function PlansPage() {
               {t("plans.pageTitle")}
             </h1>
           </div>
-          <div className="size-10" aria-hidden="true" />
+          <Link
+            href={backHref}
+            className={`absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full shadow-sm ring-1 transition hover:scale-105 ${
+              authed
+                ? "bg-white text-cs-ink ring-cs-line"
+                : "bg-white/15 text-white ring-white/20 backdrop-blur-[2px]"
+            }`}
+            aria-label={t("common.back")}
+          >
+            <IconArrow className="size-5 rotate-180" />
+          </Link>
         </header>
 
         {ready ? (

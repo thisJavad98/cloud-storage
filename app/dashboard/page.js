@@ -112,28 +112,28 @@ export default function DashboardPage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="relative grid grid-cols-3 items-center px-5 pt-6">
-          <button
-            type="button"
-            onClick={() => router.push("/profile")}
-            className="inline-flex size-10 items-center justify-center justify-self-start rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label={t("dashboard.menu")}
-          >
-            <IconMenu className="size-5" />
-          </button>
-
-          <div className="justify-self-center">
-            <AppBrand size="sm" stacked />
-          </div>
-
+        <header className="relative flex items-center justify-center px-5 pt-6">
           <Link
             href="/profile"
-            className="justify-self-end"
+            className="absolute left-5 top-6"
             aria-label={t("dashboard.menu")}
             title={user.fullName || user.email}
           >
             <UserAvatar user={user} />
           </Link>
+
+          <div>
+            <AppBrand size="sm" stacked />
+          </div>
+
+          <button
+            type="button"
+            onClick={() => router.push("/profile")}
+            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+            aria-label={t("dashboard.menu")}
+          >
+            <IconMenu className="size-5" />
+          </button>
         </header>
 
         <div className="px-5 pt-5">
