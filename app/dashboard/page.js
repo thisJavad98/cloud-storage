@@ -104,9 +104,15 @@ export default function DashboardPage() {
             <IconMenu className="size-5" />
           </button>
 
-          <p className="justify-self-center text-sm font-extrabold tracking-[0.22em] text-cs-ink">
-            LOGO
-          </p>
+          <div className="justify-self-center">
+            <img
+              src="/icon.png"
+              alt="فضای ابری"
+              width={36}
+              height={36}
+              className="size-9 rounded-xl shadow-sm"
+            />
+          </div>
 
           <div
             className="size-10 justify-self-end overflow-hidden rounded-full bg-gradient-to-br from-[#f7c59f] to-[#d9895b] shadow-sm ring-2 ring-white"
