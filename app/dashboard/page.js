@@ -5,16 +5,20 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import EmptyState from "../../components/EmptyState";
+import AdvancedSearchModal from "../../components/AdvancedSearchModal";
 import AppBrand from "../../components/AppBrand";
 import {
   FileGlyph,
+  IconClose,
   IconDots,
+  IconFilters,
   IconFolder,
   IconMenu,
   IconSearch,
   StorageRing,
 } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
+import PlansBanner from "../../components/PlansBanner";
 import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
@@ -35,6 +39,7 @@ export default function DashboardPage() {
   const router = useRouter();
   const { t, locale, brandName } = useI18n();
   const [query, setQuery] = useState("");
+  const [searchOpen, setSearchOpen] = useState(false);
   const [user, setUser] = useState(null);
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
@@ -92,9 +97,17 @@ export default function DashboardPage() {
     return files.filter((file) => file.name.toLowerCase().includes(q));
   }, [files, query]);
 
+  const filteredFolders = useMemo(() => {
+    const q = query.trim().toLowerCase();
+    if (!q) return folders;
+    return folders.filter((folder) => folder.name.toLowerCase().includes(q));
+  }, [folders, query]);
+
   if (!user || loading) {
     return <PageLoader />;
   }
+
+  const visibleFolders = filteredFolders.slice(0, 4);
 
   return (
     <main className="min-h-dvh dash-pattern">
@@ -135,18 +148,55 @@ export default function DashboardPage() {
               {user.bio}
             </p>
           ) : null}
-          <label className="relative block">
-            <span className="sr-only">{t("common.search")}</span>
-            <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
-              <IconSearch className="size-5" />
-            </span>
-            <input
-              value={query}
-              onChange={(e) => setQuery(e.target.value)}
-              placeholder={t("dashboard.searchPlaceholder")}
-              className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
-            />
-          </label>
+          <div className="flex items-center gap-2">
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-cs-blue text-white shadow-sm shadow-cs-blue/25 transition hover:bg-cs-blue-deep"
+              aria-label={t("dashboard.advancedSearch")}
+              title={t("dashboard.advancedSearch")}
+            >
+              <IconFilters className="size-5" />
+            </button>
+
+            <label className="search-shell relative block min-w-0 flex-1">
+              <span className="sr-only">{t("common.search")}</span>
+              <span className="pointer-events-none absolute inset-y-0 start-3.5 flex items-center text-cs-muted">
+                <IconSearch className="size-5" />
+              </span>
+              <input
+                value={query}
+                onChange={(e) => setQuery(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    setSearchOpen(true);
+                  }
+                }}
+                placeholder={t("dashboard.searchPlaceholder")}
+                className="h-12 w-full rounded-2xl border-0 bg-white py-3 pe-11 ps-11 text-sm text-cs-ink shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted transition focus:ring-2 focus:ring-cs-blue/25"
+              />
+              {query ? (
+                <button
+                  type="button"
+                  onClick={() => setQuery("")}
+                  className="absolute inset-y-0 end-2 my-auto inline-flex size-8 items-center justify-center rounded-full text-cs-muted hover:bg-cs-surface"
+                  aria-label={t("dashboard.clearSearch")}
+                >
+                  <IconClose className="size-3.5" />
+                </button>
+              ) : null}
+            </label>
+          </div>
+          {query.trim() ? (
+            <button
+              type="button"
+              onClick={() => setSearchOpen(true)}
+              className="mt-2 text-[11px] font-bold text-cs-blue"
+            >
+              {t("dashboard.advancedSearch")}
+            </button>
+          ) : null}
         </div>
 
         <section className="animate-fade-up px-5 pt-5">
@@ -183,6 +233,8 @@ export default function DashboardPage() {
           </div>
         </section>
 
+        <PlansBanner className="px-5 pt-4" />
+
         <section className="px-5 pt-7">
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
@@ -192,7 +244,10 @@ export default function DashboardPage() {
               {folders.length ? (
                 <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
                   {t("dashboard.folderCount", {
-                    count: formatDigits(folders.length, locale),
+                    count: formatDigits(
+                      query.trim() ? filteredFolders.length : folders.length,
+                      locale
+                    ),
                   })}
                 </p>
               ) : null}
@@ -204,7 +259,7 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {(folders.length ? folders.slice(0, 4) : []).map((folder, index) => (
+            {(visibleFolders.length ? visibleFolders : []).map((folder, index) => (
               <Reveal
                 key={folder.id}
                 as={Link}
@@ -231,6 +286,10 @@ export default function DashboardPage() {
                   title={t("dashboard.emptyFoldersTitle")}
                   description={t("dashboard.emptyFoldersDesc")}
                 />
+              </div>
+            ) : !visibleFolders.length ? (
+              <div className="col-span-2 rounded-2xl bg-white px-4 py-6 text-center text-sm text-cs-muted shadow-sm ring-1 ring-cs-line">
+                {t("advancedSearch.empty")}
               </div>
             ) : null}
           </div>
@@ -302,6 +361,11 @@ export default function DashboardPage() {
         </section>
 
         <BottomNav activeId="files" onUploadSuccess={refresh} />
+        <AdvancedSearchModal
+          open={searchOpen}
+          onClose={() => setSearchOpen(false)}
+          initialQuery={query}
+        />
       </div>
     </main>
   );

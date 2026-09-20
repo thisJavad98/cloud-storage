@@ -77,6 +77,32 @@ export function IconSearch({ className = "size-5" }) {
   );
 }
 
+export function IconFilters({ className = "size-5" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <path
+        d="M4 7h16M7 12h10M10 17h4"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
+export function IconClose({ className = "size-5" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      <path
+        d="M6 6l12 12M18 6 6 18"
+        stroke="currentColor"
+        strokeWidth="1.8"
+        strokeLinecap="round"
+      />
+    </svg>
+  );
+}
+
 export function IconEye({ open = false, className = "size-5" }) {
   if (open) {
     return (

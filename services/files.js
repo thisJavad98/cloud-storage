@@ -20,12 +20,58 @@ export async function listFiles(params = {}) {
       params.folderId === null ? "root" : String(params.folderId)
     );
   }
+  if (params.mimeType) query.set("mimeType", params.mimeType);
+  if (params.minSize !== undefined && params.minSize !== null && params.minSize !== "") {
+    query.set("minSize", String(params.minSize));
+  }
+  if (params.maxSize !== undefined && params.maxSize !== null && params.maxSize !== "") {
+    query.set("maxSize", String(params.maxSize));
+  }
   if (params.trashed) query.set("trashed", "true");
   if (params.limit) query.set("limit", String(params.limit));
   if (params.offset) query.set("offset", String(params.offset));
 
   const suffix = query.toString() ? `?${query.toString()}` : "";
   const payload = await apiRequest(`/files${suffix}`, {
+    method: "GET",
+    token,
+  });
+
+  return payload.data;
+}
+
+export async function searchLibrary(params = {}) {
+  const token = requireToken();
+  const query = new URLSearchParams();
+
+  const q = params.q ?? params.search;
+  if (q) query.set("q", String(q));
+  if (params.scope) query.set("scope", params.scope);
+  if (params.folderId !== undefined) {
+    query.set(
+      "folderId",
+      params.folderId === null ? "root" : String(params.folderId)
+    );
+  }
+  if (params.parentId !== undefined) {
+    query.set(
+      "parentId",
+      params.parentId === null ? "root" : String(params.parentId)
+    );
+  }
+  if (params.mimeType) query.set("mimeType", params.mimeType);
+  if (params.minSize !== undefined && params.minSize !== null && params.minSize !== "") {
+    query.set("minSize", String(params.minSize));
+  }
+  if (params.maxSize !== undefined && params.maxSize !== null && params.maxSize !== "") {
+    query.set("maxSize", String(params.maxSize));
+  }
+  if (params.trashed) query.set("trashed", "true");
+  if (params.limit) query.set("limit", String(params.limit));
+  if (params.offset) query.set("offset", String(params.offset));
+
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  const payload = await apiRequest(`/files/search${suffix}`, {
     method: "GET",
     token,
   });
@@ -95,6 +141,7 @@ export async function listFolders(params = {}) {
       params.parentId === null ? "root" : String(params.parentId)
     );
   }
+  if (params.search) query.set("search", params.search);
   const suffix = query.toString() ? `?${query.toString()}` : "";
   const payload = await apiRequest(`/files/folders${suffix}`, {
     method: "GET",
