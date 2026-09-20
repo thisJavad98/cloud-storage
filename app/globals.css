@@ -9,12 +9,33 @@
   --cs-line: #e6e9f0;
   --cs-surface: #f4f6fb;
   --cs-card: #ffffff;
+  --cs-input: #f1f3f8;
   --cs-folder: #f6c344;
   --cs-folder-dark: #e5a820;
   --cs-file-orange: #f29a4a;
   --cs-file-blue: #4d7cf0;
+  --cs-nav-ring: #f3f5fa;
   --background: var(--cs-blue);
   --foreground: #ffffff;
+}
+
+html[data-theme="dark"] {
+  --cs-blue: #4d7cf0;
+  --cs-blue-deep: #3a66d6;
+  --cs-blue-soft: #1c2740;
+  --cs-ink: #e8ecf7;
+  --cs-muted: #9aa6bf;
+  --cs-line: #2a3348;
+  --cs-surface: #0f131c;
+  --cs-card: #171d2b;
+  --cs-input: #222a3b;
+  --cs-folder: #f6c344;
+  --cs-folder-dark: #e5a820;
+  --cs-file-orange: #f29a4a;
+  --cs-file-blue: #6b93f5;
+  --cs-nav-ring: #0f131c;
+  --background: #0f131c;
+  --foreground: #e8ecf7;
 }
 
 @theme inline {
@@ -678,9 +699,55 @@ body:has(.auth-screen) {
 }
 
 .dash-pattern {
-  background-color: #f3f5fa;
-  background-image: radial-gradient(rgba(31, 79, 196, 0.06) 1px, transparent 1px);
+  background-color: var(--cs-surface);
+  background-image: radial-gradient(color-mix(in srgb, var(--cs-blue) 10%, transparent) 1px, transparent 1px);
   background-size: 14px 14px;
+}
+
+html[data-theme="dark"] .hex-pattern {
+  background-color: #152448;
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0),
+    linear-gradient(115deg, transparent 48%, rgba(255, 255, 255, 0.04) 50%, transparent 52%);
+}
+
+/* Map hardcoded light surfaces to theme tokens in dark mode */
+html[data-theme="dark"] .bg-white {
+  background-color: var(--cs-card) !important;
+}
+
+html[data-theme="dark"] .bg-white\/95 {
+  background-color: color-mix(in srgb, var(--cs-card) 95%, transparent) !important;
+}
+
+html[data-theme="dark"] .bg-\[\#f1f3f8\],
+html[data-theme="dark"] .bg-\[\#f7f8fc\],
+html[data-theme="dark"] .bg-\[\#fff4d4\] {
+  background-color: var(--cs-input) !important;
+}
+
+html[data-theme="dark"] .bg-\[\#fff4d4\] {
+  background-color: color-mix(in srgb, var(--cs-folder) 22%, var(--cs-card)) !important;
+}
+
+html[data-theme="dark"] .ring-white {
+  --tw-ring-color: var(--cs-line) !important;
+}
+
+html[data-theme="dark"] .text-cs-ink {
+  color: var(--cs-ink);
+}
+
+html[data-theme="dark"] .shadow-sm,
+html[data-theme="dark"] .shadow-\[0_-12px_40px_rgba\(0\2c 0\2c 0\2c 0\.18\)\],
+html[data-theme="dark"] .shadow-\[0_12px_28px_rgba\(31\2c 79\2c 196\2c 0\.28\)\],
+html[data-theme="dark"] .shadow-\[0_16px_40px_rgba\(31\2c 79\2c 196\2c 0\.28\)\] {
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+}
+
+html[data-theme="dark"] .ring-\[6px\].ring-\[\#f3f5fa\],
+html[data-theme="dark"] .ring-\[\#f3f5fa\] {
+  --tw-ring-color: var(--cs-nav-ring) !important;
 }
 
 /* Icon + Persian label spacing helpers */

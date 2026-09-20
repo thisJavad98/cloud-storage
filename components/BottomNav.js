@@ -93,7 +93,7 @@ export default function BottomNav({
                 type="button"
                 onClick={() => setUploadOpen(true)}
                 aria-label={t("nav.uploadFile")}
-                className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[#f3f5fa] transition hover:from-cs-file-orange hover:to-[#e8893a] active:scale-95"
+                className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[var(--cs-nav-ring)] transition hover:from-cs-file-orange hover:to-[#e8893a] active:scale-95"
               >
                 <IconPlus className="size-7" />
                 <span className="sr-only">{t("nav.upload")}</span>

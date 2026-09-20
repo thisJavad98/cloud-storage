@@ -7,6 +7,7 @@ import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import AppBrand from "../../components/AppBrand";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
+import ThemeSwitcher from "../../components/ThemeSwitcher";
 import { IconArrow, IconLogout } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
 import UserAvatar from "../../components/UserAvatar";
@@ -264,7 +265,7 @@ export default function ProfilePage() {
           </button>
         </form>
 
-        <section className="mt-6 px-5">
+        <section className="mt-6 space-y-3 px-5">
           <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line">
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0 text-start">
@@ -276,6 +277,20 @@ export default function ProfilePage() {
                 </p>
               </div>
               <LanguageSwitcher />
+            </div>
+          </div>
+
+          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <div className="min-w-0 text-start">
+                <p className="text-sm font-bold text-cs-ink">
+                  {t("profile.themeTitle")}
+                </p>
+                <p className="mt-1 text-xs leading-5 text-cs-muted">
+                  {t("profile.themeDesc")}
+                </p>
+              </div>
+              <ThemeSwitcher className="self-start sm:self-auto" />
             </div>
           </div>
         </section>

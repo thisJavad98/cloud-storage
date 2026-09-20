@@ -28,6 +28,7 @@ export default function RootLayout({ children }) {
     <html
       lang="fa"
       dir="rtl"
+      data-theme="light"
       className={`${vazirmatn.variable} h-full antialiased`}
       suppressHydrationWarning
     >
