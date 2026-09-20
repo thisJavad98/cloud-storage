@@ -5,7 +5,7 @@ import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../../components/BottomNav";
 import ConfirmModal from "../../../components/ConfirmModal";
-import UploadModal from "../../../components/UploadModal";
+import EmptyState from "../../../components/EmptyState";
 import {
   FileGlyph,
   IconArrow,
@@ -16,7 +16,10 @@ import {
   IconSearch,
   IconTrash,
 } from "../../../components/Icons";
+import PageLoader from "../../../components/PageLoader";
+import Reveal from "../../../components/Reveal";
 import { getAccessToken, getStoredUser, saveSession } from "../../../lib/session";
+import { openUploadModal } from "../../../lib/upload";
 import {
   notifyError,
   notifyInfo,
@@ -86,7 +89,6 @@ export default function FolderDetailPage() {
   const [files, setFiles] = useState([]);
   const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
-  const [uploadOpen, setUploadOpen] = useState(false);
   const [busyId, setBusyId] = useState("");
   const [menuId, setMenuId] = useState("");
   const [renameId, setRenameId] = useState("");
@@ -279,11 +281,7 @@ export default function FolderDetailPage() {
   }
 
   if (!user || loading || !folder) {
-    return (
-      <main className="flex min-h-dvh items-center justify-center dash-pattern text-sm text-cs-muted">
-        در حال بارگذاری...
-      </main>
-    );
+    return <PageLoader />;
   }
 
   return (
@@ -416,10 +414,12 @@ export default function FolderDetailPage() {
           ) : null}
 
           <div className="grid grid-cols-2 gap-3">
-            {subfolders.map((item) => (
-              <Link
+            {subfolders.map((item, index) => (
+              <Reveal
                 key={item.id}
+                as={Link}
                 href={`/folders/${item.id}`}
+                delay={index * 55}
                 className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4]">
@@ -431,11 +431,16 @@ export default function FolderDetailPage() {
                 <p className="mt-1 text-xs leading-5 text-cs-muted">
                   {toPersianDigits(item.fileCount ?? 0)} فایل
                 </p>
-              </Link>
+              </Reveal>
             ))}
             {!subfolders.length ? (
-              <div className="col-span-2 rounded-2xl bg-white px-4 py-5 text-center text-sm leading-7 text-cs-muted shadow-sm ring-1 ring-cs-line">
-                زیرپوشه‌ای وجود ندارد
+              <div className="col-span-2">
+                <EmptyState
+                  variant="folders"
+                  compact
+                  title="زیرپوشه‌ای وجود ندارد"
+                  description="با دکمه زیرپوشه می‌توانید یکی بسازید"
+                />
               </div>
             ) : null}
           </div>
@@ -453,8 +458,10 @@ export default function FolderDetailPage() {
 
           <div className="space-y-3">
             {filteredFiles.map((file, index) => (
-              <article
+              <Reveal
                 key={file.id}
+                as="article"
+                delay={Math.min(index, 10) * 45}
                 className="relative rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
@@ -548,38 +555,33 @@ export default function FolderDetailPage() {
                     </button>
                   </form>
                 ) : null}
-              </article>
+              </Reveal>
             ))}
 
             {!filteredFiles.length ? (
-              <div className="rounded-2xl bg-white px-4 py-10 text-center shadow-sm ring-1 ring-cs-line">
-                <p className="text-sm leading-7 text-cs-muted">
-                  این پوشه خالی است. از دکمه آپلود پایین استفاده کنید.
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setUploadOpen(true)}
-                  className="icon-label mx-auto mt-4 h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
-                >
-                  <IconPlus className="size-5 shrink-0" />
-                  <span>آپلود در پوشه</span>
-                </button>
-              </div>
+              <EmptyState
+                variant="files"
+                title="این پوشه خالی است"
+                description="از دکمه آپلود پایین صفحه فایل اضافه کنید"
+                action={
+                  <button
+                    type="button"
+                    onClick={() => openUploadModal()}
+                    className="icon-label h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
+                  >
+                    <IconPlus className="size-5 shrink-0" />
+                    <span>آپلود در پوشه</span>
+                  </button>
+                }
+              />
             ) : null}
           </div>
         </section>
 
         <BottomNav
           activeId="folders"
-          onUpload={() => setUploadOpen(true)}
-          uploadLabel="آپلود در این پوشه"
-        />
-
-        <UploadModal
-          open={uploadOpen}
-          onClose={() => setUploadOpen(false)}
           defaultFolderId={folderId}
-          onSuccess={refresh}
+          onUploadSuccess={refresh}
         />
 
         <ConfirmModal

@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
+import EmptyState from "../../components/EmptyState";
 import {
   FileGlyph,
   IconDots,
@@ -12,6 +13,8 @@ import {
   IconSearch,
   StorageRing,
 } from "../../components/Icons";
+import PageLoader from "../../components/PageLoader";
+import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
@@ -118,11 +121,7 @@ export default function DashboardPage() {
   }, [files, query]);
 
   if (!user || loading) {
-    return (
-      <main className="flex min-h-dvh items-center justify-center dash-pattern text-sm text-cs-muted">
-        در حال بارگذاری...
-      </main>
-    );
+    return <PageLoader />;
   }
 
   return (
@@ -178,7 +177,7 @@ export default function DashboardPage() {
           </label>
         </div>
 
-        <section className="px-5 pt-5">
+        <section className="animate-fade-up px-5 pt-5">
           <div className="rounded-[1.6rem] bg-cs-blue p-5 text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]">
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 text-right">
@@ -226,11 +225,13 @@ export default function DashboardPage() {
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {(folders.length ? folders.slice(0, 4) : []).map((folder) => (
-              <Link
+            {(folders.length ? folders.slice(0, 4) : []).map((folder, index) => (
+              <Reveal
                 key={folder.id}
+                as={Link}
                 href={`/folders/${folder.id}`}
-                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30 active:scale-[0.99]"
+                delay={index * 60}
+                className="pressable rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
                   <IconFolder className="size-7 text-cs-folder" />
@@ -241,12 +242,17 @@ export default function DashboardPage() {
                 <p className="mt-1 text-xs leading-5 text-cs-muted">
                   {toPersianDigits(folder.fileCount ?? 0)} فایل
                 </p>
-              </Link>
+              </Reveal>
             ))}
             {!folders.length ? (
-              <article className="col-span-2 rounded-2xl bg-white p-4 text-center text-sm leading-7 text-cs-muted shadow-sm ring-1 ring-cs-line">
-                هنوز پوشه‌ای ندارید — از بخش پوشه‌ها بسازید
-              </article>
+              <div className="col-span-2">
+                <EmptyState
+                  variant="folders"
+                  compact
+                  title="هنوز پوشه‌ای ندارید"
+                  description="از بخش پوشه‌ها یک پوشه جدید بسازید"
+                />
+              </div>
             ) : null}
           </div>
         </section>
@@ -272,10 +278,12 @@ export default function DashboardPage() {
 
           <div className="space-y-3">
             {filteredFiles.length ? (
-              filteredFiles.slice(0, 8).map((file) => (
-                <article
+              filteredFiles.slice(0, 8).map((file, index) => (
+                <Reveal
                   key={file.id}
-                  className="flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
+                  as="article"
+                  delay={index * 55}
+                  className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
                 >
                   <div className="shrink-0">
                     <FileGlyph tone={fileTone(file.mimeType)} />
@@ -297,12 +305,15 @@ export default function DashboardPage() {
                   >
                     <IconDots />
                   </Link>
-                </article>
+                </Reveal>
               ))
             ) : (
-              <div className="rounded-2xl bg-white px-4 py-8 text-center text-sm leading-7 text-cs-muted shadow-sm ring-1 ring-cs-line">
-                فایلی پیدا نشد. از دکمه آپلود پایین صفحه استفاده کنید.
-              </div>
+              <EmptyState
+                variant="files"
+                compact
+                title="فایلی پیدا نشد"
+                description="از دکمه آپلود پایین صفحه استفاده کنید"
+              />
             )}
           </div>
         </section>

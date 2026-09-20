@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { EmptyFoldersIllu, LoadingCloudIllu } from "./MotionIllustrations";
 import { IconFolder, IconPlus, IconUpload } from "./Icons";
 import { notifyError, notifySuccess, notifyWarning } from "../lib/toast";
 import {
@@ -181,9 +182,15 @@ export default function UploadModal({
             </button>
 
             {loadingFolders ? (
-              <p className="px-3 py-4 text-center text-xs text-cs-muted">
-                در حال بارگذاری پوشه‌ها...
-              </p>
+              <div className="flex flex-col items-center gap-2 px-3 py-5">
+                <LoadingCloudIllu className="h-auto w-20" />
+                <p className="text-xs text-cs-muted">در حال بارگذاری پوشه‌ها...</p>
+                <div className="flex gap-1" aria-hidden="true">
+                  <span className="loader-dot loader-dot--a" />
+                  <span className="loader-dot loader-dot--b" />
+                  <span className="loader-dot loader-dot--c" />
+                </div>
+              </div>
             ) : null}
 
             {!loadingFolders &&
@@ -221,7 +228,8 @@ export default function UploadModal({
 
             {!loadingFolders && !folders.length ? (
               <div className="rounded-xl px-3 py-4 text-center">
-                <p className="text-xs leading-6 text-cs-muted">
+                <EmptyFoldersIllu className="mx-auto h-auto w-24" />
+                <p className="mt-2 text-xs leading-6 text-cs-muted">
                   هنوز پوشه‌ای ندارید
                 </p>
                 <Link
@@ -247,7 +255,11 @@ export default function UploadModal({
             onClick={() => fileInputRef.current?.click()}
             className="flex w-full items-center gap-3 rounded-2xl border border-dashed border-cs-line bg-[#f7f8fc] px-4 py-3.5 text-right transition hover:border-cs-blue/40 hover:bg-cs-blue-soft/40"
           >
-            <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-cs-blue shadow-sm">
+            <span
+              className={`inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-white text-cs-blue shadow-sm ${
+                selectedFile ? "" : "animate-soft-float"
+              }`}
+            >
               <IconPlus className="size-5" />
             </span>
             <span className="min-w-0 flex-1">
@@ -292,6 +304,13 @@ export default function UploadModal({
             {uploading ? "در حال آپلود..." : "آپلود"}
           </button>
         </div>
+        {uploading ? (
+          <div className="px-5 pb-4">
+            <div className="h-1.5 overflow-hidden rounded-full bg-cs-line">
+              <div className="shimmer h-full w-full rounded-full bg-cs-blue/40" />
+            </div>
+          </div>
+        ) : null}
       </div>
     </div>
   );

@@ -6,6 +6,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import { IconArrow, IconLogout } from "../../components/Icons";
+import PageLoader from "../../components/PageLoader";
 import UserAvatar from "../../components/UserAvatar";
 import {
   clearSession,
@@ -140,11 +141,7 @@ export default function ProfilePage() {
   }
 
   if (!user || loading) {
-    return (
-      <main className="flex min-h-dvh items-center justify-center dash-pattern text-sm text-cs-muted">
-        در حال بارگذاری...
-      </main>
-    );
+    return <PageLoader />;
   }
 
   const dirty =

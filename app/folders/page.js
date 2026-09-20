@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
+import EmptyState from "../../components/EmptyState";
 import {
   IconEdit,
   IconFolder,
@@ -12,6 +13,8 @@ import {
   IconSearch,
   IconTrash,
 } from "../../components/Icons";
+import PageLoader from "../../components/PageLoader";
+import Reveal from "../../components/Reveal";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import {
   notifyError,
@@ -155,11 +158,7 @@ export default function FoldersManagePage() {
   }
 
   if (!user || loading) {
-    return (
-      <main className="flex min-h-dvh items-center justify-center dash-pattern text-sm text-cs-muted">
-        در حال بارگذاری...
-      </main>
-    );
+    return <PageLoader />;
   }
 
   return (
@@ -235,9 +234,11 @@ export default function FoldersManagePage() {
           </div>
 
           <div className="space-y-3">
-            {filteredFolders.map((folder) => (
-              <article
+            {filteredFolders.map((folder, index) => (
+              <Reveal
                 key={folder.id}
+                as="article"
+                delay={Math.min(index, 10) * 45}
                 className="rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
@@ -316,26 +317,25 @@ export default function FoldersManagePage() {
                     </button>
                   </form>
                 ) : null}
-              </article>
+              </Reveal>
             ))}
 
             {!filteredFolders.length ? (
-              <div className="rounded-2xl bg-white px-4 py-10 text-center shadow-sm ring-1 ring-cs-line">
-                <div className="mx-auto mb-3 inline-flex size-14 items-center justify-center rounded-2xl bg-[#fff4d4]">
-                  <IconFolder className="size-8 text-cs-folder" />
-                </div>
-                <p className="text-sm leading-7 text-cs-muted">
-                  هنوز پوشه‌ای نساخته‌اید
-                </p>
-                <button
-                  type="button"
-                  onClick={() => setShowCreate(true)}
-                  className="icon-label mx-auto mt-4 h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
-                >
-                  <IconPlus className="size-5 shrink-0" />
-                  <span>ساخت اولین پوشه</span>
-                </button>
-              </div>
+              <EmptyState
+                variant="folders"
+                title="هنوز پوشه‌ای نساخته‌اید"
+                description="پوشه‌ها کمک می‌کنند فایل‌هایتان منظم بمانند"
+                action={
+                  <button
+                    type="button"
+                    onClick={() => setShowCreate(true)}
+                    className="icon-label h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
+                  >
+                    <IconPlus className="size-5 shrink-0" />
+                    <span>ساخت اولین پوشه</span>
+                  </button>
+                }
+              />
             ) : null}
           </div>
         </section>
