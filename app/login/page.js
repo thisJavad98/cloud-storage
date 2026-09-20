@@ -7,7 +7,7 @@ import AppBrand from "../../components/AppBrand";
 import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow, IconEye } from "../../components/Icons";
 import { useI18n } from "../../lib/i18n/I18nProvider";
-import { notifyError, notifySuccess } from "../../lib/toast";
+import { notifyError } from "../../lib/toast";
 import { formatAuthError, login } from "../../services/auth";
 
 export default function LoginPage() {
@@ -24,7 +24,6 @@ export default function LoginPage() {
 
     try {
       await login({ email, password });
-      notifySuccess(t("auth.loginSuccess"));
       router.push("/dashboard");
     } catch (err) {
       notifyError(formatAuthError(err));
