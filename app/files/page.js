@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
+import AppBrand from "../../components/AppBrand";
 import {
   FileGlyph,
   IconArrow,
@@ -226,9 +227,12 @@ export default function FilesPage() {
           >
             <IconArrow className="size-5" />
           </Link>
-          <h1 className="text-base font-extrabold leading-7 text-cs-ink">
-            مدیریت فایل‌ها
-          </h1>
+          <div className="min-w-0 flex-1 text-center">
+            <AppBrand size="sm" showLogo={false} className="justify-center" />
+            <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
+              مدیریت فایل‌ها
+            </h1>
+          </div>
           <div className="size-10" aria-hidden="true" />
         </header>
 

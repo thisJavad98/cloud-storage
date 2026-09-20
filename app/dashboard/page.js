@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import EmptyState from "../../components/EmptyState";
+import AppBrand from "../../components/AppBrand";
 import {
   FileGlyph,
   IconDots,
@@ -17,6 +18,7 @@ import PageLoader from "../../components/PageLoader";
 import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
+import { APP_NAME } from "../../lib/brand";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
@@ -138,7 +140,7 @@ export default function DashboardPage() {
           </button>
 
           <div className="justify-self-center">
-            <img src="/icon.png" alt="فضای ابری" width={44} height={44} />
+            <AppBrand size="sm" stacked />
           </div>
 
           <Link
@@ -182,7 +184,7 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 text-right">
                 <h2 className="text-lg font-extrabold leading-8">
-                  فضای ابری شما
+                  فضای {APP_NAME}
                 </h2>
                 <p className="mt-1.5 text-sm leading-6 text-white/75">
                   {formatBytes(storage.used)} از {formatBytes(storage.quota)}

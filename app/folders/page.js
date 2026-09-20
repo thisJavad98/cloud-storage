@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
+import AppBrand from "../../components/AppBrand";
 import {
   IconEdit,
   IconFolder,
@@ -166,9 +167,12 @@ export default function FoldersManagePage() {
       <div className="phone-shell flex min-h-dvh flex-col pb-28">
         <header className="flex items-center justify-between gap-3 px-5 pt-6">
           <div className="size-10" aria-hidden="true" />
-          <h1 className="text-base font-extrabold leading-7 text-cs-ink">
-            مدیریت پوشه‌ها
-          </h1>
+          <div className="min-w-0 flex-1 text-center">
+            <AppBrand size="sm" showLogo={false} className="justify-center" />
+            <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
+              مدیریت پوشه‌ها
+            </h1>
+          </div>
           <button
             type="button"
             onClick={() => setShowCreate((v) => !v)}

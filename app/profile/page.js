@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
+import AppBrand from "../../components/AppBrand";
 import { IconArrow, IconLogout } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
 import UserAvatar from "../../components/UserAvatar";
@@ -159,9 +160,12 @@ export default function ProfilePage() {
           >
             <IconArrow className="size-5" />
           </Link>
-          <h1 className="flex-1 text-center text-lg font-extrabold text-cs-ink">
-            پروفایل من
-          </h1>
+          <div className="min-w-0 flex-1 text-center">
+            <AppBrand size="sm" showLogo={false} className="justify-center" />
+            <h1 className="mt-0.5 text-lg font-extrabold text-cs-ink">
+              پروفایل من
+            </h1>
+          </div>
           <span className="size-10" aria-hidden="true" />
         </header>
 

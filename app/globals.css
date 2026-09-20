@@ -485,11 +485,101 @@ body {
   animation-direction: reverse;
 }
 
+/* Landing intro illustration (gif-like loop) */
+.intro-illu__cloud {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-float 4.2s ease-in-out infinite;
+}
+
+.intro-illu__ground {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-shadow 4.2s ease-in-out infinite;
+}
+
+.intro-illu__beam {
+  animation: login-ray-pulse 3.4s ease-in-out infinite;
+}
+
+.intro-illu__plant {
+  transform-box: fill-box;
+  transform-origin: bottom center;
+  animation: intro-sway 3.6s ease-in-out infinite;
+}
+
+.intro-illu__person--l {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: login-bob 3.4s ease-in-out infinite;
+}
+
+.intro-illu__person--c {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: login-bob 3.8s ease-in-out infinite 0.2s;
+}
+
+.intro-illu__person--r {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: login-bob 3.5s ease-in-out infinite 0.35s;
+}
+
+.intro-illu__card--l {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-card-float 5s ease-in-out infinite;
+}
+
+.intro-illu__card--r {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-card-float-alt 5.5s ease-in-out infinite 0.25s;
+}
+
+.intro-illu__spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-spark 2.3s ease-in-out infinite;
+}
+
+.intro-illu__spark--b {
+  animation-delay: 0.4s;
+}
+
+.intro-illu__spark--c {
+  animation-delay: 0.85s;
+}
+
+.intro-illu__orb {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-orb 7s ease-in-out infinite;
+}
+
+.intro-illu__orb--b {
+  animation-delay: 1s;
+  animation-direction: reverse;
+}
+
+@keyframes intro-sway {
+  0%,
+  100% {
+    transform: rotate(-3deg);
+  }
+  50% {
+    transform: rotate(4deg);
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .animate-soft-float,
   .animate-fade-up,
   .animate-fade-up-delay,
   .animate-fade-up-delay-2,
+  .animate-fade-in,
+  .animate-fade-in-delay,
   .animate-pulse-soft,
   .loader-dot,
   .stagger-item,
@@ -509,7 +599,18 @@ body {
   .login-illu__card--left,
   .login-illu__card--right,
   .login-illu__rays,
-  .login-illu__orb {
+  .login-illu__orb,
+  .intro-illu__cloud,
+  .intro-illu__ground,
+  .intro-illu__beam,
+  .intro-illu__plant,
+  .intro-illu__person--l,
+  .intro-illu__person--c,
+  .intro-illu__person--r,
+  .intro-illu__card--l,
+  .intro-illu__card--r,
+  .intro-illu__spark,
+  .intro-illu__orb {
     animation: none !important;
   }
 
@@ -527,7 +628,43 @@ body {
   margin-inline: auto;
   position: relative;
   overflow-x: hidden;
-  overflow-y: visible;
+}
+
+/* Lock document scroll on auth / intro screens so entrance motion never flashes a scrollbar */
+html:has(.auth-screen),
+body:has(.auth-screen) {
+  height: 100%;
+  overflow: hidden;
+}
+
+.auth-screen {
+  height: 100dvh;
+  max-height: 100dvh;
+  overflow: hidden;
+}
+
+.auth-screen .phone-shell {
+  min-height: 0;
+  height: 100%;
+  max-height: 100%;
+  overflow: hidden;
+}
+
+@keyframes fade-in-only {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-in {
+  animation: fade-in-only 0.45s ease-out both;
+}
+
+.animate-fade-in-delay {
+  animation: fade-in-only 0.45s ease-out 0.08s both;
 }
 
 .hex-pattern {

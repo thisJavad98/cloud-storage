@@ -6,6 +6,7 @@ import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../../components/BottomNav";
 import ConfirmModal from "../../../components/ConfirmModal";
 import EmptyState from "../../../components/EmptyState";
+import AppBrand from "../../../components/AppBrand";
 import {
   FileGlyph,
   IconArrow,
@@ -296,7 +297,8 @@ export default function FolderDetailPage() {
             <IconArrow className="size-5" />
           </Link>
           <div className="min-w-0 flex-1 text-center">
-            <h1 className="truncate text-base font-extrabold leading-7 text-cs-ink">
+            <AppBrand size="sm" showLogo={false} className="justify-center" />
+            <h1 className="mt-0.5 truncate text-base font-extrabold leading-7 text-cs-ink">
               {folder.name}
             </h1>
             <p className="text-[11px] leading-5 text-cs-muted">

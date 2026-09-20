@@ -4,7 +4,9 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoginIllustration } from "../../components/LoginIllustration";
+import AppBrand from "../../components/AppBrand";
 import { IconArrow } from "../../components/Icons";
+import { APP_NAME } from "../../lib/brand";
 import { notifyError, notifySuccess } from "../../lib/toast";
 import { formatAuthError, signup } from "../../services/auth";
 
@@ -31,16 +33,19 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="h-dvh overflow-hidden hex-pattern">
-      <div className="phone-shell flex h-full min-h-0 flex-col overflow-hidden">
-        <div className="animate-fade-up flex min-h-0 flex-1 items-center justify-center overflow-hidden px-6 pb-1 pt-6">
+    <main className="auth-screen hex-pattern">
+      <div className="phone-shell flex h-full min-h-0 flex-col">
+        <div className="animate-fade-in flex min-h-0 flex-1 items-center justify-center overflow-hidden px-6 pb-1 pt-6">
           <LoginIllustration />
         </div>
 
-        <section className="animate-fade-up-delay shrink-0 rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
+        <section className="animate-fade-in-delay shrink-0 rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
+          <div className="mb-5 flex justify-center">
+            <AppBrand size="sm" tone="blue" />
+          </div>
           <div className="mb-6 flex items-center gap-3">
             <h1 className="text-2xl font-extrabold leading-none text-cs-ink">
-              ثبت‌نام
+              ثبت‌نام در {APP_NAME}
             </h1>
             <Link
               href="/login"

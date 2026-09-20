@@ -1,5 +1,6 @@
 import { Vazirmatn } from "next/font/google";
 import AppToaster from "../components/AppToaster";
+import { APP_NAME, APP_TAGLINE } from "../lib/brand";
 import "./globals.css";
 
 const vazirmatn = Vazirmatn({
@@ -9,8 +10,11 @@ const vazirmatn = Vazirmatn({
 });
 
 export const metadata = {
-  title: "فضای ابری",
-  description: "فضای ابری امن برای همه",
+  title: {
+    default: APP_NAME,
+    template: `%s | ${APP_NAME}`,
+  },
+  description: APP_TAGLINE,
   icons: {
     icon: [{ url: "/icon.png", type: "image/png" }],
     apple: [{ url: "/apple-touch-icon.png", type: "image/png" }],
