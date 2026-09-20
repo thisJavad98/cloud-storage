@@ -31,15 +31,13 @@ export default function LoginPage() {
   }
 
   return (
-    <main className="min-h-dvh hex-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col">
-        <div className="flex flex-1 flex-col items-center justify-center px-6 pb-4 pt-10">
-          <div className="animate-soft-float w-full">
-            <LoginIllustration />
-          </div>
+    <main className="h-dvh overflow-hidden hex-pattern">
+      <div className="phone-shell flex h-full min-h-0 flex-col overflow-hidden">
+        <div className="animate-fade-up flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden px-6 pb-1 pt-6">
+          <LoginIllustration />
         </div>
 
-        <section className="animate-fade-up rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
+        <section className="animate-fade-up-delay shrink-0 rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
           <div className="mb-7 flex items-center gap-3">
             <h1 className="text-2xl font-extrabold leading-none text-cs-ink">
               ورود

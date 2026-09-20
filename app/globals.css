@@ -62,6 +62,102 @@ body {
   }
 }
 
+@keyframes login-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+@keyframes login-shadow {
+  0%,
+  100% {
+    transform: scaleX(1);
+    opacity: 0.35;
+  }
+  50% {
+    transform: scaleX(0.88);
+    opacity: 0.22;
+  }
+}
+
+@keyframes login-bob {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  50% {
+    transform: translate(3px, -4px);
+  }
+}
+
+@keyframes login-arm {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  50% {
+    transform: rotate(8deg);
+  }
+}
+
+@keyframes login-spark {
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.75);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+}
+
+@keyframes login-card-float {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-10px) rotate(-3deg);
+  }
+}
+
+@keyframes login-card-float-alt {
+  0%,
+  100% {
+    transform: translateY(0) rotate(0deg);
+  }
+  50% {
+    transform: translateY(-8px) rotate(4deg);
+  }
+}
+
+@keyframes login-ray-pulse {
+  0%,
+  100% {
+    opacity: 0.4;
+  }
+  50% {
+    opacity: 0.75;
+  }
+}
+
+@keyframes login-orb {
+  0%,
+  100% {
+    transform: translate(0, 0);
+    opacity: 0.08;
+  }
+  50% {
+    transform: translate(6px, -8px);
+    opacity: 0.16;
+  }
+}
+
 .animate-fade-up {
   animation: fade-up 0.55s ease-out both;
 }
@@ -76,6 +172,94 @@ body {
 
 .animate-soft-float {
   animation: soft-float 5s ease-in-out infinite;
+}
+
+/* Login / signup illustration motion */
+.login-illu__cloud {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-float 4.5s ease-in-out infinite;
+}
+
+.login-illu__shadow {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-shadow 4.5s ease-in-out infinite;
+}
+
+.login-illu__person {
+  transform-box: fill-box;
+  transform-origin: center bottom;
+  animation: login-bob 3.2s ease-in-out infinite;
+}
+
+.login-illu__arm {
+  transform-box: fill-box;
+  transform-origin: left center;
+  animation: login-arm 3.2s ease-in-out infinite;
+}
+
+.login-illu__spark {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-spark 2.4s ease-in-out infinite;
+}
+
+.login-illu__spark--b {
+  animation-delay: 0.4s;
+}
+
+.login-illu__spark--c {
+  animation-delay: 0.8s;
+}
+
+.login-illu__spark--d {
+  animation-delay: 1.1s;
+}
+
+.login-illu__card--left {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-card-float 5s ease-in-out infinite;
+}
+
+.login-illu__card--right {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-card-float-alt 5.6s ease-in-out infinite 0.35s;
+}
+
+.login-illu__rays {
+  animation: login-ray-pulse 3.8s ease-in-out infinite;
+}
+
+.login-illu__orb {
+  transform-box: fill-box;
+  transform-origin: center;
+  animation: login-orb 7s ease-in-out infinite;
+}
+
+.login-illu__orb--b {
+  animation-delay: 1.2s;
+  animation-direction: reverse;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-soft-float,
+  .animate-fade-up,
+  .animate-fade-up-delay,
+  .animate-fade-up-delay-2,
+  .login-illu__cloud,
+  .login-illu__shadow,
+  .login-illu__person,
+  .login-illu__arm,
+  .login-illu__spark,
+  .login-illu__card--left,
+  .login-illu__card--right,
+  .login-illu__rays,
+  .login-illu__orb {
+    animation: none !important;
+  }
 }
 
 .phone-shell {

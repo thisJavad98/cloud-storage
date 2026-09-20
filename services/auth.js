@@ -37,6 +37,63 @@ export async function getMe() {
   return payload.data.user;
 }
 
+export async function updateProfile({ fullName, bio }) {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error("وارد حساب کاربری نشده‌اید.");
+  }
+
+  const body = {};
+  if (fullName !== undefined) body.fullName = fullName;
+  if (bio !== undefined) body.bio = bio;
+
+  const payload = await apiRequest("/auth/me", {
+    method: "PATCH",
+    token,
+    body,
+  });
+
+  const user = payload.data.user;
+  saveSession({ user });
+  return user;
+}
+
+export async function uploadAvatar(file) {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error("وارد حساب کاربری نشده‌اید.");
+  }
+
+  const formData = new FormData();
+  formData.append("avatar", file);
+
+  const payload = await apiRequest("/auth/avatar", {
+    method: "POST",
+    token,
+    body: formData,
+  });
+
+  const user = payload.data.user;
+  saveSession({ user });
+  return user;
+}
+
+export async function removeAvatar() {
+  const token = getAccessToken();
+  if (!token) {
+    throw new Error("وارد حساب کاربری نشده‌اید.");
+  }
+
+  const payload = await apiRequest("/auth/avatar", {
+    method: "DELETE",
+    token,
+  });
+
+  const user = payload.data.user;
+  saveSession({ user });
+  return user;
+}
+
 export function formatAuthError(error) {
   if (!error) return "خطای ناشناخته رخ داد.";
 

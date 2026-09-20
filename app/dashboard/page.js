@@ -12,14 +12,11 @@ import {
   IconSearch,
   StorageRing,
 } from "../../components/Icons";
+import UserAvatar from "../../components/UserAvatar";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
-import {
-  formatFileError,
-  listFiles,
-  listFolders,
-} from "../../services/files";
+import { formatFileError, listFiles, listFolders } from "../../services/files";
 
 function formatBytes(bytes) {
   if (!Number.isFinite(bytes) || bytes <= 0) return "۰ بایت";
@@ -30,7 +27,8 @@ function formatBytes(bytes) {
     value /= 1024;
     unit += 1;
   }
-  const rounded = value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
+  const rounded =
+    value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
   return `${toPersianDigits(rounded)}\u00A0${units[unit]}`;
 }
 
@@ -106,7 +104,8 @@ export default function DashboardPage() {
   const storage = useMemo(() => {
     const used = Number(user?.storageUsedBytes ?? 0);
     const quota = Number(user?.storageQuotaBytes ?? 5 * 1024 * 1024 * 1024);
-    const percent = quota > 0 ? Math.min(100, Math.round((used / quota) * 100)) : 0;
+    const percent =
+      quota > 0 ? Math.min(100, Math.round((used / quota) * 100)) : 0;
     const remaining = Math.max(quota - used, 0);
     return { used, quota, percent, remaining };
   }, [user]);
@@ -131,30 +130,25 @@ export default function DashboardPage() {
         <header className="relative grid grid-cols-3 items-center px-5 pt-6">
           <button
             type="button"
+            onClick={() => router.push("/profile")}
             className="inline-flex size-10 items-center justify-center justify-self-start rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label="منو"
+            aria-label="پروفایل"
           >
             <IconMenu className="size-5" />
           </button>
 
           <div className="justify-self-center">
-            <img
-              src="/icon.png"
-              alt="فضای ابری"
-              width={36}
-              height={36}
-              className="size-9 rounded-xl shadow-sm"
-            />
+            <img src="/icon.png" alt="فضای ابری" width={44} height={44} />
           </div>
 
-          <div
-            className="size-10 justify-self-end overflow-hidden rounded-full bg-gradient-to-br from-[#f7c59f] to-[#d9895b] shadow-sm ring-2 ring-white"
+          <Link
+            href="/profile"
+            className="justify-self-end"
+            aria-label="پروفایل"
             title={user.fullName || user.email}
           >
-            <div className="flex h-full items-end justify-center">
-              <div className="mb-0.5 size-6 rounded-full bg-[#5b3a2a]/30" />
-            </div>
-          </div>
+            <UserAvatar user={user} />
+          </Link>
         </header>
 
         <div className="px-5 pt-5">
@@ -164,6 +158,11 @@ export default function DashboardPage() {
               {user.fullName || user.email}
             </span>
           </p>
+          {user.bio ? (
+            <p className="mb-3 line-clamp-2 text-xs leading-6 text-cs-muted">
+              {user.bio}
+            </p>
+          ) : null}
           <label className="relative block">
             <span className="sr-only">جستجو</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
@@ -182,7 +181,9 @@ export default function DashboardPage() {
           <div className="rounded-[1.6rem] bg-cs-blue p-5 text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]">
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 text-right">
-                <h2 className="text-lg font-extrabold leading-8">فضای ابری شما</h2>
+                <h2 className="text-lg font-extrabold leading-8">
+                  فضای ابری شما
+                </h2>
                 <p className="mt-1.5 text-sm leading-6 text-white/75">
                   {formatBytes(storage.used)} از {formatBytes(storage.quota)}
                 </p>
