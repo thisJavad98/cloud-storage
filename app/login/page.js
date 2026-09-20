@@ -86,7 +86,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder={t("auth.passwordPlaceholder")}
-                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] py-3.5 ps-12 pe-4 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
+                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] py-3.5 px-4 pe-4 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
                 />
                 <button
                   type="button"
