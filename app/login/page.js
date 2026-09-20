@@ -5,16 +5,29 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow, IconEye } from "../../components/Icons";
+import { formatAuthError, login } from "../../services/auth";
 
 export default function LoginPage() {
   const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    router.push("/dashboard");
+    setError("");
+    setLoading(true);
+
+    try {
+      await login({ email, password });
+      router.push("/dashboard");
+    } catch (err) {
+      setError(formatAuthError(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -46,11 +59,12 @@ export default function LoginPage() {
               <input
                 type="email"
                 required
-                dir="rtl"
+                autoComplete="email"
+                dir="ltr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ایمیل خود را وارد کنید"
-                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
+                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
               />
             </label>
 
@@ -62,11 +76,12 @@ export default function LoginPage() {
                 <input
                   type={showPassword ? "text" : "password"}
                   required
-                  dir="rtl"
+                  autoComplete="current-password"
+                  dir="ltr"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="رمز عبور خود را وارد کنید"
-                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 pe-12 text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
+                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 pe-12 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
                 />
                 <button
                   type="button"
@@ -79,12 +94,19 @@ export default function LoginPage() {
               </div>
             </label>
 
-            <div className="flex items-center gap-3 pt-3">
+            {error ? (
+              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm leading-6 text-red-600">
+                {error}
+              </p>
+            ) : null}
+
+            <div className="flex items-center gap-3 pt-1">
               <button
                 type="submit"
-                className="inline-flex h-14 flex-1 items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white transition hover:bg-cs-blue-deep"
+                disabled={loading}
+                className="inline-flex h-14 flex-1 items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white transition hover:bg-cs-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
               >
-                ورود
+                {loading ? "در حال ورود..." : "ورود"}
               </button>
               <button
                 type="button"

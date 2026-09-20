@@ -1,17 +1,43 @@
 # Cloud Storage
 
-Next.js app for cloud storage. Requires **Node.js 20.9+** (Next.js 16).
+Next.js frontend for cloud storage. Requires **Node.js 20.9+** (Next.js 16).
+
+Connects to the backend at [`cloud-storage-services`](../cloud-storage-services) (`http://localhost:4000`).
 
 ## Pages
 
 | Route | Page |
 | --- | --- |
-| `/` | Intro / landing (soft blue UI from the mockup) |
-| `/signup` | Create account |
-| `/login` | Sign in |
-| `/dashboard` | Files dashboard |
+| `/` | Intro |
+| `/signup` | Create account (`POST /api/auth/signup`) |
+| `/login` | Sign in (`POST /api/auth/login`) |
+| `/dashboard` | Files dashboard (requires session) |
 
-Flow: **Intro → Get Started (signup) or Learn More (login) → Dashboard**.
+## Backend connection
+
+1. Start the API:
+
+```bash
+cd ../cloud-storage-services
+cp .env.example .env
+npm install
+npm run db:migrate
+npm run dev
+```
+
+2. Frontend env (already in `.env.local`):
+
+```bash
+NEXT_PUBLIC_API_URL=http://localhost:4000/api
+```
+
+Auth services live in `services/auth.js` and call:
+
+- `POST /auth/signup` — `{ email, password, fullName }`
+- `POST /auth/login` — `{ email, password }`
+- `GET /auth/me` — `Authorization: Bearer <accessToken>`
+
+Tokens and user are stored in `localStorage` via `lib/session.js`.
 
 ## Prerequisites
 

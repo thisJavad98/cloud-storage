@@ -1,7 +1,7 @@
 "use client";
 
-import Link from "next/link";
-import { useState } from "react";
+import { useRouter } from "next/navigation";
+import { useEffect, useMemo, useState } from "react";
 import {
   FileGlyph,
   IconBell,
@@ -13,6 +13,7 @@ import {
   IconUser,
   StorageRing,
 } from "../../components/Icons";
+import { clearSession, getStoredUser } from "../../lib/session";
 
 const folders = [
   { name: "پروژه", count: "۱۰۰ فایل" },
@@ -34,9 +35,62 @@ const recentFiles = [
   },
 ];
 
+function formatBytes(bytes) {
+  if (!Number.isFinite(bytes) || bytes <= 0) return "۰ B";
+  const units = ["B", "KB", "MB", "GB", "TB"];
+  let value = bytes;
+  let unit = 0;
+  while (value >= 1024 && unit < units.length - 1) {
+    value /= 1024;
+    unit += 1;
+  }
+  const rounded = value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
+  return `${toPersianDigits(rounded)} ${units[unit]}`;
+}
+
+function toPersianDigits(value) {
+  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
+}
+
 export default function DashboardPage() {
+  const router = useRouter();
   const [query, setQuery] = useState("");
   const [activeNav, setActiveNav] = useState("files");
+  const [user, setUser] = useState(null);
+
+  useEffect(() => {
+    const stored = getStoredUser();
+    if (!stored) {
+      router.replace("/login");
+      return;
+    }
+    setUser(stored);
+  }, [router]);
+
+  const storage = useMemo(() => {
+    const used = Number(user?.storageUsedBytes ?? 0);
+    const quota = Number(user?.storageQuotaBytes ?? 5 * 1024 * 1024 * 1024);
+    const percent = quota > 0 ? Math.min(100, Math.round((used / quota) * 100)) : 0;
+    const remaining = Math.max(quota - used, 0);
+    return { used, quota, percent, remaining };
+  }, [user]);
+
+  function handleNav(id) {
+    if (id === "settings") {
+      clearSession();
+      router.push("/login");
+      return;
+    }
+    setActiveNav(id);
+  }
+
+  if (!user) {
+    return (
+      <main className="flex min-h-dvh items-center justify-center dash-pattern text-sm text-cs-muted">
+        در حال بارگذاری...
+      </main>
+    );
+  }
 
   return (
     <main className="min-h-dvh dash-pattern">
@@ -54,7 +108,10 @@ export default function DashboardPage() {
             LOGO
           </p>
 
-          <div className="size-10 justify-self-end overflow-hidden rounded-full bg-gradient-to-br from-[#f7c59f] to-[#d9895b] shadow-sm ring-2 ring-white">
+          <div
+            className="size-10 justify-self-end overflow-hidden rounded-full bg-gradient-to-br from-[#f7c59f] to-[#d9895b] shadow-sm ring-2 ring-white"
+            title={user.fullName || user.email}
+          >
             <div className="flex h-full items-end justify-center">
               <div className="mb-0.5 size-6 rounded-full bg-[#5b3a2a]/30" />
             </div>
@@ -62,6 +119,12 @@ export default function DashboardPage() {
         </header>
 
         <div className="px-5 pt-5">
+          <p className="mb-3 text-sm text-cs-muted">
+            سلام،{" "}
+            <span className="font-bold text-cs-ink">
+              {user.fullName || user.email}
+            </span>
+          </p>
           <label className="relative block">
             <span className="sr-only">جستجو</span>
             <span className="pointer-events-none absolute inset-y-0 right-4 flex items-center text-cs-muted">
@@ -81,17 +144,22 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between gap-4">
               <div className="text-right">
                 <h2 className="text-lg font-extrabold">فضای ابری شما</h2>
-                <p className="mt-1 text-sm text-white/75">۱,۲۰۰ فایل</p>
+                <p className="mt-1 text-sm text-white/75">
+                  {formatBytes(storage.used)} از {formatBytes(storage.quota)}
+                </p>
               </div>
-              <StorageRing percent={70} />
+              <StorageRing percent={storage.percent || 1} />
             </div>
 
             <div className="mt-5">
               <div className="h-2 overflow-hidden rounded-full bg-white/20">
-                <div className="h-full w-[70%] rounded-full bg-white" />
+                <div
+                  className="h-full rounded-full bg-white transition-all"
+                  style={{ width: `${Math.max(storage.percent, 2)}%` }}
+                />
               </div>
               <p className="mt-2 text-xs text-white/80">
-                ۲۷ GB در دسترس باقی مانده
+                {formatBytes(storage.remaining)} در دسترس باقی مانده
               </p>
             </div>
           </div>
@@ -168,7 +236,7 @@ export default function DashboardPage() {
               { id: "files", icon: IconFolder, label: "فایل‌ها" },
               { id: "profile", icon: IconUser, label: "پروفایل" },
               { id: "alerts", icon: IconBell, label: "اعلان‌ها" },
-              { id: "settings", icon: IconSettings, label: "تنظیمات" },
+              { id: "settings", icon: IconSettings, label: "خروج" },
             ].map((item) => {
               const Icon = item.icon;
               const active = activeNav === item.id;
@@ -176,7 +244,7 @@ export default function DashboardPage() {
                 <button
                   key={item.id}
                   type="button"
-                  onClick={() => setActiveNav(item.id)}
+                  onClick={() => handleNav(item.id)}
                   className={`inline-flex size-11 items-center justify-center rounded-2xl transition ${
                     active
                       ? "bg-cs-blue text-white shadow-md shadow-cs-blue/30"
@@ -191,10 +259,6 @@ export default function DashboardPage() {
           </div>
         </nav>
       </div>
-
-      <Link href="/" className="sr-only">
-        خروج
-      </Link>
     </main>
   );
 }

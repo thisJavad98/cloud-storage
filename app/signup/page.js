@@ -5,16 +5,29 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow } from "../../components/Icons";
+import { formatAuthError, signup } from "../../services/auth";
 
 export default function SignupPage() {
   const router = useRouter();
-  const [name, setName] = useState("");
+  const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  function handleSubmit(event) {
+  async function handleSubmit(event) {
     event.preventDefault();
-    router.push("/dashboard");
+    setError("");
+    setLoading(true);
+
+    try {
+      await signup({ email, password, fullName });
+      router.push("/dashboard");
+    } catch (err) {
+      setError(formatAuthError(err));
+    } finally {
+      setLoading(false);
+    }
   }
 
   return (
@@ -25,11 +38,11 @@ export default function SignupPage() {
         </div>
 
         <section className="rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
-          <div className="mb-6 flex items-center justify-between">
+          <div className="mb-6 flex items-center justify-start gap-2">
             <h1 className="text-2xl font-extrabold text-cs-ink">ثبت‌نام</h1>
             <Link
               href="/login"
-              className="inline-flex size-10 items-center justify-center rounded-full bg-cs-surface text-cs-blue"
+              className="inline-flex size-9 items-center justify-center rounded-full text-cs-blue"
               aria-label="بازگشت"
             >
               <IconArrow className="size-5" />
@@ -44,8 +57,11 @@ export default function SignupPage() {
               <input
                 type="text"
                 required
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                minLength={2}
+                maxLength={100}
+                autoComplete="name"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
                 placeholder="نام خود را وارد کنید"
                 className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-sm outline-none placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
               />
@@ -57,10 +73,12 @@ export default function SignupPage() {
               <input
                 type="email"
                 required
+                autoComplete="email"
+                dir="ltr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="ایمیل خود را وارد کنید"
-                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-sm outline-none placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
+                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-left text-sm outline-none placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
               />
             </label>
             <label className="block">
@@ -71,18 +89,27 @@ export default function SignupPage() {
                 type="password"
                 required
                 minLength={8}
+                autoComplete="new-password"
+                dir="ltr"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="رمز عبور خود را وارد کنید"
-                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-sm outline-none placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
+                placeholder="حداقل ۸ کاراکتر، شامل حرف و عدد"
+                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-left text-sm outline-none placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
               />
             </label>
 
+            {error ? (
+              <p className="rounded-2xl bg-red-50 px-4 py-3 text-sm leading-6 text-red-600">
+                {error}
+              </p>
+            ) : null}
+
             <button
               type="submit"
-              className="mt-2 inline-flex h-14 w-full items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white hover:bg-cs-blue-deep"
+              disabled={loading}
+              className="mt-2 inline-flex h-14 w-full items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white hover:bg-cs-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
             >
-              ثبت‌نام
+              {loading ? "در حال ثبت‌نام..." : "ثبت‌نام"}
             </button>
           </form>
 
