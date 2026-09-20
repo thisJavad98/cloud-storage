@@ -12,6 +12,7 @@ import {
   IconSearch,
   StorageRing,
 } from "../../components/Icons";
+import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
@@ -206,17 +207,22 @@ export default function DashboardPage() {
         </section>
 
         <section className="px-5 pt-7">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h3 className="text-base font-extrabold leading-7 text-cs-ink">
-              پوشه‌های من
-            </h3>
-            <Link
+          <div className="mb-3.5 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="text-base font-extrabold leading-7 text-cs-ink">
+                پوشه‌های من
+              </h3>
+              {folders.length ? (
+                <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
+                  {toPersianDigits(folders.length)} پوشه
+                </p>
+              ) : null}
+            </div>
+            <SectionMoreLink
               href="/folders"
-              className="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold leading-5 text-cs-blue"
-            >
-              <span>بیشتر</span>
-              <span aria-hidden="true">‹</span>
-            </Link>
+              label="مشاهده همه"
+              count={folders.length > 4 ? folders.length : undefined}
+            />
           </div>
 
           <div className="grid grid-cols-2 gap-3">
@@ -224,7 +230,7 @@ export default function DashboardPage() {
               <Link
                 key={folder.id}
                 href={`/folders/${folder.id}`}
-                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
+                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30 active:scale-[0.99]"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
                   <IconFolder className="size-7 text-cs-folder" />
@@ -246,17 +252,22 @@ export default function DashboardPage() {
         </section>
 
         <section className="px-5 pt-7">
-          <div className="mb-3 flex items-center justify-between gap-3">
-            <h3 className="text-base font-extrabold leading-7 text-cs-ink">
-              آخرین فایل‌ها
-            </h3>
-            <Link
+          <div className="mb-3.5 flex items-center justify-between gap-3">
+            <div className="min-w-0">
+              <h3 className="text-base font-extrabold leading-7 text-cs-ink">
+                آخرین فایل‌ها
+              </h3>
+              {files.length ? (
+                <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
+                  {toPersianDigits(Math.min(filteredFiles.length, 8))} مورد اخیر
+                </p>
+              ) : null}
+            </div>
+            <SectionMoreLink
               href="/files"
-              className="inline-flex shrink-0 items-center gap-1.5 text-xs font-semibold leading-5 text-cs-blue"
-            >
-              <span>بیشتر</span>
-              <span aria-hidden="true">‹</span>
-            </Link>
+              label="مشاهده همه"
+              count={files.length > 8 ? files.length : undefined}
+            />
           </div>
 
           <div className="space-y-3">
