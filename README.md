@@ -2,6 +2,17 @@
 
 Next.js app for cloud storage. Requires **Node.js 20.9+** (Next.js 16).
 
+## Pages
+
+| Route | Page |
+| --- | --- |
+| `/` | Intro / landing (soft blue UI from the mockup) |
+| `/signup` | Create account |
+| `/login` | Sign in |
+| `/dashboard` | Files dashboard |
+
+Flow: **Intro → Get Started (signup) or Learn More (login) → Dashboard**.
+
 ## Prerequisites
 
 - Node.js `>=20.9.0` (recommended: Node 22)

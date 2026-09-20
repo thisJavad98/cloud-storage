@@ -1,26 +1,104 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --cs-blue: #1f4fc4;
+  --cs-blue-deep: #163d9e;
+  --cs-blue-soft: #e8eefc;
+  --cs-ink: #1a1f36;
+  --cs-muted: #8b93a7;
+  --cs-line: #e6e9f0;
+  --cs-surface: #f4f6fb;
+  --cs-card: #ffffff;
+  --cs-folder: #f6c344;
+  --cs-folder-dark: #e5a820;
+  --cs-file-orange: #f29a4a;
+  --cs-file-blue: #4d7cf0;
+  --background: var(--cs-blue);
+  --foreground: #ffffff;
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+  --color-cs-blue: var(--cs-blue);
+  --color-cs-blue-deep: var(--cs-blue-deep);
+  --color-cs-blue-soft: var(--cs-blue-soft);
+  --color-cs-ink: var(--cs-ink);
+  --color-cs-muted: var(--cs-muted);
+  --color-cs-line: var(--cs-line);
+  --color-cs-surface: var(--cs-surface);
+  --color-cs-card: var(--cs-card);
+  --color-cs-folder: var(--cs-folder);
+  --color-cs-folder-dark: var(--cs-folder-dark);
+  --color-cs-file-orange: var(--cs-file-orange);
+  --color-cs-file-blue: var(--cs-file-blue);
+  --font-sans: var(--font-vazirmatn);
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--cs-surface);
+  color: var(--cs-ink);
+  font-family: var(--font-vazirmatn), Tahoma, sans-serif;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-8px);
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.55s ease-out both;
+}
+
+.animate-fade-up-delay {
+  animation: fade-up 0.55s ease-out 0.1s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.55s ease-out 0.2s both;
+}
+
+.animate-soft-float {
+  animation: soft-float 5s ease-in-out infinite;
+}
+
+.phone-shell {
+  width: 100%;
+  max-width: 390px;
+  min-height: 100dvh;
+  margin-inline: auto;
+  position: relative;
+  overflow: hidden;
+}
+
+.hex-pattern {
+  background-color: var(--cs-blue);
+  background-image:
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.12) 1px, transparent 0),
+    linear-gradient(115deg, transparent 48%, rgba(255, 255, 255, 0.05) 50%, transparent 52%);
+  background-size:
+    18px 18px,
+    42px 72px;
+}
+
+.dash-pattern {
+  background-color: #f3f5fa;
+  background-image: radial-gradient(rgba(31, 79, 196, 0.06) 1px, transparent 1px);
+  background-size: 14px 14px;
 }
