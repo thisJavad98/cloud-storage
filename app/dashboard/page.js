@@ -2,25 +2,24 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
+import UploadModal from "../../components/UploadModal";
 import {
   FileGlyph,
   IconDots,
   IconFolder,
   IconMenu,
-  IconPlus,
   IconSearch,
   StorageRing,
 } from "../../components/Icons";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
-import { notifyError, notifySuccess } from "../../lib/toast";
+import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
 import {
   formatFileError,
   listFiles,
   listFolders,
-  uploadFile,
 } from "../../services/files";
 
 function formatBytes(bytes) {
@@ -62,13 +61,12 @@ function fileTone(mimeType = "") {
 
 export default function DashboardPage() {
   const router = useRouter();
-  const fileInputRef = useRef(null);
   const [query, setQuery] = useState("");
   const [user, setUser] = useState(null);
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [uploading, setUploading] = useState(false);
+  const [uploadOpen, setUploadOpen] = useState(false);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -121,23 +119,6 @@ export default function DashboardPage() {
     return files.filter((file) => file.name.toLowerCase().includes(q));
   }, [files, query]);
 
-  async function handleUpload(event) {
-    const selected = event.target.files?.[0];
-    event.target.value = "";
-    if (!selected) return;
-
-    setUploading(true);
-    try {
-      await uploadFile(selected);
-      notifySuccess("فایل با موفقیت آپلود شد");
-      await refresh();
-    } catch (err) {
-      notifyError(formatFileError(err));
-    } finally {
-      setUploading(false);
-    }
-  }
-
   if (!user || loading) {
     return (
       <main className="flex min-h-dvh items-center justify-center dash-pattern text-sm text-cs-muted">
@@ -148,7 +129,7 @@ export default function DashboardPage() {
 
   return (
     <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-28">
+      <div className="phone-shell flex min-h-dvh flex-col pb-32">
         <header className="relative grid grid-cols-3 items-center px-5 pt-6">
           <button
             type="button"
@@ -310,30 +291,23 @@ export default function DashboardPage() {
               ))
             ) : (
               <div className="rounded-2xl bg-white px-4 py-8 text-center text-sm leading-7 text-cs-muted shadow-sm ring-1 ring-cs-line">
-                فایلی پیدا نشد. با دکمه + یک فایل آپلود کنید.
+                فایلی پیدا نشد. از دکمه آپلود پایین صفحه استفاده کنید.
               </div>
             )}
           </div>
         </section>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={handleUpload}
+        <BottomNav
+          activeId="files"
+          onUpload={() => setUploadOpen(true)}
+          uploadLabel="آپلود فایل"
         />
 
-        <button
-          type="button"
-          disabled={uploading}
-          onClick={() => fileInputRef.current?.click()}
-          className="icon-label fixed bottom-24 left-1/2 z-30 h-14 -translate-x-1/2 rounded-2xl bg-cs-blue px-5 font-bold text-white shadow-lg shadow-cs-blue/35 disabled:opacity-70"
-        >
-          <IconPlus className="size-5 shrink-0" />
-          <span>{uploading ? "در حال آپلود..." : "آپلود فایل"}</span>
-        </button>
-
-        <BottomNav activeId="files" />
+        <UploadModal
+          open={uploadOpen}
+          onClose={() => setUploadOpen(false)}
+          onSuccess={refresh}
+        />
       </div>
     </main>
   );

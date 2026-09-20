@@ -2,9 +2,10 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
+import UploadModal from "../../components/UploadModal";
 import {
   FileGlyph,
   IconArrow,
@@ -14,7 +15,6 @@ import {
   IconPlus,
   IconSearch,
   IconTrash,
-  IconUpload,
 } from "../../components/Icons";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import {
@@ -32,7 +32,6 @@ import {
   listFolders,
   trashFile,
   updateFile,
-  uploadFile,
 } from "../../services/files";
 
 function formatBytes(bytes) {
@@ -74,14 +73,13 @@ function fileTone(mimeType = "", index = 0) {
 
 export default function FilesPage() {
   const router = useRouter();
-  const fileInputRef = useRef(null);
   const [user, setUser] = useState(null);
   const [query, setQuery] = useState("");
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [busyId, setBusyId] = useState("");
-  const [uploading, setUploading] = useState(false);
+  const [uploadOpen, setUploadOpen] = useState(false);
   const [menuId, setMenuId] = useState("");
   const [renameId, setRenameId] = useState("");
   const [renameValue, setRenameValue] = useState("");
@@ -130,23 +128,6 @@ export default function FilesPage() {
     if (!q) return files;
     return files.filter((file) => file.name.toLowerCase().includes(q));
   }, [files, query]);
-
-  async function handleUpload(event) {
-    const selected = event.target.files?.[0];
-    event.target.value = "";
-    if (!selected) return;
-
-    setUploading(true);
-    try {
-      await uploadFile(selected);
-      notifySuccess("فایل با موفقیت آپلود شد");
-      await refresh();
-    } catch (err) {
-      notifyError(formatFileError(err));
-    } finally {
-      setUploading(false);
-    }
-  }
 
   async function handleRename(file) {
     if (!renameValue.trim()) {
@@ -238,7 +219,7 @@ export default function FilesPage() {
 
   return (
     <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-28">
+      <div className="phone-shell flex min-h-dvh flex-col pb-32">
         <header className="flex items-center justify-between gap-3 px-5 pt-6">
           <Link
             href="/dashboard"
@@ -250,15 +231,7 @@ export default function FilesPage() {
           <h1 className="text-base font-extrabold leading-7 text-cs-ink">
             مدیریت فایل‌ها
           </h1>
-          <button
-            type="button"
-            disabled={uploading}
-            onClick={() => fileInputRef.current?.click()}
-            className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm disabled:opacity-70"
-            aria-label="آپلود"
-          >
-            <IconUpload className="size-5" />
-          </button>
+          <div className="size-10" aria-hidden="true" />
         </header>
 
         <div className="px-5 pt-5">
@@ -433,8 +406,7 @@ export default function FilesPage() {
                 </p>
                 <button
                   type="button"
-                  disabled={uploading}
-                  onClick={() => fileInputRef.current?.click()}
+                  onClick={() => setUploadOpen(true)}
                   className="icon-label mx-auto mt-4 h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
                 >
                   <IconPlus className="size-5 shrink-0" />
@@ -445,14 +417,18 @@ export default function FilesPage() {
           </div>
         </section>
 
-        <input
-          ref={fileInputRef}
-          type="file"
-          className="hidden"
-          onChange={handleUpload}
+        <BottomNav
+          activeId="manage"
+          onUpload={() => setUploadOpen(true)}
+          uploadLabel="آپلود فایل"
         />
 
-        <BottomNav activeId="manage" />
+        <UploadModal
+          open={uploadOpen}
+          onClose={() => setUploadOpen(false)}
+          defaultFolderId={null}
+          onSuccess={refresh}
+        />
 
         <ConfirmModal
           open={Boolean(confirmAction)}
