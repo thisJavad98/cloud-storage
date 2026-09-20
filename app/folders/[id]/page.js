@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomNav from "../../../components/BottomNav";
 import ConfirmModal from "../../../components/ConfirmModal";
 import EmptyState from "../../../components/EmptyState";
@@ -21,6 +21,7 @@ import PageLoader from "../../../components/PageLoader";
 import Reveal from "../../../components/Reveal";
 import { formatBytes, formatDate, formatDigits } from "../../../lib/format";
 import { useI18n } from "../../../lib/i18n/I18nProvider";
+import { finishPageLoad } from "../../../lib/pageLoading";
 import { getAccessToken, getStoredUser, saveSession } from "../../../lib/session";
 import { openUploadModal } from "../../../lib/upload";
 import {
@@ -72,6 +73,7 @@ export default function FolderDetailPage() {
   const [folderRenameValue, setFolderRenameValue] = useState("");
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -80,6 +82,9 @@ export default function FolderDetailPage() {
       return;
     }
     if (!folderId) return;
+
+    const startedAt = Date.now();
+    const isBoot = bootRef.current;
 
     try {
       const [me, folderData, childFolders, fileResult] = await Promise.all([
@@ -99,6 +104,10 @@ export default function FolderDetailPage() {
       if (err?.status === 401) router.replace("/login");
       if (err?.status === 404) router.replace("/files");
     } finally {
+      if (isBoot) {
+        await finishPageLoad(startedAt);
+        bootRef.current = false;
+      }
       setLoading(false);
     }
   }, [folderId, router]);

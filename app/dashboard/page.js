@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import EmptyState from "../../components/EmptyState";
 import AdvancedSearchModal from "../../components/AdvancedSearchModal";
@@ -24,6 +24,7 @@ import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
 import { formatBytes, formatDate, formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
+import { finishPageLoad } from "../../lib/pageLoading";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
@@ -44,6 +45,7 @@ export default function DashboardPage() {
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -51,6 +53,9 @@ export default function DashboardPage() {
       router.replace("/login");
       return;
     }
+
+    const startedAt = Date.now();
+    const isBoot = bootRef.current;
 
     try {
       const [me, folderRows, fileResult] = await Promise.all([
@@ -68,6 +73,10 @@ export default function DashboardPage() {
         router.replace("/login");
       }
     } finally {
+      if (isBoot) {
+        await finishPageLoad(startedAt);
+        bootRef.current = false;
+      }
       setLoading(false);
     }
   }, [router]);

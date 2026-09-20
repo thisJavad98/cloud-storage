@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
@@ -19,6 +19,7 @@ import PageLoader from "../../components/PageLoader";
 import Reveal from "../../components/Reveal";
 import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
+import { finishPageLoad } from "../../lib/pageLoading";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import {
   notifyError,
@@ -48,6 +49,7 @@ export default function FoldersManagePage() {
   const [editName, setEditName] = useState("");
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -55,6 +57,9 @@ export default function FoldersManagePage() {
       router.replace("/login");
       return;
     }
+
+    const startedAt = Date.now();
+    const isBoot = bootRef.current;
 
     try {
       const [me, folderRows] = await Promise.all([getMe(), listFolders()]);
@@ -65,6 +70,10 @@ export default function FoldersManagePage() {
       notifyError(formatFileError(err));
       if (err?.status === 401) router.replace("/login");
     } finally {
+      if (isBoot) {
+        await finishPageLoad(startedAt);
+        bootRef.current = false;
+      }
       setLoading(false);
     }
   }, [router]);

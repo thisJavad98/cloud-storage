@@ -13,6 +13,7 @@ import PageLoader from "../../components/PageLoader";
 import UserAvatar from "../../components/UserAvatar";
 import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
+import { finishPageLoad } from "../../lib/pageLoading";
 import {
   clearSession,
   getAccessToken,
@@ -45,6 +46,7 @@ export default function ProfilePage() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
     const token = getAccessToken();
@@ -52,6 +54,9 @@ export default function ProfilePage() {
       router.replace("/login");
       return;
     }
+
+    const startedAt = Date.now();
+    const isBoot = bootRef.current;
 
     try {
       const me = await getMe();
@@ -63,6 +68,10 @@ export default function ProfilePage() {
       notifyError(formatAuthError(err));
       if (err?.status === 401) router.replace("/login");
     } finally {
+      if (isBoot) {
+        await finishPageLoad(startedAt);
+        bootRef.current = false;
+      }
       setLoading(false);
     }
   }, [router]);
