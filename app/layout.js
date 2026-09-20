@@ -1,6 +1,6 @@
 import { Vazirmatn } from "next/font/google";
 import AppToaster from "../components/AppToaster";
-import { APP_NAME, APP_TAGLINE } from "../lib/brand";
+import { APP_NAME, APP_TAGLINE, APP_TITLE } from "../lib/brand";
 import "./globals.css";
 
 const vazirmatn = Vazirmatn({
@@ -11,7 +11,7 @@ const vazirmatn = Vazirmatn({
 
 export const metadata = {
   title: {
-    default: APP_NAME,
+    default: APP_TITLE,
     template: `%s | ${APP_NAME}`,
   },
   description: APP_TAGLINE,
