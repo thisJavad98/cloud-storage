@@ -83,7 +83,7 @@ export default function LoginPage() {
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
                   placeholder="رمز عبور خود را وارد کنید"
-                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 pe-12 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
+                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] py-3.5 ps-12 pe-4 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
                 />
                 <button
                   type="button"
