@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LoginIllustration } from "../../components/LoginIllustration";
 import AppBrand from "../../components/AppBrand";
+import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow, IconEye } from "../../components/Icons";
-import { APP_NAME } from "../../lib/brand";
+import { useI18n } from "../../lib/i18n/I18nProvider";
 import { notifyError, notifySuccess } from "../../lib/toast";
 import { formatAuthError, login } from "../../services/auth";
 
 export default function LoginPage() {
   const router = useRouter();
+  const { t, brandName } = useI18n();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -23,7 +24,7 @@ export default function LoginPage() {
 
     try {
       await login({ email, password });
-      notifySuccess("ورود با موفقیت انجام شد");
+      notifySuccess(t("auth.loginSuccess"));
       router.push("/dashboard");
     } catch (err) {
       notifyError(formatAuthError(err));
@@ -45,12 +46,12 @@ export default function LoginPage() {
           </div>
           <div className="mb-7 flex items-center gap-3">
             <h1 className="text-2xl font-extrabold leading-none text-cs-ink">
-              ورود به {APP_NAME}
+              {t("auth.loginTo", { name: brandName })}
             </h1>
             <Link
               href="/"
               className="icon-label inline-flex size-9 shrink-0 items-center justify-center rounded-full text-cs-blue"
-              aria-label="بازگشت"
+              aria-label={t("common.back")}
             >
               <IconArrow className="size-5" />
             </Link>
@@ -59,7 +60,7 @@ export default function LoginPage() {
           <form onSubmit={handleSubmit} className="space-y-5">
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-cs-ink">
-                ایمیل
+                {t("auth.email")}
               </span>
               <input
                 type="email"
@@ -68,14 +69,14 @@ export default function LoginPage() {
                 dir="ltr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ایمیل خود را وارد کنید"
-                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
+                placeholder={t("auth.emailPlaceholder")}
+                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
               />
             </label>
 
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-cs-ink">
-                رمز عبور
+                {t("auth.password")}
               </span>
               <div className="relative">
                 <input
@@ -85,14 +86,16 @@ export default function LoginPage() {
                   dir="ltr"
                   value={password}
                   onChange={(e) => setPassword(e.target.value)}
-                  placeholder="رمز عبور خود را وارد کنید"
-                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] py-3.5 ps-12 pe-4 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
+                  placeholder={t("auth.passwordPlaceholder")}
+                  className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] py-3.5 ps-12 pe-4 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute inset-y-0 left-0 flex w-12 items-center justify-center text-cs-muted"
-                  aria-label={showPassword ? "مخفی کردن رمز" : "نمایش رمز"}
+                  className="absolute inset-y-0 start-0 flex w-12 items-center justify-center text-cs-muted"
+                  aria-label={
+                    showPassword ? t("auth.hidePassword") : t("auth.showPassword")
+                  }
                 >
                   <IconEye open={showPassword} />
                 </button>
@@ -105,12 +108,12 @@ export default function LoginPage() {
                 disabled={loading}
                 className="inline-flex h-14 flex-1 items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white transition hover:bg-cs-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
               >
-                {loading ? "در حال ورود..." : "ورود"}
+                {loading ? t("auth.submittingLogin") : t("auth.login")}
               </button>
               <button
                 type="button"
                 className="inline-flex size-14 shrink-0 items-center justify-center rounded-2xl bg-cs-surface text-cs-blue ring-1 ring-cs-line"
-                aria-label="ورود با گوگل"
+                aria-label={t("auth.googleLogin")}
               >
                 <svg viewBox="0 0 24 24" className="size-6" aria-hidden="true">
                   <path
@@ -123,9 +126,9 @@ export default function LoginPage() {
           </form>
 
           <p className="mt-6 text-center text-sm leading-7 text-cs-muted">
-            حساب ندارید؟{" "}
+            {t("auth.noAccount")}{" "}
             <Link href="/signup" className="font-bold text-cs-blue">
-              ثبت‌نام
+              {t("auth.signup")}
             </Link>
           </p>
         </section>

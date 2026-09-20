@@ -16,6 +16,8 @@ import {
 } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
 import Reveal from "../../components/Reveal";
+import { formatDigits } from "../../lib/format";
+import { useI18n } from "../../lib/i18n/I18nProvider";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import {
   notifyError,
@@ -31,12 +33,9 @@ import {
   updateFolder,
 } from "../../services/files";
 
-function toPersianDigits(value) {
-  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
-}
-
 export default function FoldersManagePage() {
   const router = useRouter();
+  const { t, locale } = useI18n();
   const [user, setUser] = useState(null);
   const [folders, setFolders] = useState([]);
   const [query, setQuery] = useState("");
@@ -88,7 +87,7 @@ export default function FoldersManagePage() {
   async function handleCreate(event) {
     event.preventDefault();
     if (!createName.trim()) {
-      notifyWarning("نام پوشه را وارد کنید");
+      notifyWarning(t("folders.namePlaceholder"));
       return;
     }
 
@@ -97,7 +96,7 @@ export default function FoldersManagePage() {
       await createFolder({ name: createName.trim() });
       setCreateName("");
       setShowCreate(false);
-      notifySuccess("پوشه با موفقیت ساخته شد");
+      notifySuccess(t("folders.created"));
       await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
@@ -110,7 +109,7 @@ export default function FoldersManagePage() {
     event.preventDefault();
     if (!editId) return;
     if (!editName.trim()) {
-      notifyWarning("نام جدید پوشه را وارد کنید");
+      notifyWarning(t("folders.namePlaceholder"));
       return;
     }
 
@@ -119,7 +118,7 @@ export default function FoldersManagePage() {
       await updateFolder(editId, { name: editName.trim() });
       setEditId("");
       setEditName("");
-      notifySuccess("نام پوشه تغییر کرد");
+      notifySuccess(t("folders.renamed"));
       await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
@@ -131,9 +130,9 @@ export default function FoldersManagePage() {
   function askDelete(folder) {
     setConfirmAction({
       folder,
-      title: "حذف پوشه",
-      message: `پوشه «${folder.name}» و فایل‌های داخل آن حذف شوند؟`,
-      confirmLabel: "بله، حذف کن",
+      title: t("folders.deleteTitle"),
+      message: t("folders.deleteMessage"),
+      confirmLabel: t("folders.deleteConfirm"),
     });
   }
 
@@ -143,7 +142,7 @@ export default function FoldersManagePage() {
     setBusyId(confirmAction.folder.id);
     try {
       await deleteFolder(confirmAction.folder.id);
-      notifySuccess("پوشه حذف شد");
+      notifySuccess(t("folders.deleted"));
       setConfirmAction(null);
       if (editId === confirmAction.folder.id) {
         setEditId("");
@@ -170,14 +169,14 @@ export default function FoldersManagePage() {
           <div className="min-w-0 flex-1 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
-              مدیریت پوشه‌ها
+              {t("folders.title")}
             </h1>
           </div>
           <button
             type="button"
             onClick={() => setShowCreate((v) => !v)}
             className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm"
-            aria-label="پوشه جدید"
+            aria-label={t("folders.newFolder")}
           >
             <IconPlus className="size-5" />
           </button>
@@ -185,14 +184,14 @@ export default function FoldersManagePage() {
 
         <div className="px-5 pt-5">
           <label className="relative block">
-            <span className="sr-only">جستجو</span>
+            <span className="sr-only">{t("common.search")}</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
               <IconSearch className="size-5" />
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="جستجوی پوشه..."
+              placeholder={t("folders.searchPlaceholder")}
               className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
             />
           </label>
@@ -205,13 +204,13 @@ export default function FoldersManagePage() {
               className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
             >
               <h2 className="mb-3 text-sm font-extrabold text-cs-ink">
-                ساخت پوشه جدید
+                {t("folders.createTitle")}
               </h2>
               <div className="flex items-center gap-2">
                 <input
                   value={createName}
                   onChange={(e) => setCreateName(e.target.value)}
-                  placeholder="نام پوشه"
+                  placeholder={t("folders.namePlaceholder")}
                   autoFocus
                   className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
                 />
@@ -220,7 +219,7 @@ export default function FoldersManagePage() {
                   disabled={busyId === "create"}
                   className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white disabled:opacity-70"
                 >
-                  ساخت
+                  {busyId === "create" ? t("folders.creating") : t("folders.create")}
                 </button>
               </div>
             </form>
@@ -230,10 +229,10 @@ export default function FoldersManagePage() {
         <section className="px-5 pt-6">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
-              همه پوشه‌ها
+              {t("folders.allFolders")}
             </h2>
             <span className="text-xs leading-5 text-cs-muted">
-              {toPersianDigits(filteredFolders.length)} مورد
+              {formatDigits(filteredFolders.length, locale)} {t("common.items")}
             </span>
           </div>
 
@@ -249,7 +248,7 @@ export default function FoldersManagePage() {
                   <Link
                     href={`/folders/${folder.id}`}
                     className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]"
-                    aria-label={`باز کردن ${folder.name}`}
+                    aria-label={t("folders.open", { name: folder.name })}
                   >
                     <IconFolder className="size-7 text-cs-folder" />
                   </Link>
@@ -262,7 +261,8 @@ export default function FoldersManagePage() {
                       {folder.name}
                     </h3>
                     <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                      {toPersianDigits(folder.fileCount ?? 0)} فایل
+                      {formatDigits(folder.fileCount ?? 0, locale)}{" "}
+                      {t("common.file")}
                     </p>
                   </Link>
 
@@ -275,7 +275,7 @@ export default function FoldersManagePage() {
                         setShowCreate(false);
                       }}
                       className="inline-flex size-9 items-center justify-center rounded-xl bg-[#f1f3f8] text-cs-ink"
-                      aria-label="ویرایش"
+                      aria-label={t("folders.rename")}
                     >
                       <IconEdit className="size-4" />
                     </button>
@@ -284,7 +284,7 @@ export default function FoldersManagePage() {
                       disabled={busyId === folder.id}
                       onClick={() => askDelete(folder)}
                       className="inline-flex size-9 items-center justify-center rounded-xl bg-red-50 text-red-500"
-                      aria-label="حذف"
+                      aria-label={t("folders.delete")}
                     >
                       <IconTrash className="size-4" />
                     </button>
@@ -310,14 +310,14 @@ export default function FoldersManagePage() {
                       }}
                       className="h-11 shrink-0 rounded-xl bg-[#f1f3f8] px-3 text-sm font-semibold text-cs-muted"
                     >
-                      لغو
+                      {t("common.cancel")}
                     </button>
                     <button
                       type="submit"
                       disabled={busyId === folder.id}
                       className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white disabled:opacity-70"
                     >
-                      ذخیره
+                      {t("common.save")}
                     </button>
                   </form>
                 ) : null}
@@ -327,8 +327,8 @@ export default function FoldersManagePage() {
             {!filteredFolders.length ? (
               <EmptyState
                 variant="folders"
-                title="هنوز پوشه‌ای نساخته‌اید"
-                description="پوشه‌ها کمک می‌کنند فایل‌هایتان منظم بمانند"
+                title={t("folders.emptyTitle")}
+                description={t("folders.emptyDesc")}
                 action={
                   <button
                     type="button"
@@ -336,7 +336,7 @@ export default function FoldersManagePage() {
                     className="icon-label h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
                   >
                     <IconPlus className="size-5 shrink-0" />
-                    <span>ساخت اولین پوشه</span>
+                    <span>{t("folders.createFirst")}</span>
                   </button>
                 }
               />

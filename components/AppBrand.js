@@ -1,4 +1,6 @@
-import { APP_NAME } from "../lib/brand";
+"use client";
+
+import { useI18n } from "../lib/i18n/I18nProvider";
 
 export default function AppBrand({
   tone = "ink",
@@ -7,6 +9,8 @@ export default function AppBrand({
   stacked = false,
   className = "",
 }) {
+  const { brandName } = useI18n();
+
   const textClass =
     tone === "white"
       ? "text-white"
@@ -30,7 +34,7 @@ export default function AppBrand({
         // eslint-disable-next-line @next/next/no-img-element
         <img
           src="/icon.png"
-          alt={APP_NAME}
+          alt={brandName}
           width={size === "lg" ? 44 : size === "sm" ? 32 : 36}
           height={size === "lg" ? 44 : size === "sm" ? 32 : 36}
           className={`${logoClass} object-contain ${stacked ? "mx-auto" : ""}`}
@@ -41,7 +45,7 @@ export default function AppBrand({
           stacked ? "text-center leading-none" : ""
         }`}
       >
-        {APP_NAME}
+        {brandName}
       </span>
     </div>
   );

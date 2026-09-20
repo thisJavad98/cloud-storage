@@ -19,6 +19,8 @@ import {
 } from "../../../components/Icons";
 import PageLoader from "../../../components/PageLoader";
 import Reveal from "../../../components/Reveal";
+import { formatBytes, formatDate, formatDigits } from "../../../lib/format";
+import { useI18n } from "../../../lib/i18n/I18nProvider";
 import { getAccessToken, getStoredUser, saveSession } from "../../../lib/session";
 import { openUploadModal } from "../../../lib/upload";
 import {
@@ -42,37 +44,6 @@ import {
   updateFolder,
 } from "../../../services/files";
 
-function formatBytes(bytes) {
-  if (!Number.isFinite(bytes) || bytes <= 0) return "۰ بایت";
-  const units = ["بایت", "کیلوبایت", "مگابایت", "گیگابایت", "ترابایت"];
-  let value = bytes;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded = value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
-  return `${toPersianDigits(rounded)}\u00A0${units[unit]}`;
-}
-
-function toPersianDigits(value) {
-  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
-}
-
-function formatDate(value) {
-  if (!value) return "";
-  try {
-    return new Intl.DateTimeFormat("fa-IR", {
-      day: "numeric",
-      month: "long",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(value));
-  } catch {
-    return value;
-  }
-}
-
 function fileTone(mimeType = "", index = 0) {
   if (mimeType.startsWith("image/")) return "orange";
   if (mimeType.includes("pdf") || mimeType.startsWith("text/")) return "blue";
@@ -83,6 +54,7 @@ export default function FolderDetailPage() {
   const router = useRouter();
   const params = useParams();
   const folderId = params?.id;
+  const { t, locale } = useI18n();
 
   const [user, setUser] = useState(null);
   const [folder, setFolder] = useState(null);
@@ -150,7 +122,7 @@ export default function FolderDetailPage() {
   async function handleCreateSubfolder(event) {
     event.preventDefault();
     if (!folderName.trim()) {
-      notifyWarning("نام پوشه را وارد کنید");
+      notifyWarning(t("folders.namePlaceholder"));
       return;
     }
     setBusyId("folder");
@@ -158,7 +130,7 @@ export default function FolderDetailPage() {
       await createFolder({ name: folderName.trim(), parentId: folderId });
       setFolderName("");
       setShowFolderForm(false);
-      notifySuccess("زیرپوشه ساخته شد");
+      notifySuccess(t("folderDetail.subfolderCreated"));
       await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
@@ -170,14 +142,14 @@ export default function FolderDetailPage() {
   async function handleRenameFolder(event) {
     event.preventDefault();
     if (!folderRenameValue.trim()) {
-      notifyWarning("نام پوشه را وارد کنید");
+      notifyWarning(t("folders.namePlaceholder"));
       return;
     }
     setBusyId("rename-folder");
     try {
       await updateFolder(folderId, { name: folderRenameValue.trim() });
       setRenameFolderOpen(false);
-      notifySuccess("نام پوشه تغییر کرد");
+      notifySuccess(t("folders.renamed"));
       await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
@@ -188,7 +160,7 @@ export default function FolderDetailPage() {
 
   async function handleRenameFile(file) {
     if (!renameValue.trim()) {
-      notifyWarning("نام جدید فایل را وارد کنید");
+      notifyWarning(t("folders.namePlaceholder"));
       return;
     }
     setBusyId(file.id);
@@ -196,7 +168,7 @@ export default function FolderDetailPage() {
       await updateFile(file.id, { name: renameValue.trim() });
       setRenameId("");
       setMenuId("");
-      notifySuccess("نام فایل تغییر کرد");
+      notifySuccess(t("files.renamed"));
       await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
@@ -210,7 +182,7 @@ export default function FolderDetailPage() {
     try {
       await downloadFile(file.id, file.name);
       setMenuId("");
-      notifySuccess("دانلود آغاز شد");
+      notifySuccess(t("files.downloadStarted"));
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -222,9 +194,9 @@ export default function FolderDetailPage() {
     setConfirmAction({
       type: "trash-file",
       file,
-      title: "انتقال به سطل زباله",
-      message: `فایل «${file.name}» به سطل زباله منتقل شود؟`,
-      confirmLabel: "بله، منتقل کن",
+      title: t("files.trashTitle"),
+      message: t("files.trashMessage"),
+      confirmLabel: t("files.trashConfirm"),
       tone: "warning",
     });
   }
@@ -233,9 +205,9 @@ export default function FolderDetailPage() {
     setConfirmAction({
       type: "delete-file",
       file,
-      title: "حذف دائمی فایل",
-      message: `فایل «${file.name}» برای همیشه حذف شود؟`,
-      confirmLabel: "بله، حذف کن",
+      title: t("files.deleteTitle"),
+      message: t("files.deleteMessage"),
+      confirmLabel: t("files.deleteConfirm"),
       tone: "danger",
     });
   }
@@ -243,9 +215,9 @@ export default function FolderDetailPage() {
   function askDeleteFolder() {
     setConfirmAction({
       type: "delete-folder",
-      title: "حذف پوشه",
-      message: `پوشه «${folder?.name}» و فایل‌های داخل آن به سطل زباله منتقل شوند؟`,
-      confirmLabel: "بله، حذف کن",
+      title: t("folders.deleteTitle"),
+      message: t("folders.deleteMessage"),
+      confirmLabel: t("folders.deleteConfirm"),
       tone: "danger",
     });
   }
@@ -258,14 +230,14 @@ export default function FolderDetailPage() {
       if (confirmAction.type === "trash-file") {
         setBusyId(confirmAction.file.id);
         await trashFile(confirmAction.file.id);
-        notifyInfo("فایل به سطل زباله منتقل شد");
+        notifyInfo(t("files.trashed"));
       } else if (confirmAction.type === "delete-file") {
         setBusyId(confirmAction.file.id);
         await deleteFile(confirmAction.file.id);
-        notifySuccess("فایل برای همیشه حذف شد");
+        notifySuccess(t("files.deleted"));
       } else if (confirmAction.type === "delete-folder") {
         await deleteFolder(folderId);
-        notifySuccess("پوشه حذف شد");
+        notifySuccess(t("folders.deleted"));
         setConfirmAction(null);
         router.replace("/files");
         return;
@@ -292,7 +264,7 @@ export default function FolderDetailPage() {
           <Link
             href="/folders"
             className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label="بازگشت"
+            aria-label={t("common.back")}
           >
             <IconArrow className="size-5" />
           </Link>
@@ -302,7 +274,8 @@ export default function FolderDetailPage() {
               {folder.name}
             </h1>
             <p className="text-[11px] leading-5 text-cs-muted">
-              {toPersianDigits(folder.fileCount ?? files.length)} فایل
+              {formatDigits(folder.fileCount ?? files.length, locale)}{" "}
+              {t("common.file")}
             </p>
           </div>
           <div className="size-10" aria-hidden="true" />
@@ -319,7 +292,7 @@ export default function FolderDetailPage() {
                   {folder.name}
                 </p>
                 <p className="mt-0.5 text-xs leading-5 text-cs-muted">
-                  آپلود فایل‌ها داخل این پوشه
+                  {t("folderDetail.uploadHere")}
                 </p>
               </div>
             </div>
@@ -333,7 +306,7 @@ export default function FolderDetailPage() {
                 className="icon-label justify-center rounded-xl bg-[#f1f3f8] px-3 py-2.5 text-xs font-semibold text-cs-ink"
               >
                 <IconEdit className="size-4 shrink-0" />
-                <span>تغییر نام</span>
+                <span>{t("folders.rename")}</span>
               </button>
               <button
                 type="button"
@@ -341,7 +314,7 @@ export default function FolderDetailPage() {
                 className="icon-label justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600"
               >
                 <IconTrash className="size-4 shrink-0" />
-                <span>حذف پوشه</span>
+                <span>{t("folders.delete")}</span>
               </button>
             </div>
 
@@ -357,7 +330,7 @@ export default function FolderDetailPage() {
                   disabled={busyId === "rename-folder"}
                   className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
                 >
-                  ذخیره
+                  {t("common.save")}
                 </button>
               </form>
             ) : null}
@@ -366,14 +339,14 @@ export default function FolderDetailPage() {
 
         <div className="px-5 pt-4">
           <label className="relative block">
-            <span className="sr-only">جستجو</span>
+            <span className="sr-only">{t("common.search")}</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
               <IconSearch className="size-5" />
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="جستجو در این پوشه..."
+              placeholder={t("folderDetail.searchPlaceholder")}
               className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
             />
           </label>
@@ -382,7 +355,7 @@ export default function FolderDetailPage() {
         <section className="px-5 pt-6">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
-              زیرپوشه‌ها
+              {t("folderDetail.subfolders")}
             </h2>
             <button
               type="button"
@@ -390,7 +363,7 @@ export default function FolderDetailPage() {
               className="icon-label text-xs font-semibold text-cs-blue"
             >
               <IconPlus className="size-4 shrink-0" />
-              <span>زیرپوشه</span>
+              <span>{t("folderDetail.subfolder")}</span>
             </button>
           </div>
 
@@ -402,7 +375,7 @@ export default function FolderDetailPage() {
               <input
                 value={folderName}
                 onChange={(e) => setFolderName(e.target.value)}
-                placeholder="نام زیرپوشه"
+                placeholder={t("folderDetail.subfolderName")}
                 className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
               />
               <button
@@ -410,7 +383,7 @@ export default function FolderDetailPage() {
                 disabled={busyId === "folder"}
                 className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
               >
-                ساخت
+                {t("folderDetail.create")}
               </button>
             </form>
           ) : null}
@@ -431,7 +404,7 @@ export default function FolderDetailPage() {
                   {item.name}
                 </h3>
                 <p className="mt-1 text-xs leading-5 text-cs-muted">
-                  {toPersianDigits(item.fileCount ?? 0)} فایل
+                  {formatDigits(item.fileCount ?? 0, locale)} {t("common.file")}
                 </p>
               </Reveal>
             ))}
@@ -440,8 +413,8 @@ export default function FolderDetailPage() {
                 <EmptyState
                   variant="folders"
                   compact
-                  title="زیرپوشه‌ای وجود ندارد"
-                  description="با دکمه زیرپوشه می‌توانید یکی بسازید"
+                  title={t("folderDetail.emptySubfoldersTitle")}
+                  description={t("folderDetail.emptySubfoldersDesc")}
                 />
               </div>
             ) : null}
@@ -451,10 +424,10 @@ export default function FolderDetailPage() {
         <section className="px-5 pt-7">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
-              فایل‌های پوشه
+              {t("folderDetail.filesInFolder")}
             </h2>
             <span className="text-xs leading-5 text-cs-muted">
-              {toPersianDigits(filteredFiles.length)} مورد
+              {formatDigits(filteredFiles.length, locale)} {t("common.items")}
             </span>
           </div>
 
@@ -475,9 +448,9 @@ export default function FolderDetailPage() {
                       {file.name}
                     </h3>
                     <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                      {formatDate(file.updatedAt || file.createdAt)}
+                      {formatDate(file.updatedAt || file.createdAt, locale)}
                       <span className="mx-2 text-cs-line">|</span>
-                      {formatBytes(file.sizeBytes)}
+                      {formatBytes(file.sizeBytes, t, locale)}
                     </p>
                   </div>
                   <button
@@ -486,7 +459,7 @@ export default function FolderDetailPage() {
                       setMenuId((current) => (current === file.id ? "" : file.id))
                     }
                     className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-cs-muted"
-                    aria-label="گزینه‌ها"
+                    aria-label={t("common.options")}
                   >
                     ⋮
                   </button>
@@ -501,7 +474,7 @@ export default function FolderDetailPage() {
                       className="icon-label justify-center rounded-xl bg-cs-blue-soft px-3 py-2.5 text-xs font-semibold text-cs-blue"
                     >
                       <IconDownload className="size-4 shrink-0" />
-                      <span>دانلود</span>
+                      <span>{t("files.download")}</span>
                     </button>
                     <button
                       type="button"
@@ -512,7 +485,7 @@ export default function FolderDetailPage() {
                       className="icon-label justify-center rounded-xl bg-[#f1f3f8] px-3 py-2.5 text-xs font-semibold text-cs-ink"
                     >
                       <IconEdit className="size-4 shrink-0" />
-                      <span>تغییر نام</span>
+                      <span>{t("files.rename")}</span>
                     </button>
                     <button
                       type="button"
@@ -521,7 +494,7 @@ export default function FolderDetailPage() {
                       className="icon-label justify-center rounded-xl bg-[#fff4d4] px-3 py-2.5 text-xs font-semibold text-[#9a6b00]"
                     >
                       <IconTrash className="size-4 shrink-0" />
-                      <span>سطل زباله</span>
+                      <span>{t("files.trash")}</span>
                     </button>
                     <button
                       type="button"
@@ -530,7 +503,7 @@ export default function FolderDetailPage() {
                       className="icon-label justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600"
                     >
                       <IconTrash className="size-4 shrink-0" />
-                      <span>حذف دائم</span>
+                      <span>{t("files.deleteForever")}</span>
                     </button>
                   </div>
                 ) : null}
@@ -553,7 +526,7 @@ export default function FolderDetailPage() {
                       disabled={busyId === file.id}
                       className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
                     >
-                      ذخیره
+                      {t("common.save")}
                     </button>
                   </form>
                 ) : null}
@@ -563,8 +536,8 @@ export default function FolderDetailPage() {
             {!filteredFiles.length ? (
               <EmptyState
                 variant="files"
-                title="این پوشه خالی است"
-                description="از دکمه آپلود پایین صفحه فایل اضافه کنید"
+                title={t("folderDetail.emptyFilesTitle")}
+                description={t("folderDetail.emptyFilesDesc")}
                 action={
                   <button
                     type="button"
@@ -572,7 +545,7 @@ export default function FolderDetailPage() {
                     className="icon-label h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
                   >
                     <IconPlus className="size-5 shrink-0" />
-                    <span>آپلود در پوشه</span>
+                    <span>{t("folderDetail.uploadHere")}</span>
                   </button>
                 }
               />

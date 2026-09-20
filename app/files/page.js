@@ -19,6 +19,8 @@ import {
 } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
 import Reveal from "../../components/Reveal";
+import { formatBytes, formatDate, formatDigits } from "../../lib/format";
+import { useI18n } from "../../lib/i18n/I18nProvider";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { openUploadModal } from "../../lib/upload";
 import {
@@ -38,37 +40,6 @@ import {
   updateFile,
 } from "../../services/files";
 
-function formatBytes(bytes) {
-  if (!Number.isFinite(bytes) || bytes <= 0) return "۰ بایت";
-  const units = ["بایت", "کیلوبایت", "مگابایت", "گیگابایت", "ترابایت"];
-  let value = bytes;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded = value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
-  return `${toPersianDigits(rounded)}\u00A0${units[unit]}`;
-}
-
-function toPersianDigits(value) {
-  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
-}
-
-function formatDate(value) {
-  if (!value) return "";
-  try {
-    return new Intl.DateTimeFormat("fa-IR", {
-      day: "numeric",
-      month: "long",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(value));
-  } catch {
-    return value;
-  }
-}
-
 function fileTone(mimeType = "", index = 0) {
   if (mimeType.startsWith("image/")) return "orange";
   if (mimeType.includes("pdf") || mimeType.startsWith("text/")) return "blue";
@@ -77,6 +48,7 @@ function fileTone(mimeType = "", index = 0) {
 
 export default function FilesPage() {
   const router = useRouter();
+  const { t, locale } = useI18n();
   const [user, setUser] = useState(null);
   const [query, setQuery] = useState("");
   const [folders, setFolders] = useState([]);
@@ -134,7 +106,7 @@ export default function FilesPage() {
 
   async function handleRename(file) {
     if (!renameValue.trim()) {
-      notifyWarning("نام جدید فایل را وارد کنید");
+      notifyWarning(t("folders.namePlaceholder"));
       return;
     }
     setBusyId(file.id);
@@ -142,7 +114,7 @@ export default function FilesPage() {
       await updateFile(file.id, { name: renameValue.trim() });
       setRenameId("");
       setMenuId("");
-      notifySuccess("نام فایل تغییر کرد");
+      notifySuccess(t("files.renamed"));
       await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
@@ -155,9 +127,9 @@ export default function FilesPage() {
     setConfirmAction({
       type: "trash",
       file,
-      title: "انتقال به سطل زباله",
-      message: `فایل «${file.name}» به سطل زباله منتقل شود؟`,
-      confirmLabel: "بله، منتقل کن",
+      title: t("files.trashTitle"),
+      message: t("files.trashMessage"),
+      confirmLabel: t("files.trashConfirm"),
       tone: "warning",
     });
   }
@@ -166,9 +138,9 @@ export default function FilesPage() {
     setConfirmAction({
       type: "delete",
       file,
-      title: "حذف دائمی",
-      message: `فایل «${file.name}» برای همیشه حذف شود؟ این کار قابل بازگشت نیست.`,
-      confirmLabel: "بله، حذف کن",
+      title: t("files.deleteTitle"),
+      message: t("files.deleteMessage"),
+      confirmLabel: t("files.deleteConfirm"),
       tone: "danger",
     });
   }
@@ -183,10 +155,10 @@ export default function FilesPage() {
     try {
       if (type === "trash") {
         await trashFile(file.id);
-        notifyInfo("فایل به سطل زباله منتقل شد");
+        notifyInfo(t("files.trashed"));
       } else if (type === "delete") {
         await deleteFile(file.id);
-        notifySuccess("فایل برای همیشه حذف شد");
+        notifySuccess(t("files.deleted"));
       }
       setMenuId("");
       setConfirmAction(null);
@@ -204,7 +176,7 @@ export default function FilesPage() {
     try {
       await downloadFile(file.id, file.name);
       setMenuId("");
-      notifySuccess("دانلود آغاز شد");
+      notifySuccess(t("files.downloadStarted"));
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -223,14 +195,14 @@ export default function FilesPage() {
           <Link
             href="/dashboard"
             className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label="بازگشت"
+            aria-label={t("common.back")}
           >
             <IconArrow className="size-5" />
           </Link>
           <div className="min-w-0 flex-1 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
-              مدیریت فایل‌ها
+              {t("files.title")}
             </h1>
           </div>
           <div className="size-10" aria-hidden="true" />
@@ -238,14 +210,14 @@ export default function FilesPage() {
 
         <div className="px-5 pt-5">
           <label className="relative block">
-            <span className="sr-only">جستجو</span>
+            <span className="sr-only">{t("common.search")}</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
               <IconSearch className="size-5" />
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="جستجوی فایل..."
+              placeholder={t("files.searchPlaceholder")}
               className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
             />
           </label>
@@ -254,14 +226,14 @@ export default function FilesPage() {
         <section className="px-5 pt-6">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
-              پوشه‌ها
+              {t("files.foldersSection")}
             </h2>
             <Link
               href="/folders"
               className="icon-label text-xs font-semibold text-cs-blue"
             >
               <IconPlus className="size-4 shrink-0" />
-              <span>مدیریت پوشه‌ها</span>
+              <span>{t("files.manageFolders")}</span>
             </Link>
           </div>
 
@@ -281,7 +253,7 @@ export default function FilesPage() {
                   {folder.name}
                 </h3>
                 <p className="mt-1 text-xs leading-5 text-cs-muted">
-                  {toPersianDigits(folder.fileCount ?? 0)} فایل
+                  {formatDigits(folder.fileCount ?? 0, locale)} {t("common.file")}
                 </p>
               </Reveal>
             ))}
@@ -290,8 +262,8 @@ export default function FilesPage() {
                 <EmptyState
                   variant="folders"
                   compact
-                  title="پوشه‌ای وجود ندارد"
-                  description="از «مدیریت پوشه‌ها» یک پوشه بسازید"
+                  title={t("files.emptyFoldersTitle")}
+                  description={t("files.emptyFoldersDesc")}
                 />
               </div>
             ) : null}
@@ -301,10 +273,10 @@ export default function FilesPage() {
         <section className="px-5 pt-7">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
-              فایل‌های ریشه
+              {t("files.rootFiles")}
             </h2>
             <span className="shrink-0 text-xs leading-5 text-cs-muted">
-              {toPersianDigits(filteredFiles.length)} مورد
+              {formatDigits(filteredFiles.length, locale)} {t("common.items")}
             </span>
           </div>
 
@@ -325,9 +297,9 @@ export default function FilesPage() {
                       {file.name}
                     </h3>
                     <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                      {formatDate(file.updatedAt || file.createdAt)}
+                      {formatDate(file.updatedAt || file.createdAt, locale)}
                       <span className="mx-2 text-cs-line">|</span>
-                      {formatBytes(file.sizeBytes)}
+                      {formatBytes(file.sizeBytes, t, locale)}
                     </p>
                   </div>
                   <button
@@ -336,7 +308,7 @@ export default function FilesPage() {
                       setMenuId((current) => (current === file.id ? "" : file.id))
                     }
                     className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-cs-muted"
-                    aria-label="گزینه‌ها"
+                    aria-label={t("common.options")}
                   >
                     ⋮
                   </button>
@@ -351,7 +323,7 @@ export default function FilesPage() {
                       className="icon-label justify-center rounded-xl bg-cs-blue-soft px-3 py-2.5 text-xs font-semibold text-cs-blue"
                     >
                       <IconDownload className="size-4 shrink-0" />
-                      <span>دانلود</span>
+                      <span>{t("files.download")}</span>
                     </button>
                     <button
                       type="button"
@@ -362,7 +334,7 @@ export default function FilesPage() {
                       className="icon-label justify-center rounded-xl bg-[#f1f3f8] px-3 py-2.5 text-xs font-semibold text-cs-ink"
                     >
                       <IconEdit className="size-4 shrink-0" />
-                      <span>تغییر نام</span>
+                      <span>{t("files.rename")}</span>
                     </button>
                     <button
                       type="button"
@@ -371,7 +343,7 @@ export default function FilesPage() {
                       className="icon-label justify-center rounded-xl bg-[#fff4d4] px-3 py-2.5 text-xs font-semibold text-[#9a6b00]"
                     >
                       <IconTrash className="size-4 shrink-0" />
-                      <span>سطل زباله</span>
+                      <span>{t("files.trash")}</span>
                     </button>
                     <button
                       type="button"
@@ -380,7 +352,7 @@ export default function FilesPage() {
                       className="icon-label justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600"
                     >
                       <IconTrash className="size-4 shrink-0" />
-                      <span>حذف دائم</span>
+                      <span>{t("files.deleteForever")}</span>
                     </button>
                   </div>
                 ) : null}
@@ -403,7 +375,7 @@ export default function FilesPage() {
                       disabled={busyId === file.id}
                       className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
                     >
-                      ذخیره
+                      {t("common.save")}
                     </button>
                   </form>
                 ) : null}
@@ -413,8 +385,8 @@ export default function FilesPage() {
             {!filteredFiles.length ? (
               <EmptyState
                 variant="files"
-                title="هنوز فایلی آپلود نکرده‌اید"
-                description="اولین فایل خود را اضافه کنید تا اینجا نمایش داده شود"
+                title={t("files.emptyFilesTitle")}
+                description={t("files.emptyFilesDesc")}
                 action={
                   <button
                     type="button"
@@ -422,7 +394,7 @@ export default function FilesPage() {
                     className="icon-label h-12 rounded-2xl bg-cs-blue px-5 font-bold text-white"
                   >
                     <IconPlus className="size-5 shrink-0" />
-                    <span>آپلود اولین فایل</span>
+                    <span>{t("files.uploadFirst")}</span>
                   </button>
                 }
               />
@@ -430,10 +402,7 @@ export default function FilesPage() {
           </div>
         </section>
 
-        <BottomNav
-          activeId="manage"
-          onUploadSuccess={refresh}
-        />
+        <BottomNav activeId="manage" onUploadSuccess={refresh} />
 
         <ConfirmModal
           open={Boolean(confirmAction)}

@@ -1,7 +1,16 @@
-export function StorageRing({ percent = 70 }) {
+export function StorageRing({
+  percent = 70,
+  usedLabel,
+  locale = "fa",
+}) {
   const radius = 34;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (percent / 100) * circumference;
+  const percentText =
+    locale === "fa"
+      ? String(percent).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d])
+      : String(percent);
+  const percentSuffix = locale === "fa" ? "٪" : "%";
 
   return (
     <div className="relative size-[88px] shrink-0">
@@ -28,11 +37,14 @@ export function StorageRing({ percent = 70 }) {
       </svg>
       <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
         <span className="text-lg font-extrabold leading-none tracking-wide">
-          {String(percent).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d])}٪
+          {percentText}
+          {percentSuffix}
         </span>
-        <span className="mt-1.5 text-[10px] leading-none opacity-80">
-          استفاده‌شده
-        </span>
+        {usedLabel ? (
+          <span className="mt-1.5 text-[10px] leading-none opacity-80">
+            {usedLabel}
+          </span>
+        ) : null}
       </div>
     </div>
   );

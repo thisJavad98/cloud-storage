@@ -4,6 +4,8 @@ import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
 import { EmptyFoldersIllu, LoadingCloudIllu } from "./MotionIllustrations";
 import { IconFolder, IconPlus, IconUpload } from "./Icons";
+import { formatBytes, formatDigits } from "../lib/format";
+import { useI18n } from "../lib/i18n/I18nProvider";
 import { notifyError, notifySuccess, notifyWarning } from "../lib/toast";
 import {
   formatFileError,
@@ -11,29 +13,13 @@ import {
   uploadFile,
 } from "../services/files";
 
-function toPersianDigits(value) {
-  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
-}
-
-function formatBytes(bytes) {
-  if (!Number.isFinite(bytes) || bytes <= 0) return "۰ بایت";
-  const units = ["بایت", "کیلوبایت", "مگابایت", "گیگابایت"];
-  let value = bytes;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded = value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
-  return `${toPersianDigits(rounded)}\u00A0${units[unit]}`;
-}
-
 export default function UploadModal({
   open,
   onClose,
   defaultFolderId = null,
   onSuccess,
 }) {
+  const { t, locale } = useI18n();
   const fileInputRef = useRef(null);
   const uploadingRef = useRef(false);
   const [folders, setFolders] = useState([]);
@@ -90,7 +76,7 @@ export default function UploadModal({
 
   async function handleUpload() {
     if (!selectedFile) {
-      notifyWarning("ابتدا یک فایل انتخاب کنید");
+      notifyWarning(t("upload.pickRequired"));
       return;
     }
 
@@ -98,11 +84,7 @@ export default function UploadModal({
     try {
       const targetFolderId = folderId === "root" ? null : folderId;
       await uploadFile(selectedFile, { folderId: targetFolderId || undefined });
-      notifySuccess(
-        targetFolderId
-          ? "فایل داخل پوشه انتخاب‌شده آپلود شد"
-          : "فایل با موفقیت آپلود شد"
-      );
+      notifySuccess(t("upload.success"));
       onClose?.();
       await onSuccess?.();
     } catch (err) {
@@ -114,8 +96,8 @@ export default function UploadModal({
 
   const selectedFolderName =
     folderId === "root"
-      ? "فایل‌های ریشه"
-      : folders.find((item) => item.id === folderId)?.name || "پوشه";
+      ? t("upload.root")
+      : folders.find((item) => item.id === folderId)?.name || t("common.folder");
 
   return (
     <div
@@ -142,15 +124,15 @@ export default function UploadModal({
                 id="upload-modal-title"
                 className="text-lg font-extrabold leading-8 text-cs-ink"
               >
-                آپلود فایل
+                {t("upload.title")}
               </h2>
               <p className="text-xs leading-5 text-cs-muted">
-                پوشه مقصد را انتخاب کنید، سپس فایل را بفرستید
+                {t("upload.folder")}
               </p>
             </div>
           </div>
 
-          <p className="mb-2 text-sm font-bold text-cs-ink">مقصد آپلود</p>
+          <p className="mb-2 text-sm font-bold text-cs-ink">{t("upload.folder")}</p>
           <div className="max-h-48 space-y-2 overflow-y-auto rounded-2xl bg-[#f7f8fc] p-2">
             <button
               type="button"
@@ -166,10 +148,10 @@ export default function UploadModal({
               </span>
               <span className="min-w-0 flex-1">
                 <span className="block text-sm font-bold text-cs-ink">
-                  فایل‌های ریشه
+                  {t("files.rootFiles")}
                 </span>
                 <span className="block text-[11px] text-cs-muted">
-                  بدون پوشه
+                  {t("upload.root")}
                 </span>
               </span>
               <span
@@ -184,7 +166,9 @@ export default function UploadModal({
             {loadingFolders ? (
               <div className="flex flex-col items-center gap-2 px-3 py-5">
                 <LoadingCloudIllu className="h-auto w-20" />
-                <p className="text-xs text-cs-muted">در حال بارگذاری پوشه‌ها...</p>
+                <p className="text-xs text-cs-muted">
+                  {t("upload.loadingFolders")}
+                </p>
                 <div className="flex gap-1" aria-hidden="true">
                   <span className="loader-dot loader-dot--a" />
                   <span className="loader-dot loader-dot--b" />
@@ -213,7 +197,8 @@ export default function UploadModal({
                       {folder.name}
                     </span>
                     <span className="block text-[11px] text-cs-muted">
-                      {toPersianDigits(folder.fileCount ?? 0)} فایل
+                      {formatDigits(folder.fileCount ?? 0, locale)}{" "}
+                      {t("common.file")}
                     </span>
                   </span>
                   <span
@@ -230,20 +215,22 @@ export default function UploadModal({
               <div className="rounded-xl px-3 py-4 text-center">
                 <EmptyFoldersIllu className="mx-auto h-auto w-24" />
                 <p className="mt-2 text-xs leading-6 text-cs-muted">
-                  هنوز پوشه‌ای ندارید
+                  {t("upload.noFolders")}
                 </p>
                 <Link
                   href="/folders"
                   onClick={onClose}
                   className="mt-2 inline-flex text-xs font-bold text-cs-blue"
                 >
-                  ساخت پوشه جدید
+                  {t("upload.createFolder")}
                 </Link>
               </div>
             ) : null}
           </div>
 
-          <p className="mb-2 mt-4 text-sm font-bold text-cs-ink">فایل</p>
+          <p className="mb-2 mt-4 text-sm font-bold text-cs-ink">
+            {t("upload.file")}
+          </p>
           <input
             ref={fileInputRef}
             type="file"
@@ -269,16 +256,16 @@ export default function UploadModal({
                     {selectedFile.name}
                   </span>
                   <span className="block text-[11px] text-cs-muted">
-                    {formatBytes(selectedFile.size)}
+                    {formatBytes(selectedFile.size, t, locale)}
                   </span>
                 </>
               ) : (
                 <>
                   <span className="block text-sm font-bold text-cs-ink">
-                    انتخاب فایل
+                    {t("upload.pickFile")}
                   </span>
                   <span className="block text-[11px] text-cs-muted">
-                    برای آپلود در «{selectedFolderName}»
+                    {t("upload.uploadTo", { name: selectedFolderName })}
                   </span>
                 </>
               )}
@@ -293,7 +280,7 @@ export default function UploadModal({
             onClick={onClose}
             className="h-12 rounded-2xl bg-[#f1f3f8] text-sm font-bold text-cs-ink disabled:opacity-60"
           >
-            انصراف
+            {t("common.cancel")}
           </button>
           <button
             type="button"
@@ -301,7 +288,7 @@ export default function UploadModal({
             onClick={handleUpload}
             className="h-12 rounded-2xl bg-cs-blue text-sm font-bold text-white transition hover:bg-cs-blue-deep disabled:opacity-60"
           >
-            {uploading ? "در حال آپلود..." : "آپلود"}
+            {uploading ? t("upload.uploading") : t("upload.upload")}
           </button>
         </div>
         {uploading ? (

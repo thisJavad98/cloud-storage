@@ -1,6 +1,7 @@
 import { Vazirmatn } from "next/font/google";
 import AppToaster from "../components/AppToaster";
-import { APP_NAME, APP_TAGLINE, APP_TITLE } from "../lib/brand";
+import Providers from "../components/Providers";
+import { APP_TAGLINE, APP_TITLE } from "../lib/brand";
 import "./globals.css";
 
 const vazirmatn = Vazirmatn({
@@ -12,7 +13,7 @@ const vazirmatn = Vazirmatn({
 export const metadata = {
   title: {
     default: APP_TITLE,
-    template: `%s | ${APP_NAME}`,
+    template: `%s | نیمبوس`,
   },
   description: APP_TAGLINE,
   icons: {
@@ -28,10 +29,13 @@ export default function RootLayout({ children }) {
       lang="fa"
       dir="rtl"
       className={`${vazirmatn.variable} h-full antialiased`}
+      suppressHydrationWarning
     >
       <body className="min-h-full font-sans text-cs-ink">
-        {children}
-        <AppToaster />
+        <Providers>
+          {children}
+          <AppToaster />
+        </Providers>
       </body>
     </html>
   );

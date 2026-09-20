@@ -18,43 +18,12 @@ import PageLoader from "../../components/PageLoader";
 import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
-import { APP_NAME } from "../../lib/brand";
+import { formatBytes, formatDate, formatDigits } from "../../lib/format";
+import { useI18n } from "../../lib/i18n/I18nProvider";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
 import { formatFileError, listFiles, listFolders } from "../../services/files";
-
-function formatBytes(bytes) {
-  if (!Number.isFinite(bytes) || bytes <= 0) return "۰ بایت";
-  const units = ["بایت", "کیلوبایت", "مگابایت", "گیگابایت", "ترابایت"];
-  let value = bytes;
-  let unit = 0;
-  while (value >= 1024 && unit < units.length - 1) {
-    value /= 1024;
-    unit += 1;
-  }
-  const rounded =
-    value >= 10 || unit === 0 ? value.toFixed(0) : value.toFixed(1);
-  return `${toPersianDigits(rounded)}\u00A0${units[unit]}`;
-}
-
-function toPersianDigits(value) {
-  return String(value).replace(/\d/g, (d) => "۰۱۲۳۴۵۶۷۸۹"[d]);
-}
-
-function formatDate(value) {
-  if (!value) return "";
-  try {
-    return new Intl.DateTimeFormat("fa-IR", {
-      day: "numeric",
-      month: "long",
-      hour: "2-digit",
-      minute: "2-digit",
-    }).format(new Date(value));
-  } catch {
-    return value;
-  }
-}
 
 function fileTone(mimeType = "") {
   if (mimeType.startsWith("image/")) return "orange";
@@ -64,6 +33,7 @@ function fileTone(mimeType = "") {
 
 export default function DashboardPage() {
   const router = useRouter();
+  const { t, locale, brandName } = useI18n();
   const [query, setQuery] = useState("");
   const [user, setUser] = useState(null);
   const [folders, setFolders] = useState([]);
@@ -134,7 +104,7 @@ export default function DashboardPage() {
             type="button"
             onClick={() => router.push("/profile")}
             className="inline-flex size-10 items-center justify-center justify-self-start rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label="پروفایل"
+            aria-label={t("dashboard.menu")}
           >
             <IconMenu className="size-5" />
           </button>
@@ -146,7 +116,7 @@ export default function DashboardPage() {
           <Link
             href="/profile"
             className="justify-self-end"
-            aria-label="پروفایل"
+            aria-label={t("dashboard.menu")}
             title={user.fullName || user.email}
           >
             <UserAvatar user={user} />
@@ -155,7 +125,7 @@ export default function DashboardPage() {
 
         <div className="px-5 pt-5">
           <p className="mb-3 text-sm leading-7 text-cs-muted">
-            سلام،{" "}
+            {t("dashboard.hello")}{" "}
             <span className="font-bold text-cs-ink">
               {user.fullName || user.email}
             </span>
@@ -166,14 +136,14 @@ export default function DashboardPage() {
             </p>
           ) : null}
           <label className="relative block">
-            <span className="sr-only">جستجو</span>
+            <span className="sr-only">{t("common.search")}</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
               <IconSearch className="size-5" />
             </span>
             <input
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="جستجو..."
+              placeholder={t("dashboard.searchPlaceholder")}
               className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
             />
           </label>
@@ -184,13 +154,18 @@ export default function DashboardPage() {
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 text-right">
                 <h2 className="text-lg font-extrabold leading-8">
-                  فضای {APP_NAME}
+                  {t("dashboard.storageTitle", { name: brandName })}
                 </h2>
                 <p className="mt-1.5 text-sm leading-6 text-white/75">
-                  {formatBytes(storage.used)} از {formatBytes(storage.quota)}
+                  {formatBytes(storage.used, t, locale)} {t("dashboard.of")}{" "}
+                  {formatBytes(storage.quota, t, locale)}
                 </p>
               </div>
-              <StorageRing percent={storage.percent || 1} />
+              <StorageRing
+                percent={storage.percent || 1}
+                usedLabel={t("dashboard.used")}
+                locale={locale}
+              />
             </div>
 
             <div className="mt-5">
@@ -201,7 +176,8 @@ export default function DashboardPage() {
                 />
               </div>
               <p className="mt-2.5 text-xs leading-5 text-white/80">
-                {formatBytes(storage.remaining)} در دسترس باقی مانده
+                {formatBytes(storage.remaining, t, locale)}{" "}
+                {t("dashboard.remaining")}
               </p>
             </div>
           </div>
@@ -211,17 +187,18 @@ export default function DashboardPage() {
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base font-extrabold leading-7 text-cs-ink">
-                پوشه‌های من
+                {t("dashboard.myFolders")}
               </h3>
               {folders.length ? (
                 <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                  {toPersianDigits(folders.length)} پوشه
+                  {t("dashboard.folderCount", {
+                    count: formatDigits(folders.length, locale),
+                  })}
                 </p>
               ) : null}
             </div>
             <SectionMoreLink
               href="/folders"
-              label="مشاهده همه"
               count={folders.length > 4 ? folders.length : undefined}
             />
           </div>
@@ -242,7 +219,7 @@ export default function DashboardPage() {
                   {folder.name}
                 </h4>
                 <p className="mt-1 text-xs leading-5 text-cs-muted">
-                  {toPersianDigits(folder.fileCount ?? 0)} فایل
+                  {formatDigits(folder.fileCount ?? 0, locale)} {t("common.file")}
                 </p>
               </Reveal>
             ))}
@@ -251,8 +228,8 @@ export default function DashboardPage() {
                 <EmptyState
                   variant="folders"
                   compact
-                  title="هنوز پوشه‌ای ندارید"
-                  description="از بخش پوشه‌ها یک پوشه جدید بسازید"
+                  title={t("dashboard.emptyFoldersTitle")}
+                  description={t("dashboard.emptyFoldersDesc")}
                 />
               </div>
             ) : null}
@@ -263,17 +240,21 @@ export default function DashboardPage() {
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base font-extrabold leading-7 text-cs-ink">
-                آخرین فایل‌ها
+                {t("dashboard.recentFiles")}
               </h3>
               {files.length ? (
                 <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                  {toPersianDigits(Math.min(filteredFiles.length, 8))} مورد اخیر
+                  {t("dashboard.recentCount", {
+                    count: formatDigits(
+                      Math.min(filteredFiles.length, 8),
+                      locale
+                    ),
+                  })}
                 </p>
               ) : null}
             </div>
             <SectionMoreLink
               href="/files"
-              label="مشاهده همه"
               count={files.length > 8 ? files.length : undefined}
             />
           </div>
@@ -295,15 +276,15 @@ export default function DashboardPage() {
                       {file.name}
                     </h4>
                     <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                      {formatDate(file.updatedAt || file.createdAt)}
+                      {formatDate(file.updatedAt || file.createdAt, locale)}
                       <span className="mx-2 text-cs-line">|</span>
-                      {formatBytes(file.sizeBytes)}
+                      {formatBytes(file.sizeBytes, t, locale)}
                     </p>
                   </div>
                   <Link
                     href="/files"
                     className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-cs-muted"
-                    aria-label="گزینه‌ها"
+                    aria-label={t("common.options")}
                   >
                     <IconDots />
                   </Link>
@@ -313,8 +294,8 @@ export default function DashboardPage() {
               <EmptyState
                 variant="files"
                 compact
-                title="فایلی پیدا نشد"
-                description="از دکمه آپلود پایین صفحه استفاده کنید"
+                title={t("dashboard.emptyFilesTitle")}
+                description={t("dashboard.emptyFilesDesc")}
               />
             )}
           </div>

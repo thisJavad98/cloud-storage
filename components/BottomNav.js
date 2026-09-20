@@ -10,15 +10,16 @@ import {
   IconUpload,
   IconUser,
 } from "./Icons";
+import { useI18n } from "../lib/i18n/I18nProvider";
 
 const leftItems = [
-  { id: "files", href: "/dashboard", icon: IconFolder, label: "خانه" },
-  { id: "manage", href: "/files", icon: IconUpload, label: "مدیریت" },
+  { id: "files", href: "/dashboard", icon: IconFolder, labelKey: "nav.home" },
+  { id: "manage", href: "/files", icon: IconUpload, labelKey: "nav.manage" },
 ];
 
 const rightItems = [
-  { id: "folders", href: "/folders", icon: IconFolders, label: "پوشه‌ها" },
-  { id: "profile", href: "/profile", icon: IconUser, label: "پروفایل" },
+  { id: "folders", href: "/folders", icon: IconFolders, labelKey: "nav.folders" },
+  { id: "profile", href: "/profile", icon: IconUser, labelKey: "nav.profile" },
 ];
 
 export default function BottomNav({
@@ -29,6 +30,7 @@ export default function BottomNav({
 }) {
   const router = useRouter();
   const pathname = usePathname();
+  const { t } = useI18n();
   const [uploadOpen, setUploadOpen] = useState(false);
 
   useEffect(() => {
@@ -74,7 +76,7 @@ export default function BottomNav({
             ? "bg-cs-blue text-white shadow-md shadow-cs-blue/25"
             : "text-cs-muted hover:bg-cs-blue-soft/60 hover:text-cs-blue"
         }`}
-        aria-label={item.label}
+        aria-label={t(item.labelKey)}
       >
         <Icon className="size-5 shrink-0" />
       </button>
@@ -90,11 +92,11 @@ export default function BottomNav({
               <button
                 type="button"
                 onClick={() => setUploadOpen(true)}
-                aria-label="آپلود فایل"
+                aria-label={t("nav.uploadFile")}
                 className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[#f3f5fa] transition hover:from-cs-file-orange hover:to-[#e8893a] active:scale-95"
               >
                 <IconPlus className="size-7" />
-                <span className="sr-only">آپلود</span>
+                <span className="sr-only">{t("nav.upload")}</span>
               </button>
             </div>
           ) : null}

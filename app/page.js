@@ -4,25 +4,7 @@ import Link from "next/link";
 import AppBrand from "../components/AppBrand";
 import { IntroIllustration } from "../components/IntroIllustration";
 import { IconArrow, IconFolder, IconUpload } from "../components/Icons";
-import { APP_NAME } from "../lib/brand";
-
-const features = [
-  {
-    icon: IconUpload,
-    title: "آپلود سریع",
-    text: "فایل‌ها را با چند لمس ذخیره کنید",
-  },
-  {
-    icon: IconFolder,
-    title: "پوشه‌بندی",
-    text: "همه‌چیز منظم و قابل‌جستجو",
-  },
-  {
-    icon: ShieldIcon,
-    title: "امن و خصوصی",
-    text: "دسترسی فقط برای شما",
-  },
-];
+import { useI18n } from "../lib/i18n/I18nProvider";
 
 function ShieldIcon({ className = "size-5" }) {
   return (
@@ -45,10 +27,30 @@ function ShieldIcon({ className = "size-5" }) {
 }
 
 export default function IntroPage() {
+  const { t, brandName } = useI18n();
+
+  const features = [
+    {
+      icon: IconUpload,
+      title: t("landing.featureUpload"),
+      text: t("landing.featureUploadDesc"),
+    },
+    {
+      icon: IconFolder,
+      title: t("landing.featureFolders"),
+      text: t("landing.featureFoldersDesc"),
+    },
+    {
+      icon: ShieldIcon,
+      title: t("landing.featureSecure"),
+      text: t("landing.featureSecureDesc"),
+    },
+  ];
+
   return (
     <main className="auth-screen hex-pattern">
       <div className="phone-shell flex h-full min-h-0 flex-col overflow-hidden px-6 pb-7 pt-8 text-white">
-        <header className="animate-fade-in flex justify-center">
+        <header className="animate-fade-in flex items-center justify-center">
           <AppBrand tone="white" size="lg" />
         </header>
 
@@ -58,11 +60,10 @@ export default function IntroPage() {
 
         <section className="animate-fade-in-delay shrink-0 text-center">
           <h1 className="text-[1.85rem] font-extrabold leading-tight tracking-tight">
-            به {APP_NAME} خوش آمدید
+            {t("landing.welcome", { name: brandName })}
           </h1>
           <p className="mx-auto mt-3 max-w-[320px] text-[13px] leading-7 text-white/80">
-            اسناد، عکس‌ها و پوشه‌هایتان را در یک مکان نگه دارید، از هر جا به آن‌ها
-            دسترسی داشته باشید و با خیال راحت مدیریتشان کنید — ساده، سریع و امن.
+            {t("landing.description")}
           </p>
 
           <ul className="mt-5 grid grid-cols-3 gap-2">
@@ -91,15 +92,15 @@ export default function IntroPage() {
             href="/login"
             className="inline-flex h-14 w-full items-center justify-between gap-3 rounded-2xl bg-white px-5 text-cs-blue shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:bg-white/95 active:scale-[0.99]"
           >
-            <span className="text-base font-bold leading-none">شروع کنید</span>
+            <span className="text-base font-bold leading-none">{t("landing.start")}</span>
             <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-cs-blue/10 text-cs-blue">
               <IconArrow className="size-5" />
             </span>
           </Link>
           <p className="text-center text-xs leading-6 text-white/70">
-            حساب ندارید؟{" "}
+            {t("landing.noAccount")}{" "}
             <Link href="/signup" className="font-bold text-white underline-offset-4 hover:underline">
-              ثبت‌نام رایگان
+              {t("landing.freeSignup")}
             </Link>
           </p>
         </div>

@@ -1,18 +1,21 @@
 "use client";
 
 import { useEffect } from "react";
+import { useI18n } from "../lib/i18n/I18nProvider";
 
 export default function ConfirmModal({
   open,
-  title = "تأیید عملیات",
+  title,
   message,
-  confirmLabel = "تأیید",
-  cancelLabel = "انصراف",
+  confirmLabel,
+  cancelLabel,
   tone = "danger",
   loading = false,
   onConfirm,
   onCancel,
 }) {
+  const { t } = useI18n();
+
   useEffect(() => {
     if (!open) return undefined;
 
@@ -109,7 +112,7 @@ export default function ConfirmModal({
             onClick={onCancel}
             className="h-12 rounded-2xl bg-[#f1f3f8] text-sm font-bold text-cs-ink transition disabled:opacity-60"
           >
-            {cancelLabel}
+            {cancelLabel || t("common.cancel")}
           </button>
           <button
             type="button"
@@ -117,7 +120,9 @@ export default function ConfirmModal({
             onClick={onConfirm}
             className={`h-12 rounded-2xl text-sm font-bold text-white transition disabled:opacity-70 ${confirmClass}`}
           >
-            {loading ? "لطفاً صبر کنید..." : confirmLabel}
+            {loading
+              ? t("common.pleaseWait")
+              : confirmLabel || t("common.yes")}
           </button>
         </div>
       </div>

@@ -3,15 +3,16 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
-import { LoginIllustration } from "../../components/LoginIllustration";
 import AppBrand from "../../components/AppBrand";
+import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow } from "../../components/Icons";
-import { APP_NAME } from "../../lib/brand";
+import { useI18n } from "../../lib/i18n/I18nProvider";
 import { notifyError, notifySuccess } from "../../lib/toast";
 import { formatAuthError, signup } from "../../services/auth";
 
 export default function SignupPage() {
   const router = useRouter();
+  const { t, brandName } = useI18n();
   const [fullName, setFullName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -23,7 +24,7 @@ export default function SignupPage() {
 
     try {
       await signup({ email, password, fullName });
-      notifySuccess("ثبت‌نام با موفقیت انجام شد");
+      notifySuccess(t("auth.signupSuccess"));
       router.push("/dashboard");
     } catch (err) {
       notifyError(formatAuthError(err));
@@ -45,12 +46,12 @@ export default function SignupPage() {
           </div>
           <div className="mb-6 flex items-center gap-3">
             <h1 className="text-2xl font-extrabold leading-none text-cs-ink">
-              ثبت‌نام در {APP_NAME}
+              {t("auth.signupTo", { name: brandName })}
             </h1>
             <Link
               href="/login"
               className="inline-flex size-9 shrink-0 items-center justify-center rounded-full text-cs-blue"
-              aria-label="بازگشت"
+              aria-label={t("common.back")}
             >
               <IconArrow className="size-5" />
             </Link>
@@ -59,23 +60,22 @@ export default function SignupPage() {
           <form onSubmit={handleSubmit} className="space-y-4">
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-cs-ink">
-                نام و نام خانوادگی
+                {t("auth.fullName")}
               </span>
               <input
                 type="text"
                 required
                 minLength={2}
-                maxLength={100}
-                autoComplete="name"
                 value={fullName}
                 onChange={(e) => setFullName(e.target.value)}
-                placeholder="نام خود را وارد کنید"
-                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-sm outline-none placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
+                placeholder={t("auth.fullNamePlaceholder")}
+                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
               />
             </label>
+
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-cs-ink">
-                ایمیل
+                {t("auth.email")}
               </span>
               <input
                 type="email"
@@ -84,13 +84,14 @@ export default function SignupPage() {
                 dir="ltr"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                placeholder="ایمیل خود را وارد کنید"
-                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-left text-sm outline-none placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
+                placeholder={t("auth.emailPlaceholder")}
+                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
               />
             </label>
+
             <label className="block">
               <span className="mb-2 block text-sm font-semibold text-cs-ink">
-                رمز عبور
+                {t("auth.password")}
               </span>
               <input
                 type="password"
@@ -100,24 +101,24 @@ export default function SignupPage() {
                 dir="ltr"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                placeholder="حداقل ۸ کاراکتر، شامل حرف و عدد"
-                className="w-full rounded-2xl bg-[#f1f3f8] px-4 py-3.5 text-left text-sm outline-none placeholder:text-right placeholder:text-cs-muted focus:bg-white focus:ring-1 focus:ring-cs-blue/30"
+                placeholder={t("auth.passwordPlaceholder")}
+                className="h-13 w-full rounded-2xl border-0 bg-[#f1f3f8] px-4 py-3.5 text-left text-sm text-cs-ink outline-none ring-1 ring-transparent transition placeholder:text-cs-muted focus:bg-white focus:ring-cs-blue/30"
               />
             </label>
 
             <button
               type="submit"
               disabled={loading}
-              className="mt-2 inline-flex h-14 w-full items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white hover:bg-cs-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
+              className="mt-2 inline-flex h-14 w-full items-center justify-center rounded-2xl bg-cs-blue text-base font-bold text-white transition hover:bg-cs-blue-deep disabled:cursor-not-allowed disabled:opacity-70"
             >
-              {loading ? "در حال ثبت‌نام..." : "ثبت‌نام"}
+              {loading ? t("auth.submittingSignup") : t("auth.signup")}
             </button>
           </form>
 
-          <p className="mt-5 text-center text-sm leading-7 text-cs-muted">
-            حساب دارید؟{" "}
+          <p className="mt-6 text-center text-sm leading-7 text-cs-muted">
+            {t("auth.haveAccount")}{" "}
             <Link href="/login" className="font-bold text-cs-blue">
-              ورود
+              {t("auth.login")}
             </Link>
           </p>
         </section>
