@@ -12,8 +12,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata = {
-  title: "Cloud Storage",
-  description: "Cloud Storage",
+  title: "Cloud Storage App",
+  description: "Simple cloud storage built with Next.js",
 };
 
 export default function RootLayout({ children }) {
