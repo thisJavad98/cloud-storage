@@ -1,18 +1,34 @@
 "use client";
 
 import { motion, useReducedMotion } from "motion/react";
-import { easeOut, fadeDown, fadeUp, pageTransition, scaleIn } from "../lib/motion";
+import { easeOut, fadeUp, pageTransition, scaleIn } from "../lib/motion";
 
-/** Top app bar entrance */
-export function MotionHeader({ children, className = "", delay = 0 }) {
+const STICKY_TONES = {
+  surface:
+    "sticky top-0 z-30 bg-[color-mix(in_srgb,var(--cs-surface)_90%,transparent)] pb-3 backdrop-blur-md",
+  blue:
+    "sticky top-0 z-30 bg-[color-mix(in_srgb,var(--cs-blue)_88%,transparent)] pb-3 backdrop-blur-md",
+};
+
+/** Top app bar — sticky by default. Opacity-only entrance (Y transform breaks sticky). */
+export function MotionHeader({
+  children,
+  className = "",
+  delay = 0,
+  sticky = true,
+  tone = "surface",
+}) {
   const reduce = useReducedMotion();
-  if (reduce) return <header className={className}>{children}</header>;
+  const stickyClass = sticky ? STICKY_TONES[tone] || STICKY_TONES.surface : "";
+  const classes = `${stickyClass} ${className}`.trim();
+
+  if (reduce) return <header className={classes}>{children}</header>;
 
   return (
     <motion.header
-      className={className}
-      initial={fadeDown.initial}
-      animate={fadeDown.animate}
+      className={classes}
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
       transition={{ ...pageTransition, delay }}
     >
       {children}

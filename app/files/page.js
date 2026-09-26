@@ -202,7 +202,7 @@ export default function FilesPage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <MotionHeader className="relative flex items-center justify-center px-5 pt-6">
+        <MotionHeader className="flex items-center justify-center px-5 pt-6">
           <div className="min-w-0 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">

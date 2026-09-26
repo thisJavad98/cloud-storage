@@ -168,7 +168,7 @@ export default function ProfilePage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <MotionHeader className="relative flex items-center justify-center px-5 pt-6">
+        <MotionHeader className="flex items-center justify-center px-5 pt-6">
           <div className="min-w-0 flex-1 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-lg font-extrabold text-cs-ink">

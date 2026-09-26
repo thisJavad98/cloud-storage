@@ -176,7 +176,7 @@ export default function FoldersManagePage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-28">
-        <MotionHeader className="relative flex items-center justify-center px-5 pt-6">
+        <MotionHeader className="flex items-center justify-center px-5 pt-6">
           <motion.button
             type="button"
             onClick={() => setShowCreate((v) => !v)}

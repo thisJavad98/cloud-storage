@@ -75,7 +75,8 @@ export default function PlansPageClient() {
         }`}
       >
         <MotionHeader
-          className={`relative flex items-center justify-center px-5 pt-6 ${
+          tone={showAppChrome ? "surface" : "blue"}
+          className={`flex items-center justify-center px-5 pt-6 ${
             showAppChrome ? "" : "text-white"
           }`}
         >
