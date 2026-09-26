@@ -26,6 +26,7 @@ import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
 import { formatBytes, formatDate, formatDigits } from "../../lib/format";
+import { getFileDetailHref } from "../../lib/filesNav";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
@@ -386,9 +387,10 @@ export default function DashboardPage() {
                     </div>
                   </button>
                   <Link
-                    href="/files"
-                    className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-cs-muted"
-                    aria-label={t("common.options")}
+                    href={getFileDetailHref(file)}
+                    className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-cs-muted transition hover:bg-cs-blue-soft hover:text-cs-blue"
+                    aria-label={t("dashboard.openFileLocation")}
+                    title={t("dashboard.openFileLocation")}
                   >
                     <IconDots />
                   </Link>

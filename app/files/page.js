@@ -23,6 +23,7 @@ import PageLoader from "../../components/PageLoader";
 import { MotionBlock, MotionHeader } from "../../components/PageMotion";
 import Reveal from "../../components/Reveal";
 import { formatBytes, formatDate, formatDigits } from "../../lib/format";
+import { readFocusFileIdFromLocation } from "../../lib/filesNav";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
@@ -67,6 +68,8 @@ export default function FilesPage() {
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
+  const [focusFileId, setFocusFileId] = useState("");
+  const focusedOnceRef = useRef(false);
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
@@ -110,6 +113,7 @@ export default function FilesPage() {
       return;
     }
     setUser(stored);
+    setFocusFileId(readFocusFileIdFromLocation());
     refresh();
   }, [router, refresh]);
 
@@ -118,6 +122,30 @@ export default function FilesPage() {
     if (!q) return files;
     return files.filter((file) => file.name.toLowerCase().includes(q));
   }, [files, query]);
+
+  useEffect(() => {
+    if (loading || !focusFileId || focusedOnceRef.current) return;
+    const target = files.find((file) => file.id === focusFileId);
+    if (!target) return;
+
+    focusedOnceRef.current = true;
+
+    const timer = window.setTimeout(() => {
+      document
+        .getElementById(`file-row-${focusFileId}`)
+        ?.scrollIntoView({ behavior: "smooth", block: "center" });
+    }, 120);
+
+    try {
+      const url = new URL(window.location.href);
+      url.searchParams.delete("file");
+      window.history.replaceState({}, "", `${url.pathname}${url.search}`);
+    } catch {
+      /* ignore */
+    }
+
+    return () => window.clearTimeout(timer);
+  }, [loading, focusFileId, files]);
 
   async function handleRename(file) {
     if (!renameValue.trim()) {
@@ -304,10 +332,15 @@ export default function FilesPage() {
             {filteredFiles.map((file, index) => (
               <Reveal
                 key={file.id}
+                id={`file-row-${file.id}`}
                 as="article"
                 delay={Math.min(index, 10) * 45}
                 hover
-                className="relative rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+                className={`relative rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 transition ${
+                  focusFileId === file.id
+                    ? "ring-2 ring-cs-blue shadow-[0_12px_28px_rgba(30,85,214,0.18)]"
+                    : "ring-cs-line"
+                }`}
               >
                 <div className="flex items-center gap-3">
                   <button

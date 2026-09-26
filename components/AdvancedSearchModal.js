@@ -437,7 +437,9 @@ export default function AdvancedSearchModal({
                     <Link
                       key={file.id}
                       href={
-                        file.folderId ? `/folders/${file.folderId}` : "/files"
+                        file.folderId
+                          ? `/folders/${file.folderId}?file=${encodeURIComponent(file.id)}`
+                          : `/files?file=${encodeURIComponent(file.id)}`
                       }
                       onClick={() => onClose?.()}
                       className="pressable flex items-center gap-3 rounded-2xl bg-cs-surface p-3 ring-1 ring-transparent transition hover:ring-cs-blue/25"
