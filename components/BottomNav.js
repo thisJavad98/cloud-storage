@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, motion, useReducedMotion } from "motion/react";
 import UploadModal from "./UploadModal";
 import {
   IconFolder,
@@ -69,34 +69,65 @@ export default function BottomNav({
   function renderItem(item) {
     const Icon = item.icon;
     const active = isActive(item);
+
     return (
       <motion.button
         key={item.id}
         type="button"
         onClick={() => router.push(item.href)}
-        className={`relative inline-flex size-11 items-center justify-center rounded-2xl transition ${
-          active
-            ? "text-white shadow-md shadow-cs-blue/25"
-            : "text-cs-muted hover:bg-cs-blue-soft/60 hover:text-cs-blue"
+        className={`group relative inline-flex size-12 items-center justify-center rounded-full transition-colors ${
+          active ? "text-white" : "text-cs-muted hover:text-cs-blue"
         }`}
         aria-label={t(item.labelKey)}
+        aria-current={active ? "page" : undefined}
+        whileHover={reduce || active ? undefined : { scale: 1.06 }}
         whileTap={reduce ? undefined : { scale: 0.9 }}
-        transition={{ type: "spring", stiffness: 420, damping: 28 }}
       >
-        {active ? (
-          reduce ? (
-            <span className="pointer-events-none absolute inset-0 rounded-2xl bg-cs-blue" />
-          ) : (
-            <motion.span
-              layoutId="nav-active-glow"
-              className="pointer-events-none absolute inset-0 rounded-2xl bg-cs-blue"
-              transition={{ type: "spring", stiffness: 380, damping: 32 }}
-            />
-          )
+        <AnimatePresence>
+          {active ? (
+            <>
+              <motion.span
+                layoutId="nav-active-circle"
+                className="pointer-events-none absolute inset-0 rounded-full bg-cs-blue shadow-[0_8px_20px_rgba(30,85,214,0.35)]"
+                transition={
+                  reduce
+                    ? { duration: 0 }
+                    : { type: "spring", stiffness: 420, damping: 28, mass: 0.7 }
+                }
+              />
+              {!reduce ? (
+                <motion.span
+                  key={`ring-${item.id}`}
+                  className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-cs-blue/35"
+                  initial={{ opacity: 0, scale: 0.72 }}
+                  animate={{ opacity: [0.55, 0], scale: [0.92, 1.28] }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.7, ease: "easeOut" }}
+                />
+              ) : null}
+            </>
+          ) : null}
+        </AnimatePresence>
+
+        {!active ? (
+          <span className="pointer-events-none absolute inset-0 rounded-full bg-transparent transition-colors group-hover:bg-cs-blue-soft/70" />
         ) : null}
-        <span className="relative z-[1]">
+
+        <motion.span
+          className="relative z-[1] inline-flex"
+          animate={
+            active && !reduce
+              ? { scale: [1, 1.12, 1], y: [0, -1, 0] }
+              : { scale: 1, y: 0 }
+          }
+          transition={
+            active && !reduce
+              ? { duration: 0.45, ease: easeOut }
+              : { duration: 0.2 }
+          }
+        >
           <Icon className="size-5 shrink-0" />
-        </span>
+        </motion.span>
       </motion.button>
     );
   }
@@ -153,7 +184,7 @@ export default function BottomNav({
                 {leftItems.map(renderItem)}
               </div>
 
-              {showUpload ? <div aria-hidden="true" className="h-11" /> : null}
+              {showUpload ? <div aria-hidden="true" className="h-12" /> : null}
 
               <div className="flex items-center justify-around">
                 {rightItems.map(renderItem)}
