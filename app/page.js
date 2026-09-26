@@ -6,6 +6,7 @@ import AppBrand from "../components/AppBrand";
 import { IntroIllustration } from "../components/IntroIllustration";
 import PlansBanner from "../components/PlansBanner";
 import AuthAurora from "../components/AuthAurora";
+import IosAddToHomeGate from "../components/IosAddToHomeGate";
 import { IconArrow, IconFolder, IconUpload } from "../components/Icons";
 import { useI18n } from "../lib/i18n/I18nProvider";
 
@@ -54,6 +55,7 @@ export default function IntroPage() {
 
   return (
     <main className="auth-screen hex-pattern auth-stage">
+      <IosAddToHomeGate />
       <AuthAurora />
       <div className="phone-shell auth-shell relative z-[1] flex h-full min-h-0 flex-col overflow-hidden px-6 pb-5 pt-6 text-white">
         <motion.header

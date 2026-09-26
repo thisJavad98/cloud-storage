@@ -34,6 +34,7 @@ import {
   uploadAvatar,
 } from "../../services/auth";
 import { motion } from "motion/react";
+import { shouldPromptAddToHome } from "../../lib/ios";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -48,6 +49,7 @@ export default function ProfilePage() {
   const [logoutOpen, setLogoutOpen] = useState(false);
   const [loggingOut, setLoggingOut] = useState(false);
   const [removeOpen, setRemoveOpen] = useState(false);
+  const [showA2hs, setShowA2hs] = useState(false);
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
@@ -85,6 +87,7 @@ export default function ProfilePage() {
       return;
     }
     setUser(stored);
+    setShowA2hs(shouldPromptAddToHome());
     setFullName(stored.fullName || "");
     setBio(stored.bio || "");
     refresh();
@@ -287,6 +290,28 @@ export default function ProfilePage() {
         </MotionBlock>
 
         <MotionBlock className="mt-6 space-y-3 px-5" delay={0.3} as="section">
+          {showA2hs ? (
+            <motion.div
+              className="rounded-2xl bg-gradient-to-br from-cs-blue to-[#1542b0] p-4 text-white shadow-[0_12px_28px_rgba(30,85,214,0.28)]"
+              whileHover={{ y: -2 }}
+            >
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0 text-start">
+                  <p className="text-sm font-bold">{t("a2hs.profileTitle")}</p>
+                  <p className="mt-1 text-xs leading-5 text-white/80">
+                    {t("a2hs.profileDesc")}
+                  </p>
+                </div>
+                <Link
+                  href="/add-to-home"
+                  className="shrink-0 rounded-xl bg-white px-3 py-2 text-xs font-bold text-cs-blue"
+                >
+                  {t("a2hs.profileCta")}
+                </Link>
+              </div>
+            </motion.div>
+          ) : null}
+
           <motion.div
             className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             whileHover={{ y: -2 }}
