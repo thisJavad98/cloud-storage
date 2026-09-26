@@ -18,7 +18,7 @@ export function LoginIllustration() {
   return (
     <motion.svg
       viewBox="0 0 360 250"
-      className="login-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px]"
+      className="login-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px] md:max-h-[min(22vh,140px)] md:max-w-[200px]"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -30,12 +30,12 @@ export function LoginIllustration() {
       <defs>
         <linearGradient id="lArch" x1="180" y1="30" x2="180" y2="220" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" stopOpacity="0.96" />
-          <stop offset="0.5" stopColor="#c8dbff" stopOpacity="0.5" />
-          <stop offset="1" stopColor="#8eb6ff" stopOpacity="0.06" />
+          <stop offset="0.5" stopColor="#c8dbff" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#6ea8ff" stopOpacity="0.08" />
         </linearGradient>
         <linearGradient id="lCloud" x1="180" y1="14" x2="180" y2="90" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#bfd4ff" />
+          <stop offset="1" stopColor="#c5d9ff" />
         </linearGradient>
         <linearGradient id="lRay" x1="180" y1="70" x2="180" y2="180" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" stopOpacity="0.8" />

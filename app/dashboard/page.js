@@ -215,7 +215,7 @@ export default function DashboardPage() {
 
         <MotionBlock className="px-5 pt-5" delay={0.2} variant="scale" as="section">
           <motion.div
-            className="rounded-[1.6rem] bg-cs-blue p-5 text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]"
+            className="storage-card rounded-[1.7rem] p-5 text-white"
             whileHover={{ y: -2 }}
             transition={{ duration: 0.25 }}
           >
@@ -294,7 +294,7 @@ export default function DashboardPage() {
                 href={`/folders/${folder.id}`}
                 delay={index * 60}
                 hover
-                className="pressable rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
+                className="pressable rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:ring-cs-blue/35"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
                   <IconFolder className="size-7 text-cs-folder" />
@@ -355,7 +355,7 @@ export default function DashboardPage() {
                   as="article"
                   delay={index * 55}
                   hover
-                  className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
+                  className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
                 >
                   <div className="shrink-0">
                     <FileGlyph tone={fileTone(file.mimeType)} />

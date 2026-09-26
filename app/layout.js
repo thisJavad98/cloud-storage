@@ -17,7 +17,7 @@ const brandFont = Lalezar({
   weight: "400",
 });
 
-const THEME_COLOR = "#1f4fc4";
+const THEME_COLOR = "#1e55d6";
 
 export const viewport = {
   themeColor: [

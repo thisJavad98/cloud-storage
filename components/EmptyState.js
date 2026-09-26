@@ -20,7 +20,7 @@ export default function EmptyState({
 
   return (
     <motion.div
-      className={`rounded-2xl bg-white text-center shadow-sm ring-1 ring-cs-line ${
+      className={`rounded-2xl bg-white text-center shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line ${
         compact ? "px-4 py-6" : "px-5 py-10"
       } ${className}`}
       initial={{ opacity: 0, y: 12 }}

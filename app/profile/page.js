@@ -177,7 +177,7 @@ export default function ProfilePage() {
           </div>
           <Link
             href="/dashboard"
-            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-blue shadow-sm ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-blue shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             aria-label={t("common.back")}
           >
             <IconArrow className="size-5 rotate-180" />
@@ -288,7 +288,7 @@ export default function ProfilePage() {
 
         <MotionBlock className="mt-6 space-y-3 px-5" delay={0.3} as="section">
           <motion.div
-            className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
+            className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             whileHover={{ y: -2 }}
           >
             <div className="flex items-center justify-between gap-3">
@@ -305,7 +305,7 @@ export default function ProfilePage() {
           </motion.div>
 
           <motion.div
-            className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
+            className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             whileHover={{ y: -2 }}
           >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">

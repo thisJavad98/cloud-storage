@@ -18,7 +18,7 @@ export function SignupIllustration() {
   return (
     <motion.svg
       viewBox="0 0 360 250"
-      className="signup-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px]"
+      className="signup-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px] md:max-h-[min(22vh,140px)] md:max-w-[200px]"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -30,11 +30,11 @@ export function SignupIllustration() {
       <defs>
         <linearGradient id="sCloud" x1="180" y1="12" x2="180" y2="100" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#bdd3ff" />
+          <stop offset="1" stopColor="#c5d9ff" />
         </linearGradient>
         <linearGradient id="sCard" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#e6f0ff" />
+          <stop offset="1" stopColor="#e8f0ff" />
         </linearGradient>
         <linearGradient id="sPlus" x1="0" y1="0" x2="1" y2="1">
           <stop stopColor="#8bffbf" />

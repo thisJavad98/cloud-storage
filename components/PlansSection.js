@@ -97,11 +97,11 @@ export default function PlansSection({
 
           const cardClass = isLanding
             ? plan.featured
-              ? "plans-card plans-card--featured relative overflow-hidden rounded-[1.35rem] bg-white p-4 text-cs-ink shadow-[0_12px_32px_rgba(0,0,0,0.18)]"
-              : "plans-card relative overflow-hidden rounded-[1.35rem] bg-white/10 p-4 text-white ring-1 ring-white/15 backdrop-blur-[2px]"
+              ? "plans-card plans-card--featured relative overflow-hidden rounded-[1.4rem] bg-white p-4 text-cs-ink shadow-[0_14px_36px_rgba(10,30,90,0.2)]"
+              : "plans-card relative overflow-hidden rounded-[1.4rem] bg-white/12 p-4 text-white ring-1 ring-white/18 backdrop-blur-[6px]"
             : plan.featured
-              ? "plans-card plans-card--featured relative overflow-hidden rounded-[1.35rem] bg-cs-blue p-4 text-white shadow-[0_16px_40px_rgba(31,79,196,0.32)]"
-              : "plans-card relative overflow-hidden rounded-[1.35rem] bg-white p-4 text-cs-ink shadow-sm ring-1 ring-cs-line";
+              ? "plans-card plans-card--featured storage-card relative overflow-hidden rounded-[1.4rem] p-4 text-white"
+              : "plans-card relative overflow-hidden rounded-[1.4rem] bg-white p-4 text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line";
 
           const mutedClass = isLanding
             ? plan.featured

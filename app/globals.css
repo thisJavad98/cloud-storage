@@ -1,41 +1,47 @@
 @import "tailwindcss";
 
 :root {
-  --cs-blue: #1f4fc4;
-  --cs-blue-deep: #163d9e;
-  --cs-blue-soft: #e8eefc;
-  --cs-ink: #1a1f36;
-  --cs-muted: #8b93a7;
-  --cs-line: #e6e9f0;
-  --cs-surface: #f4f6fb;
+  --cs-blue: #1e55d6;
+  --cs-blue-deep: #1542b0;
+  --cs-blue-soft: #e9f0ff;
+  --cs-sky: #6ea8ff;
+  --cs-ink: #152038;
+  --cs-muted: #7d89a3;
+  --cs-line: #e2e8f4;
+  --cs-surface: #eef2fb;
   --cs-card: #ffffff;
-  --cs-input: #f1f3f8;
-  --cs-folder: #f6c344;
-  --cs-folder-dark: #e5a820;
-  --cs-file-orange: #f29a4a;
+  --cs-input: #f3f5fb;
+  --cs-folder: #f5c03d;
+  --cs-folder-dark: #e0a61a;
+  --cs-file-orange: #f08a3a;
   --cs-file-blue: #4d7cf0;
-  --cs-nav-ring: #f3f5fa;
+  --cs-nav-ring: #eef2fb;
+  --cs-shadow: 0 10px 28px rgba(21, 32, 56, 0.08);
+  --cs-shadow-lg: 0 18px 48px rgba(21, 32, 56, 0.14);
   --background: var(--cs-blue);
   --foreground: #ffffff;
 }
 
 html[data-theme="dark"] {
-  --cs-blue: #4d7cf0;
-  --cs-blue-deep: #3a66d6;
-  --cs-blue-soft: #1c2740;
-  --cs-ink: #e8ecf7;
-  --cs-muted: #9aa6bf;
-  --cs-line: #2a3348;
-  --cs-surface: #0f131c;
-  --cs-card: #171d2b;
-  --cs-input: #222a3b;
-  --cs-folder: #f6c344;
-  --cs-folder-dark: #e5a820;
-  --cs-file-orange: #f29a4a;
+  --cs-blue: #5b8cff;
+  --cs-blue-deep: #4074e8;
+  --cs-blue-soft: #1a2438;
+  --cs-sky: #7eb0ff;
+  --cs-ink: #e9eef9;
+  --cs-muted: #97a4bf;
+  --cs-line: #2c364c;
+  --cs-surface: #0e121a;
+  --cs-card: #161d2c;
+  --cs-input: #1f2738;
+  --cs-folder: #f5c03d;
+  --cs-folder-dark: #e0a61a;
+  --cs-file-orange: #f08a3a;
   --cs-file-blue: #6b93f5;
-  --cs-nav-ring: #0f131c;
-  --background: #0f131c;
-  --foreground: #e8ecf7;
+  --cs-nav-ring: #0e121a;
+  --cs-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
+  --cs-shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.45);
+  --background: #0e121a;
+  --foreground: #e9eef9;
 }
 
 @theme inline {
@@ -594,11 +600,15 @@ body {
 }
 
 .pressable {
-  transition: transform 0.15s ease, box-shadow 0.15s ease;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.pressable:hover {
+  box-shadow: var(--cs-shadow);
 }
 
 .pressable:active {
-  transform: scale(0.98);
+  transform: scale(0.985);
 }
 
 /* Login / signup illustration motion */
@@ -1098,26 +1108,206 @@ body:has(.auth-screen) {
 }
 
 .hex-pattern {
-  background-color: var(--cs-blue);
+  position: relative;
+  isolation: isolate;
+  background-color: #1849c4;
   background-image:
-    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.12) 1px, transparent 0),
-    linear-gradient(115deg, transparent 48%, rgba(255, 255, 255, 0.05) 50%, transparent 52%);
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(110, 168, 255, 0.55), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 80%, rgba(245, 192, 61, 0.18), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 70%, rgba(255, 255, 255, 0.12), transparent 45%),
+    radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.14) 1px, transparent 0),
+    linear-gradient(160deg, #1e55d6 0%, #1542b0 48%, #123a9a 100%);
   background-size:
+    auto,
+    auto,
+    auto,
     18px 18px,
-    42px 72px;
+    auto;
+}
+
+.hex-pattern::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: -20% -10% auto;
+  height: 55%;
+  z-index: 0;
+  background: radial-gradient(circle at 30% 40%, rgba(255, 255, 255, 0.16), transparent 55%);
+}
+
+/* Auth desktop atmosphere (landing / login / signup) */
+.auth-aurora {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .auth-screen.auth-stage {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 2.25rem 1.25rem;
+  }
+
+  .auth-stage.hex-pattern {
+    background-color: #0f2f8a;
+    background-image:
+      radial-gradient(ellipse 55% 70% at 12% 18%, rgba(110, 168, 255, 0.45), transparent 60%),
+      radial-gradient(ellipse 50% 55% at 88% 22%, rgba(245, 192, 61, 0.22), transparent 58%),
+      radial-gradient(ellipse 70% 60% at 70% 92%, rgba(80, 140, 255, 0.28), transparent 55%),
+      radial-gradient(ellipse 90% 50% at 50% -5%, rgba(255, 255, 255, 0.18), transparent 50%),
+      linear-gradient(145deg, #1a4cc8 0%, #143da8 38%, #0f2f8a 72%, #0c2674 100%);
+    background-size: auto;
+  }
+
+  .auth-stage.hex-pattern::before {
+    inset: 0;
+    height: auto;
+    background:
+      radial-gradient(circle at 50% 42%, rgba(255, 255, 255, 0.08), transparent 42%),
+      radial-gradient(ellipse 100% 40% at 50% 100%, rgba(6, 20, 70, 0.45), transparent 55%);
+  }
+
+  .auth-aurora {
+    display: block;
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    overflow: hidden;
+  }
+
+  .auth-aurora__grid {
+    position: absolute;
+    inset: 0;
+    opacity: 0.35;
+    background-image:
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.16) 1px, transparent 0);
+    background-size: 28px 28px;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, #000 20%, transparent 75%);
+  }
+
+  .auth-aurora__orb {
+    position: absolute;
+    border-radius: 9999px;
+    filter: blur(2px);
+    animation: auth-orb-drift 14s ease-in-out infinite;
+  }
+
+  .auth-aurora__orb--a {
+    width: min(42vw, 420px);
+    height: min(42vw, 420px);
+    top: -8%;
+    left: -6%;
+    background: radial-gradient(circle, rgba(140, 190, 255, 0.45), transparent 68%);
+  }
+
+  .auth-aurora__orb--b {
+    width: min(36vw, 360px);
+    height: min(36vw, 360px);
+    top: 8%;
+    right: -4%;
+    background: radial-gradient(circle, rgba(255, 210, 110, 0.28), transparent 70%);
+    animation-delay: -4s;
+    animation-direction: reverse;
+  }
+
+  .auth-aurora__orb--c {
+    width: min(48vw, 480px);
+    height: min(48vw, 480px);
+    bottom: -18%;
+    left: 28%;
+    background: radial-gradient(circle, rgba(70, 130, 255, 0.35), transparent 70%);
+    animation-delay: -7s;
+  }
+
+  .auth-screen.auth-stage .auth-shell {
+    width: 100%;
+    max-width: 420px;
+    height: min(860px, calc(100dvh - 4.5rem));
+    max-height: min(860px, calc(100dvh - 4.5rem));
+    border-radius: 2rem;
+    background: linear-gradient(
+      180deg,
+      rgba(255, 255, 255, 0.1) 0%,
+      rgba(255, 255, 255, 0.04) 28%,
+      rgba(8, 28, 90, 0.18) 100%
+    );
+    box-shadow:
+      0 0 0 1px rgba(255, 255, 255, 0.14),
+      0 28px 80px rgba(4, 18, 60, 0.45),
+      inset 0 1px 0 rgba(255, 255, 255, 0.12);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+@keyframes auth-orb-drift {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+  50% {
+    transform: translate3d(18px, -22px, 0) scale(1.06);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .auth-aurora__orb {
+    animation: none;
+  }
 }
 
 .dash-pattern {
+  position: relative;
+  isolation: isolate;
   background-color: var(--cs-surface);
-  background-image: radial-gradient(color-mix(in srgb, var(--cs-blue) 10%, transparent) 1px, transparent 1px);
-  background-size: 14px 14px;
+  background-image:
+    radial-gradient(ellipse 90% 60% at 50% -20%, color-mix(in srgb, var(--cs-blue) 16%, transparent), transparent 60%),
+    radial-gradient(ellipse 50% 40% at 100% 100%, color-mix(in srgb, var(--cs-folder) 10%, transparent), transparent 55%),
+    radial-gradient(color-mix(in srgb, var(--cs-blue) 11%, transparent) 1.1px, transparent 1.1px);
+  background-size:
+    auto,
+    auto,
+    15px 15px;
+}
+
+.app-card {
+  background: var(--cs-card);
+  border-radius: 1rem;
+  box-shadow: var(--cs-shadow);
+  border: 1px solid var(--cs-line);
+}
+
+.storage-card {
+  background: linear-gradient(145deg, #2a6af0 0%, #1e55d6 42%, #1542b0 100%);
+  box-shadow: 0 18px 44px rgba(30, 85, 214, 0.34);
+}
+
+.auth-sheet {
+  background: var(--cs-card);
+  border-radius: 2rem 2rem 0 0;
+  box-shadow: 0 -16px 48px rgba(10, 30, 90, 0.22);
+}
+
+.auth-sheet::before {
+  content: "";
+  display: block;
+  width: 42px;
+  height: 4px;
+  margin: 0 auto 1.1rem;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--cs-muted) 35%, transparent);
 }
 
 html[data-theme="dark"] .hex-pattern {
   background-color: #152448;
   background-image:
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(91, 140, 255, 0.35), transparent 55%),
     radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0),
-    linear-gradient(115deg, transparent 48%, rgba(255, 255, 255, 0.04) 50%, transparent 52%);
+    linear-gradient(160deg, #1a2d55 0%, #121c33 100%);
+  background-size:
+    auto,
+    18px 18px,
+    auto;
 }
 
 /* Map hardcoded light surfaces to theme tokens in dark mode */

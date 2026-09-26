@@ -196,7 +196,7 @@ export default function FoldersManagePage() {
           </div>
           <Link
             href="/dashboard"
-            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             aria-label={t("common.back")}
           >
             <IconArrow className="size-5 rotate-180" />
@@ -230,7 +230,7 @@ export default function FoldersManagePage() {
             >
               <form
                 onSubmit={handleCreate}
-                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
+                className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
               >
                 <h2 className="mb-3 text-sm font-extrabold text-cs-ink">
                   {t("folders.createTitle")}
@@ -273,7 +273,7 @@ export default function FoldersManagePage() {
                 as="article"
                 delay={Math.min(index, 10) * 45}
                 hover
-                className="rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
+                className="rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
                   <Link

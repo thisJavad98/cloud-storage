@@ -5,6 +5,7 @@ import { motion } from "motion/react";
 import AppBrand from "../components/AppBrand";
 import { IntroIllustration } from "../components/IntroIllustration";
 import PlansBanner from "../components/PlansBanner";
+import AuthAurora from "../components/AuthAurora";
 import { IconArrow, IconFolder, IconUpload } from "../components/Icons";
 import { useI18n } from "../lib/i18n/I18nProvider";
 
@@ -52,8 +53,9 @@ export default function IntroPage() {
   ];
 
   return (
-    <main className="auth-screen hex-pattern">
-      <div className="phone-shell flex h-full min-h-0 flex-col overflow-hidden px-6 pb-5 pt-6 text-white">
+    <main className="auth-screen hex-pattern auth-stage">
+      <AuthAurora />
+      <div className="phone-shell auth-shell relative z-[1] flex h-full min-h-0 flex-col overflow-hidden px-6 pb-5 pt-6 text-white">
         <motion.header
           className="flex shrink-0 items-center justify-center"
           initial={{ opacity: 0, y: -12 }}
@@ -73,30 +75,30 @@ export default function IntroPage() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.15, ease }}
         >
-          <h1 className="text-[1.65rem] font-extrabold leading-tight tracking-tight">
+          <h1 className="text-[1.7rem] font-extrabold leading-tight tracking-tight drop-shadow-sm">
             {t("landing.welcome", { name: brandName })}
           </h1>
-          <p className="mx-auto mt-2 max-w-[320px] text-[12px] leading-6 text-white/80">
+          <p className="mx-auto mt-2 max-w-[320px] text-[12.5px] leading-6 text-white/82">
             {t("landing.description")}
           </p>
 
-          <ul className="mt-3.5 grid grid-cols-3 gap-2">
+          <ul className="mt-4 grid grid-cols-3 gap-2">
             {features.map((item, index) => {
               const Icon = item.icon;
               return (
                 <motion.li
                   key={item.title}
-                  className="rounded-2xl bg-white/10 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur-[2px]"
+                  className="rounded-2xl bg-white/12 px-2 py-2.5 ring-1 ring-white/18 shadow-[0_8px_24px_rgba(8,30,90,0.18)] backdrop-blur-[6px]"
                   initial={{ opacity: 0, y: 14 }}
                   animate={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.45, delay: 0.28 + index * 0.08, ease }}
-                  whileHover={{ y: -3, backgroundColor: "rgba(255,255,255,0.16)" }}
+                  whileHover={{ y: -3, backgroundColor: "rgba(255,255,255,0.18)" }}
                 >
-                  <span className="mx-auto mb-1.5 inline-flex size-7 items-center justify-center rounded-xl bg-white/15 text-white">
+                  <span className="mx-auto mb-1.5 inline-flex size-8 items-center justify-center rounded-xl bg-white/18 text-white">
                     <Icon className="size-3.5" />
                   </span>
                   <p className="text-[11px] font-bold leading-5">{item.title}</p>
-                  <p className="mt-0.5 text-[10px] leading-4 text-white/65">
+                  <p className="mt-0.5 text-[10px] leading-4 text-white/70">
                     {item.text}
                   </p>
                 </motion.li>
@@ -113,14 +115,14 @@ export default function IntroPage() {
         >
           <Link
             href="/login"
-            className="inline-flex h-12 w-full items-center justify-between gap-3 rounded-2xl bg-white px-5 text-cs-blue shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:bg-white/95 active:scale-[0.99]"
+            className="inline-flex h-12 w-full items-center justify-between gap-3 rounded-2xl bg-white px-5 text-cs-blue shadow-[0_14px_36px_rgba(0,0,0,0.22)] transition hover:bg-white/95 active:scale-[0.99]"
           >
             <span className="text-base font-bold leading-none">{t("landing.start")}</span>
             <span className="inline-flex size-8 shrink-0 items-center justify-center rounded-full bg-cs-blue/10 text-cs-blue">
               <IconArrow className="size-4" />
             </span>
           </Link>
-          <p className="text-center text-xs leading-5 text-white/70">
+          <p className="text-center text-xs leading-5 text-white/75">
             {t("landing.noAccount")}{" "}
             <Link href="/signup" className="relative z-10 font-bold text-white underline-offset-4 hover:underline">
               {t("landing.freeSignup")}

@@ -110,10 +110,10 @@ export default function PlansPageClient() {
 
         <Reveal className="px-5 pt-4" delay={40}>
           <motion.div
-            className={`relative overflow-hidden rounded-[1.6rem] px-4 pb-2 pt-3 ${
+            className={`relative overflow-hidden rounded-[1.7rem] px-4 pb-2 pt-3 ${
               showAppChrome
-                ? "bg-cs-blue text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]"
-                : "bg-white/10 text-white ring-1 ring-white/15 backdrop-blur-[2px]"
+                ? "storage-card text-white"
+                : "bg-white/12 text-white ring-1 ring-white/20 shadow-[0_16px_40px_rgba(8,30,90,0.25)] backdrop-blur-[6px]"
             }`}
             initial={{ opacity: 0, y: 16, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
@@ -153,7 +153,7 @@ export default function PlansPageClient() {
           className={
             showAppChrome
               ? "px-5 pt-5"
-              : "mx-5 mt-5 rounded-[1.6rem] bg-white px-4 pb-5 pt-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)]"
+              : "mx-5 mt-5 rounded-[1.7rem] bg-white px-4 pb-5 pt-5 shadow-[0_18px_48px_rgba(10,30,90,0.18)]"
           }
         >
           <PlansSection

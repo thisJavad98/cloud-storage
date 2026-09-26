@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { motion } from "motion/react";
 import AppBrand from "../../components/AppBrand";
+import AuthAurora from "../../components/AuthAurora";
 import { SignupIllustration } from "../../components/SignupIllustration";
 import { IconArrow } from "../../components/Icons";
 import { useI18n } from "../../lib/i18n/I18nProvider";
@@ -37,14 +38,15 @@ export default function SignupPage() {
   }
 
   return (
-    <main className="auth-screen hex-pattern">
-      <div className="phone-shell flex h-full min-h-0 flex-col">
+    <main className="auth-screen hex-pattern auth-stage">
+      <AuthAurora />
+      <div className="phone-shell auth-shell relative z-[1] flex h-full min-h-0 flex-col overflow-hidden">
         <div className="relative z-0 flex min-h-0 flex-1 items-center justify-center overflow-hidden px-6 pb-1 pt-6">
           <SignupIllustration />
         </div>
 
         <motion.section
-          className="relative z-10 shrink-0 rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]"
+          className="auth-sheet relative z-10 shrink-0 px-6 pb-8 pt-3"
           initial={{ opacity: 0, y: 28 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.55, delay: 0.12, ease }}

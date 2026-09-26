@@ -283,7 +283,7 @@ export default function FolderDetailPage() {
           </div>
           <Link
             href="/folders"
-            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             aria-label={t("common.back")}
           >
             <IconArrow className="size-5 rotate-180" />
@@ -291,7 +291,7 @@ export default function FolderDetailPage() {
         </MotionHeader>
 
         <MotionBlock className="px-5 pt-5" delay={0.1} as="section" variant="scale">
-          <div className="rounded-[1.4rem] bg-white p-4 shadow-sm ring-1 ring-cs-line">
+          <div className="rounded-[1.4rem] bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line">
             <div className="flex items-center gap-3">
               <div className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]">
                 <IconFolder className="size-7 text-cs-folder" />
@@ -379,7 +379,7 @@ export default function FolderDetailPage() {
           {showFolderForm ? (
             <form
               onSubmit={handleCreateSubfolder}
-              className="mb-3 flex items-center gap-2 rounded-2xl bg-white p-3 shadow-sm ring-1 ring-cs-line"
+              className="mb-3 flex items-center gap-2 rounded-2xl bg-white p-3 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             >
               <input
                 value={folderName}
@@ -405,7 +405,7 @@ export default function FolderDetailPage() {
                 href={`/folders/${item.id}`}
                 delay={index * 55}
                 hover
-                className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
+                className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:ring-cs-blue/35"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4]">
                   <IconFolder className="size-7 text-cs-folder" />
@@ -448,7 +448,7 @@ export default function FolderDetailPage() {
                 as="article"
                 delay={Math.min(index, 10) * 45}
                 hover
-                className="relative rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
+                className="relative rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
                   <div className="shrink-0">

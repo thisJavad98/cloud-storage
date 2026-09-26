@@ -143,7 +143,7 @@ export default function BottomNav({
             </div>
           ) : null}
 
-          <div className="border-t border-cs-line bg-white/95 px-3 pb-[max(0.65rem,env(safe-area-inset-bottom))] pt-3 backdrop-blur-md">
+          <div className="border-t border-cs-line/80 bg-white/92 px-3 pb-[max(0.65rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_28px_rgba(21,32,56,0.06)] backdrop-blur-md">
             <div
               className={`grid items-center gap-1 ${
                 showUpload ? "grid-cols-[1fr_3.5rem_1fr]" : "grid-cols-1"

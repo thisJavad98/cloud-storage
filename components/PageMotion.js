@@ -7,7 +7,7 @@ const STICKY_TONES = {
   surface:
     "sticky top-0 z-30 bg-[color-mix(in_srgb,var(--cs-surface)_90%,transparent)] pb-3 backdrop-blur-md",
   blue:
-    "sticky top-0 z-30 bg-[color-mix(in_srgb,var(--cs-blue)_88%,transparent)] pb-3 backdrop-blur-md",
+    "sticky top-0 z-30 bg-[color-mix(in_srgb,#1849c4_88%,transparent)] pb-3 backdrop-blur-md",
 };
 
 /** Top app bar — sticky by default. Opacity-only entrance (Y transform breaks sticky). */

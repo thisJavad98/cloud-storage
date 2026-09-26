@@ -18,7 +18,7 @@ export function IntroIllustration() {
   return (
     <motion.svg
       viewBox="0 0 360 270"
-      className="intro-illu pointer-events-none mx-auto h-auto max-h-[min(42vh,270px)] w-full max-w-[340px]"
+      className="intro-illu pointer-events-none mx-auto h-auto max-h-[min(42vh,270px)] w-full max-w-[340px] md:max-h-[min(26vh,168px)] md:max-w-[220px]"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
@@ -29,24 +29,24 @@ export function IntroIllustration() {
     >
       <defs>
         <linearGradient id="iDesk" x1="180" y1="130" x2="180" y2="220" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6b96f7" />
-          <stop offset="1" stopColor="#1f4fc4" />
+          <stop stopColor="#6ea8ff" />
+          <stop offset="1" stopColor="#1e55d6" />
         </linearGradient>
         <linearGradient id="iScreen" x1="180" y1="140" x2="180" y2="190" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#d4e4ff" />
+          <stop offset="1" stopColor="#dce8ff" />
         </linearGradient>
         <linearGradient id="iCloud" x1="180" y1="10" x2="180" y2="95" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#b4ceff" />
+          <stop offset="1" stopColor="#c5d9ff" />
         </linearGradient>
         <linearGradient id="iFolder" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#ffe69a" />
-          <stop offset="1" stopColor="#f0b429" />
+          <stop offset="1" stopColor="#f08a3a" />
         </linearGradient>
         <linearGradient id="iServer" x1="0" y1="0" x2="1" y2="1">
-          <stop stopColor="#8eb4ff" />
-          <stop offset="1" stopColor="#2f63d8" />
+          <stop stopColor="#9ec0ff" />
+          <stop offset="1" stopColor="#1e55d6" />
         </linearGradient>
         <radialGradient id="iGlow" cx="50%" cy="42%" r="55%">
           <stop stopColor="#fff" stopOpacity="0.38" />
