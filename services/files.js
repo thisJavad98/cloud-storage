@@ -201,7 +201,7 @@ export async function downloadFile(id, fileName) {
 /** Fetch file binary for in-app preview (caller must revoke object URL). */
 export async function fetchFileBlob(id) {
   const token = requireToken();
-  const response = await apiRequest(`/files/${id}/download`, {
+  const response = await apiRequest(`/files/${id}/download?inline=1`, {
     method: "GET",
     token,
     rawResponse: true,
