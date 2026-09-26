@@ -1,6 +1,15 @@
 import { apiRequest } from "../lib/api";
 import { getAccessToken, getRefreshToken, saveSession } from "../lib/session";
+import { emitLibrarySync, setStoredDataRevision } from "../lib/sync";
 
+function persistUser(user) {
+  saveSession({ user });
+  if (user?.dataRevision != null) {
+    setStoredDataRevision(user.dataRevision);
+  }
+  emitLibrarySync("profile");
+  return user;
+}
 export async function signup({ email, password, fullName }) {
   const payload = await apiRequest("/auth/signup", {
     method: "POST",
@@ -10,6 +19,7 @@ export async function signup({ email, password, fullName }) {
 
   const { user, accessToken, refreshToken } = payload.data;
   saveSession({ user, accessToken, refreshToken });
+  if (user?.dataRevision != null) setStoredDataRevision(user.dataRevision);
   return payload.data;
 }
 
@@ -22,6 +32,7 @@ export async function login({ email, password }) {
 
   const { user, accessToken, refreshToken } = payload.data;
   saveSession({ user, accessToken, refreshToken });
+  if (user?.dataRevision != null) setStoredDataRevision(user.dataRevision);
   return payload.data;
 }
 
@@ -39,6 +50,7 @@ export async function refreshSession() {
 
   const { user, accessToken, refreshToken: nextRefresh } = payload.data;
   saveSession({ user, accessToken, refreshToken: nextRefresh });
+  if (user?.dataRevision != null) setStoredDataRevision(user.dataRevision);
   return payload.data;
 }
 
@@ -72,9 +84,7 @@ export async function updateProfile({ fullName, bio }) {
     body,
   });
 
-  const user = payload.data.user;
-  saveSession({ user });
-  return user;
+  return persistUser(payload.data.user);
 }
 
 export async function uploadAvatar(file) {
@@ -92,9 +102,7 @@ export async function uploadAvatar(file) {
     body: formData,
   });
 
-  const user = payload.data.user;
-  saveSession({ user });
-  return user;
+  return persistUser(payload.data.user);
 }
 
 export async function removeAvatar() {
@@ -108,9 +116,7 @@ export async function removeAvatar() {
     token,
   });
 
-  const user = payload.data.user;
-  saveSession({ user });
-  return user;
+  return persistUser(payload.data.user);
 }
 
 export function formatAuthError(error) {

@@ -33,6 +33,7 @@ import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
 import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
+import { useLibrarySync } from "../../lib/useLibrarySync";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
 import { formatFileError, listFiles, listFolders } from "../../services/files";
@@ -89,6 +90,7 @@ export default function DashboardPage() {
     }
   }, [router]);
 
+  useLibrarySync(refresh);
   useEffect(() => {
     const stored = getStoredUser();
     if (!stored) {

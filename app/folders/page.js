@@ -23,6 +23,7 @@ import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
+import { useLibrarySync } from "../../lib/useLibrarySync";
 import {
   notifyError,
   notifySuccess,
@@ -80,6 +81,8 @@ export default function FoldersManagePage() {
       setLoading(false);
     }
   }, [router]);
+
+  useLibrarySync(refresh);
 
   useEffect(() => {
     const stored = getStoredUser();

@@ -87,6 +87,13 @@ export default function UploadModal({
       notifySuccess(t("upload.success"));
       onClose?.();
       await onSuccess?.();
+      // uploadFile already emits library sync; ensure UI refreshes even if listener missed it.
+      try {
+        const { emitLibrarySync } = await import("../lib/sync");
+        emitLibrarySync("upload");
+      } catch {
+        // ignore
+      }
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {

@@ -23,6 +23,7 @@ import {
   saveSession,
 } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
+import { useLibrarySync } from "../../lib/useLibrarySync";
 import {
   notifyError,
   notifyInfo,
@@ -81,6 +82,8 @@ export default function ProfilePage() {
       setLoading(false);
     }
   }, [router]);
+
+  useLibrarySync(refresh);
 
   useEffect(() => {
     const stored = getStoredUser();

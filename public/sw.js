@@ -1,5 +1,5 @@
 /* Nimbus PWA service worker — network-first for navigations, cache-first for static assets */
-const CACHE_NAME = "nimbus-pwa-v5";
+const CACHE_NAME = "nimbus-pwa-v6";
 const PRECACHE = ["/", "/dashboard", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png", "/logo.svg"];
 
 self.addEventListener("install", (event) => {

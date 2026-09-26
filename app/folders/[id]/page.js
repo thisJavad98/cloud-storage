@@ -29,6 +29,7 @@ import { finishPageLoad } from "../../../lib/pageLoading";
 import { canPreviewFile } from "../../../lib/preview";
 import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../../lib/session";
 import { useLiveUser } from "../../../lib/useLiveUser";
+import { useLibrarySync } from "../../../lib/useLibrarySync";
 import { openUploadModal } from "../../../lib/upload";
 import {
   notifyError,
@@ -120,6 +121,8 @@ export default function FolderDetailPage() {
       setLoading(false);
     }
   }, [folderId, router]);
+
+  useLibrarySync(refresh);
 
   useEffect(() => {
     const stored = getStoredUser();

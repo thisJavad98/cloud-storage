@@ -1,11 +1,17 @@
 import { apiRequest, getApiUrl } from "../lib/api";
 import { getAccessToken, hasSession } from "../lib/session";
+import { emitLibrarySync } from "../lib/sync";
 
 function requireToken() {
   if (!hasSession()) {
     throw new Error("وارد حساب کاربری نشده‌اید.");
   }
   return getAccessToken();
+}
+
+function afterMutation(result) {
+  emitLibrarySync("mutation");
+  return result;
 }
 
 export async function listFiles(params = {}) {
@@ -91,7 +97,7 @@ export async function uploadFile(file, { name, folderId } = {}) {
     token,
   });
 
-  return payload.data.file;
+  return afterMutation(payload.data.file);
 }
 
 export async function updateFile(id, body) {
@@ -101,7 +107,7 @@ export async function updateFile(id, body) {
     body,
     token,
   });
-  return payload.data.file;
+  return afterMutation(payload.data.file);
 }
 
 export async function trashFile(id) {
@@ -110,7 +116,7 @@ export async function trashFile(id) {
     method: "POST",
     token,
   });
-  return payload.data.file;
+  return afterMutation(payload.data.file);
 }
 
 export async function restoreFile(id) {
@@ -119,7 +125,7 @@ export async function restoreFile(id) {
     method: "POST",
     token,
   });
-  return payload.data.file;
+  return afterMutation(payload.data.file);
 }
 
 export async function deleteFile(id) {
@@ -128,7 +134,7 @@ export async function deleteFile(id) {
     method: "DELETE",
     token,
   });
-  return payload.data;
+  return afterMutation(payload.data);
 }
 
 export async function listFolders(params = {}) {
@@ -165,7 +171,7 @@ export async function createFolder({ name, parentId } = {}) {
     body: { name, parentId: parentId || null },
     token,
   });
-  return payload.data.folder;
+  return afterMutation(payload.data.folder);
 }
 
 export async function updateFolder(id, { name }) {
@@ -175,7 +181,7 @@ export async function updateFolder(id, { name }) {
     body: { name },
     token,
   });
-  return payload.data.folder;
+  return afterMutation(payload.data.folder);
 }
 
 export async function deleteFolder(id) {
@@ -184,7 +190,7 @@ export async function deleteFolder(id) {
     method: "DELETE",
     token,
   });
-  return payload.data;
+  return afterMutation(payload.data);
 }
 
 export async function downloadFile(id, fileName) {
