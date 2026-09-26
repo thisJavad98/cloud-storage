@@ -1,6 +1,7 @@
 "use client";
 
 import { useI18n } from "../lib/i18n/I18nProvider";
+import LogoMark from "./LogoMark";
 
 export default function AppBrand({
   tone = "ink",
@@ -8,6 +9,7 @@ export default function AppBrand({
   showLogo = true,
   stacked = false,
   className = "",
+  animated = true,
 }) {
   const { brandName } = useI18n();
 
@@ -18,8 +20,10 @@ export default function AppBrand({
         ? "text-cs-blue"
         : "text-cs-ink";
 
+  const markClass = tone === "white" ? "text-white" : "text-cs-blue";
+
   const logoClass =
-    size === "lg" ? "size-11" : size === "sm" ? "size-8" : "size-9";
+    size === "lg" ? "size-12" : size === "sm" ? "size-9" : "size-10";
 
   const nameClass =
     size === "lg"
@@ -31,17 +35,17 @@ export default function AppBrand({
   return (
     <div
       className={`inline-flex ${
-        stacked ? "flex-col gap-1" : "items-center gap-2"
+        stacked ? "flex-col gap-1.5" : "items-center gap-2.5"
       } ${className}`}
     >
       {showLogo ? (
-        // eslint-disable-next-line @next/next/no-img-element
-        <img
-          src="/icon.png"
-          alt={brandName}
-          width={size === "lg" ? 44 : size === "sm" ? 32 : 36}
-          height={size === "lg" ? 44 : size === "sm" ? 32 : 36}
-          className={`${logoClass} object-contain ${stacked ? "mx-auto" : ""}`}
+        <LogoMark
+          title={brandName}
+          tone={tone === "white" ? "white" : "blue"}
+          animated={animated}
+          className={`${logoClass} ${markClass} shrink-0 ${
+            stacked ? "mx-auto" : ""
+          }`}
         />
       ) : null}
       <span

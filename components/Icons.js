@@ -169,26 +169,45 @@ export function IconFolder({ className = "size-6" }) {
 export function IconFolders({ className = "size-6" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      {/* rear folder */}
       <path
-        d="M8.2 5.5h3.4l1.2 1.2H19a1.7 1.7 0 0 1 1.7 1.7v1.1"
+        d="M6.2 5.2h3.6l1.35 1.35H18.2c.9 0 1.65.72 1.65 1.6v1.05"
         stroke="currentColor"
-        strokeWidth="1.85"
+        strokeWidth="1.7"
         strokeLinecap="round"
         strokeLinejoin="round"
-        opacity="0.5"
+        opacity="0.42"
       />
       <path
-        d="M3.5 9.4c0-1 .8-1.8 1.8-1.8h3.6l1.5 1.5h8.3c1 0 1.8.8 1.8 1.8v6.6c0 1-.8 1.8-1.8 1.8H5.3c-1 0-1.8-.8-1.8-1.8V9.4Z"
+        d="M7.4 6.85h2.9l1.1 1.05h6.9c.72 0 1.3.55 1.3 1.22v.55"
+        stroke="currentColor"
+        strokeWidth="1.5"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        opacity="0.28"
+      />
+      {/* front folder body */}
+      <path
+        d="M3.35 9.15c0-.95.77-1.72 1.72-1.72h3.55L10.2 9.1h8.55c.95 0 1.72.77 1.72 1.72v6.55c0 .95-.77 1.72-1.72 1.72H5.07c-.95 0-1.72-.77-1.72-1.72V9.15Z"
         stroke="currentColor"
         strokeWidth="1.85"
         strokeLinejoin="round"
       />
+      {/* pocket / lid crease */}
       <path
-        d="M3.5 11.3h13.5"
+        d="M3.35 11.05h17.12"
         stroke="currentColor"
         strokeWidth="1.55"
         strokeLinecap="round"
-        opacity="0.4"
+        opacity="0.55"
+      />
+      {/* file hints */}
+      <path
+        d="M7.2 14.2h5.4M7.2 16.35h3.6"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+        opacity="0.5"
       />
     </svg>
   );

@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
-import { AnimatePresence, motion, useReducedMotion } from "motion/react";
+import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import UploadModal from "./UploadModal";
 import {
   IconFolder,
@@ -23,6 +23,8 @@ const rightItems = [
   { id: "folders", href: "/folders", icon: IconFolders, labelKey: "nav.folders" },
   { id: "profile", href: "/profile", icon: IconUser, labelKey: "nav.profile" },
 ];
+
+const springActive = { type: "spring", stiffness: 480, damping: 26, mass: 0.65 };
 
 export default function BottomNav({
   activeId,
@@ -80,34 +82,64 @@ export default function BottomNav({
         }`}
         aria-label={t(item.labelKey)}
         aria-current={active ? "page" : undefined}
-        whileHover={reduce || active ? undefined : { scale: 1.06 }}
-        whileTap={reduce ? undefined : { scale: 0.9 }}
+        whileHover={reduce || active ? undefined : { scale: 1.08, y: -1 }}
+        whileTap={reduce ? undefined : { scale: 0.88 }}
+        transition={springActive}
       >
+        {active ? (
+          <motion.span
+            layoutId="nav-active-circle"
+            className="pointer-events-none absolute inset-0 rounded-full bg-cs-blue"
+            style={{ boxShadow: "0 8px 20px rgba(30,85,214,0.38)" }}
+            initial={false}
+            animate={
+              reduce
+                ? undefined
+                : {
+                    scale: [1, 1.05, 1],
+                    boxShadow: [
+                      "0 8px 18px rgba(30,85,214,0.32)",
+                      "0 12px 26px rgba(30,85,214,0.48)",
+                      "0 8px 18px rgba(30,85,214,0.32)",
+                    ],
+                  }
+            }
+            transition={
+              reduce
+                ? { duration: 0 }
+                : {
+                    layout: springActive,
+                    scale: { duration: 2.2, repeat: Infinity, ease: "easeInOut" },
+                    boxShadow: {
+                      duration: 2.2,
+                      repeat: Infinity,
+                      ease: "easeInOut",
+                    },
+                  }
+            }
+          />
+        ) : null}
+
         <AnimatePresence>
-          {active ? (
-            <>
-              <motion.span
-                layoutId="nav-active-circle"
-                className="pointer-events-none absolute inset-0 rounded-full bg-cs-blue shadow-[0_8px_20px_rgba(30,85,214,0.35)]"
-                transition={
-                  reduce
-                    ? { duration: 0 }
-                    : { type: "spring", stiffness: 420, damping: 28, mass: 0.7 }
-                }
-              />
-              {!reduce ? (
-                <motion.span
-                  key={`ring-${item.id}`}
-                  className="pointer-events-none absolute inset-[-3px] rounded-full border-2 border-cs-blue/35"
-                  initial={{ opacity: 0, scale: 0.72 }}
-                  animate={{ opacity: [0.55, 0], scale: [0.92, 1.28] }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.7, ease: "easeOut" }}
-                />
-              ) : null}
-            </>
+          {active && !reduce ? (
+            <motion.span
+              key={`burst-${item.id}`}
+              className="pointer-events-none absolute inset-[-4px] rounded-full border-2 border-cs-blue/40"
+              initial={{ opacity: 0.75, scale: 0.75 }}
+              animate={{ opacity: 0, scale: 1.5 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.55, ease: easeOut }}
+            />
           ) : null}
         </AnimatePresence>
+
+        {active && !reduce ? (
+          <motion.span
+            className="pointer-events-none absolute inset-[-2px] rounded-full ring-2 ring-cs-blue/25"
+            animate={{ opacity: [0.3, 0.65, 0.3], scale: [1, 1.1, 1] }}
+            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+          />
+        ) : null}
 
         {!active ? (
           <span className="pointer-events-none absolute inset-0 rounded-full bg-transparent transition-colors group-hover:bg-cs-blue-soft/70" />
@@ -117,13 +149,13 @@ export default function BottomNav({
           className="relative z-[1] inline-flex"
           animate={
             active && !reduce
-              ? { scale: [1, 1.12, 1], y: [0, -1, 0] }
-              : { scale: 1, y: 0 }
+              ? { scale: [1, 1.18, 1.05], y: [0, -3, -1], rotate: [0, -6, 0] }
+              : { scale: 1, y: 0, rotate: 0 }
           }
           transition={
             active && !reduce
-              ? { duration: 0.45, ease: easeOut }
-              : { duration: 0.2 }
+              ? { duration: 0.55, ease: easeOut }
+              : { type: "spring", stiffness: 400, damping: 28 }
           }
         >
           <Icon className="size-5 shrink-0" />
@@ -175,21 +207,23 @@ export default function BottomNav({
           ) : null}
 
           <div className="border-t border-cs-line/80 bg-white/92 px-3 pb-[max(0.65rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_28px_rgba(21,32,56,0.06)] backdrop-blur-md">
-            <div
-              className={`grid items-center gap-1 ${
-                showUpload ? "grid-cols-[1fr_3.5rem_1fr]" : "grid-cols-1"
-              }`}
-            >
-              <div className="flex items-center justify-around">
-                {leftItems.map(renderItem)}
-              </div>
+            <LayoutGroup id="bottom-nav">
+              <div
+                className={`grid items-center gap-1 ${
+                  showUpload ? "grid-cols-[1fr_3.5rem_1fr]" : "grid-cols-1"
+                }`}
+              >
+                <div className="flex items-center justify-around">
+                  {leftItems.map(renderItem)}
+                </div>
 
-              {showUpload ? <div aria-hidden="true" className="h-12" /> : null}
+                {showUpload ? <div aria-hidden="true" className="h-12" /> : null}
 
-              <div className="flex items-center justify-around">
-                {rightItems.map(renderItem)}
+                <div className="flex items-center justify-around">
+                  {rightItems.map(renderItem)}
+                </div>
               </div>
-            </div>
+            </LayoutGroup>
           </div>
         </motion.div>
       </nav>
