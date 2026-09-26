@@ -20,17 +20,18 @@ function SparkIcon({ className = "size-5" }) {
 export default function PlansBanner({
   className = "",
   variant = "dashboard",
-  href = "/plans",
+  href,
   compact = false,
 }) {
   const { t } = useI18n();
   const isLanding = variant === "landing";
+  const targetHref = href || (isLanding ? "/plans?from=landing" : "/plans");
 
   if (isLanding && compact) {
     return (
       <section className={className}>
         <Link
-          href={href}
+          href={targetHref}
           className="group relative flex items-center gap-3 overflow-hidden rounded-[1.35rem] bg-white px-3.5 py-3 text-cs-ink shadow-[0_12px_28px_rgba(0,0,0,0.16)] transition hover:bg-white/95 active:scale-[0.99]"
         >
           <span
@@ -57,7 +58,7 @@ export default function PlansBanner({
     return (
       <section className={className}>
         <Link
-          href={href}
+          href={targetHref}
           className="group relative block overflow-hidden rounded-[1.6rem] bg-white p-5 text-cs-ink shadow-[0_16px_40px_rgba(0,0,0,0.18)] transition hover:bg-white/95 active:scale-[0.99]"
         >
           <span
@@ -105,7 +106,7 @@ export default function PlansBanner({
   return (
     <section className={className}>
       <Link
-        href={href}
+        href={targetHref}
         className="pressable flex items-center gap-3 rounded-[1.4rem] bg-cs-blue-soft/90 px-4 py-3.5 ring-1 ring-cs-blue/10 transition hover:ring-cs-blue/25"
       >
         <span className="inline-flex size-11 shrink-0 items-center justify-center rounded-2xl bg-cs-blue text-white shadow-sm shadow-cs-blue/25">
