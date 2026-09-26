@@ -1,0 +1,8 @@
+[{
+      "relation": ["delegate_permission/common.handle_all_urls"],
+      "target": {
+        "namespace": "android_app",
+        "package_name": "app.nimbus.cloudstorage",
+        "sha256_cert_fingerprints": ["34:A1:E1:C1:7B:B5:C2:AC:73:2D:F2:2E:47:6E:94:BE:AF:07:5B:E0:C2:B1:D6:C9:00:71:AF:F9:09:3C:51:DC"]
+      }
+    }]
