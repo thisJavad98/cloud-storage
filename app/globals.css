@@ -1056,7 +1056,8 @@ body {
   min-height: 100dvh;
   margin-inline: auto;
   position: relative;
-  overflow-x: hidden;
+  /* clip (not hidden) so sticky headers still work while containing horizontal overflow */
+  overflow-x: clip;
 }
 
 /* Lock document scroll on auth / intro screens so entrance motion never flashes a scrollbar */

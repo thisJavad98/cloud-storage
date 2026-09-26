@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
+import { motion, useReducedMotion } from "motion/react";
 import UploadModal from "./UploadModal";
 import {
   IconFolder,
@@ -11,6 +12,7 @@ import {
   IconUser,
 } from "./Icons";
 import { useI18n } from "../lib/i18n/I18nProvider";
+import { easeOut } from "../lib/motion";
 
 const leftItems = [
   { id: "files", href: "/dashboard", icon: IconFolder, labelKey: "nav.home" },
@@ -31,6 +33,7 @@ export default function BottomNav({
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useI18n();
+  const reduce = useReducedMotion();
   const [uploadOpen, setUploadOpen] = useState(false);
 
   useEffect(() => {
@@ -67,37 +70,76 @@ export default function BottomNav({
     const Icon = item.icon;
     const active = isActive(item);
     return (
-      <button
+      <motion.button
         key={item.id}
         type="button"
         onClick={() => router.push(item.href)}
-        className={`inline-flex size-11 items-center justify-center rounded-2xl transition ${
+        className={`relative inline-flex size-11 items-center justify-center rounded-2xl transition ${
           active
-            ? "bg-cs-blue text-white shadow-md shadow-cs-blue/25"
+            ? "text-white shadow-md shadow-cs-blue/25"
             : "text-cs-muted hover:bg-cs-blue-soft/60 hover:text-cs-blue"
         }`}
         aria-label={t(item.labelKey)}
+        whileTap={reduce ? undefined : { scale: 0.9 }}
+        transition={{ type: "spring", stiffness: 420, damping: 28 }}
       >
-        <Icon className="size-5 shrink-0" />
-      </button>
+        {active ? (
+          reduce ? (
+            <span className="pointer-events-none absolute inset-0 rounded-2xl bg-cs-blue" />
+          ) : (
+            <motion.span
+              layoutId="nav-active-glow"
+              className="pointer-events-none absolute inset-0 rounded-2xl bg-cs-blue"
+              transition={{ type: "spring", stiffness: 380, damping: 32 }}
+            />
+          )
+        ) : null}
+        <span className="relative z-[1]">
+          <Icon className="size-5 shrink-0" />
+        </span>
+      </motion.button>
     );
   }
 
   return (
     <>
       <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center">
-        <div className="pointer-events-auto relative w-full max-w-[390px]">
+        <motion.div
+          className="pointer-events-auto relative w-full max-w-[390px]"
+          initial={reduce ? false : { y: 64, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ duration: 0.55, ease: easeOut, delay: 0.15 }}
+        >
           {showUpload ? (
             <div className="pointer-events-none absolute inset-x-0 -top-7 z-10 flex justify-center">
-              <button
+              <motion.button
                 type="button"
                 onClick={() => setUploadOpen(true)}
                 aria-label={t("nav.uploadFile")}
-                className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[var(--cs-nav-ring)] transition hover:from-cs-file-orange hover:to-[#e8893a] active:scale-95"
+                className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[var(--cs-nav-ring)]"
+                whileHover={reduce ? undefined : { scale: 1.06 }}
+                whileTap={reduce ? undefined : { scale: 0.94 }}
+                animate={
+                  reduce
+                    ? undefined
+                    : {
+                        y: [0, -3, 0],
+                        boxShadow: [
+                          "0 10px 24px rgba(242,154,74,0.4)",
+                          "0 14px 28px rgba(242,154,74,0.55)",
+                          "0 10px 24px rgba(242,154,74,0.4)",
+                        ],
+                      }
+                }
+                transition={
+                  reduce
+                    ? undefined
+                    : { duration: 2.8, repeat: Infinity, ease: "easeInOut" }
+                }
               >
                 <IconPlus className="size-7" />
                 <span className="sr-only">{t("nav.upload")}</span>
-              </button>
+              </motion.button>
             </div>
           ) : null}
 
@@ -118,7 +160,7 @@ export default function BottomNav({
               </div>
             </div>
           </div>
-        </div>
+        </motion.div>
       </nav>
 
       {showUpload ? (

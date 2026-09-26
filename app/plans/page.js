@@ -6,12 +6,14 @@ import AppBrand from "../../components/AppBrand";
 import BottomNav from "../../components/BottomNav";
 import { IconArrow } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
+import { MotionBlock, MotionHeader } from "../../components/PageMotion";
 import { PlansIllustration } from "../../components/PlansIllustration";
 import PlansSection from "../../components/PlansSection";
 import Reveal from "../../components/Reveal";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { getAccessToken, getStoredUser } from "../../lib/session";
+import { motion } from "motion/react";
 
 export default function PlansPage() {
   const { t } = useI18n();
@@ -49,8 +51,8 @@ export default function PlansPage() {
           authed ? "pb-32" : "pb-10"
         }`}
       >
-        <header
-          className={`animate-fade-in relative flex items-center justify-center px-5 pt-6 ${
+        <MotionHeader
+          className={`relative flex items-center justify-center px-5 pt-6 ${
             authed ? "" : "text-white"
           }`}
         >
@@ -80,23 +82,30 @@ export default function PlansPage() {
           >
             <IconArrow className="size-5 rotate-180" />
           </Link>
-        </header>
+        </MotionHeader>
 
         <Reveal className="px-5 pt-4" delay={40}>
-          <div
+          <motion.div
             className={`relative overflow-hidden rounded-[1.6rem] px-4 pb-2 pt-3 ${
               authed
                 ? "bg-cs-blue text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]"
                 : "bg-white/10 text-white ring-1 ring-white/15 backdrop-blur-[2px]"
             }`}
+            initial={{ opacity: 0, y: 16, scale: 0.97 }}
+            animate={{ opacity: 1, y: 0, scale: 1 }}
+            transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            <span
-              className="plans-hero__orb plans-hero__orb--a pointer-events-none absolute -end-8 -top-6 size-28 rounded-full bg-white/10"
+            <motion.span
+              className="pointer-events-none absolute -end-8 -top-6 size-28 rounded-full bg-white/10"
               aria-hidden="true"
+              animate={{ scale: [1, 1.12, 1], x: [0, 6, 0] }}
+              transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
             />
-            <span
-              className="plans-hero__orb plans-hero__orb--b pointer-events-none absolute -bottom-10 -start-6 size-24 rounded-full bg-[#f6c344]/20"
+            <motion.span
+              className="pointer-events-none absolute -bottom-10 -start-6 size-24 rounded-full bg-[#f6c344]/20"
               aria-hidden="true"
+              animate={{ scale: [1, 1.15, 1], y: [0, -8, 0] }}
+              transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
             />
             <div className="relative mx-auto max-w-[260px]">
               <PlansIllustration />
@@ -112,21 +121,22 @@ export default function PlansPage() {
                 {t("plans.heroSubtitle")}
               </p>
             </div>
-          </div>
+          </motion.div>
         </Reveal>
 
-        <div
+        <MotionBlock
+          delay={0.2}
           className={
             authed
               ? "px-5 pt-5"
-              : "mx-5 mt-5 rounded-[1.6rem] bg-white px-4 pb-5 pt-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)] animate-fade-up"
+              : "mx-5 mt-5 rounded-[1.6rem] bg-white px-4 pb-5 pt-5 shadow-[0_16px_40px_rgba(0,0,0,0.16)]"
           }
         >
           <PlansSection
             variant={authed ? "dashboard" : "public"}
             guestMode={!authed}
           />
-        </div>
+        </MotionBlock>
 
         {authed ? <BottomNav activeId="files" /> : null}
       </div>

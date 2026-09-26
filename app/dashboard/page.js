@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { motion } from "motion/react";
 import BottomNav from "../../components/BottomNav";
 import EmptyState from "../../components/EmptyState";
 import AdvancedSearchModal from "../../components/AdvancedSearchModal";
@@ -18,12 +19,14 @@ import {
   StorageRing,
 } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
+import { MotionBlock } from "../../components/PageMotion";
 import PlansBanner from "../../components/PlansBanner";
 import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
 import { formatBytes, formatDate, formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
+import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
@@ -121,7 +124,7 @@ export default function DashboardPage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="relative flex items-center justify-center px-5 pt-6">
+        <header className="sticky top-0 z-30 flex items-center justify-center bg-[color-mix(in_srgb,var(--cs-surface)_90%,transparent)] px-5 pb-3 pt-6 backdrop-blur-md">
           <Link
             href="/profile"
             className="absolute left-5 top-6"
@@ -145,7 +148,7 @@ export default function DashboardPage() {
           </button>
         </header>
 
-        <div className="px-5 pt-5">
+        <MotionBlock className="px-5 pt-5" delay={0.12}>
           <p className="mb-3 text-sm leading-7 text-cs-muted">
             {t("dashboard.hello")}{" "}
             <span className="font-bold text-cs-ink">
@@ -158,15 +161,17 @@ export default function DashboardPage() {
             </p>
           ) : null}
           <div className="flex items-center gap-2">
-            <button
+            <motion.button
               type="button"
               onClick={() => setSearchOpen(true)}
               className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-cs-blue text-white shadow-sm shadow-cs-blue/25 transition hover:bg-cs-blue-deep"
               aria-label={t("dashboard.advancedSearch")}
               title={t("dashboard.advancedSearch")}
+              whileHover={{ scale: 1.04 }}
+              whileTap={{ scale: 0.94 }}
             >
               <IconFilters className="size-5" />
-            </button>
+            </motion.button>
 
             <label className="search-shell relative block min-w-0 flex-1">
               <span className="sr-only">{t("common.search")}</span>
@@ -206,10 +211,14 @@ export default function DashboardPage() {
               {t("dashboard.advancedSearch")}
             </button>
           ) : null}
-        </div>
+        </MotionBlock>
 
-        <section className="animate-fade-up px-5 pt-5">
-          <div className="rounded-[1.6rem] bg-cs-blue p-5 text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]">
+        <MotionBlock className="px-5 pt-5" delay={0.2} variant="scale" as="section">
+          <motion.div
+            className="rounded-[1.6rem] bg-cs-blue p-5 text-white shadow-[0_16px_40px_rgba(31,79,196,0.28)]"
+            whileHover={{ y: -2 }}
+            transition={{ duration: 0.25 }}
+          >
             <div className="flex items-center justify-between gap-4">
               <div className="min-w-0 flex-1 text-right">
                 <h2 className="text-lg font-extrabold leading-8">
@@ -220,18 +229,26 @@ export default function DashboardPage() {
                   {formatBytes(storage.quota, t, locale)}
                 </p>
               </div>
-              <StorageRing
-                percent={storage.percent || 1}
-                usedLabel={t("dashboard.used")}
-                locale={locale}
-              />
+              <motion.div
+                initial={{ rotate: -20, opacity: 0 }}
+                animate={{ rotate: 0, opacity: 1 }}
+                transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.35 }}
+              >
+                <StorageRing
+                  percent={storage.percent || 1}
+                  usedLabel={t("dashboard.used")}
+                  locale={locale}
+                />
+              </motion.div>
             </div>
 
             <div className="mt-5">
               <div className="h-2 overflow-hidden rounded-full bg-white/20">
-                <div
-                  className="h-full rounded-full bg-white transition-all"
-                  style={{ width: `${Math.max(storage.percent, 2)}%` }}
+                <motion.div
+                  className="h-full rounded-full bg-white"
+                  initial={{ width: 0 }}
+                  animate={{ width: `${Math.max(storage.percent, 2)}%` }}
+                  transition={{ duration: 1.1, ease: easeOut, delay: 0.4 }}
                 />
               </div>
               <p className="mt-2.5 text-xs leading-5 text-white/80">
@@ -239,12 +256,14 @@ export default function DashboardPage() {
                 {t("dashboard.remaining")}
               </p>
             </div>
-          </div>
-        </section>
+          </motion.div>
+        </MotionBlock>
 
-        <PlansBanner className="px-5 pt-4" />
+        <MotionBlock delay={0.28}>
+          <PlansBanner className="px-5 pt-4" />
+        </MotionBlock>
 
-        <section className="px-5 pt-7">
+        <MotionBlock className="px-5 pt-7" delay={0.32} as="section">
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base font-extrabold leading-7 text-cs-ink">
@@ -274,6 +293,7 @@ export default function DashboardPage() {
                 as={Link}
                 href={`/folders/${folder.id}`}
                 delay={index * 60}
+                hover
                 className="pressable rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
@@ -302,9 +322,9 @@ export default function DashboardPage() {
               </div>
             ) : null}
           </div>
-        </section>
+        </MotionBlock>
 
-        <section className="px-5 pt-7">
+        <MotionBlock className="px-5 pt-7" delay={0.4} as="section">
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base font-extrabold leading-7 text-cs-ink">
@@ -334,6 +354,7 @@ export default function DashboardPage() {
                   key={file.id}
                   as="article"
                   delay={index * 55}
+                  hover
                   className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
                 >
                   <div className="shrink-0">
@@ -367,7 +388,7 @@ export default function DashboardPage() {
               />
             )}
           </div>
-        </section>
+        </MotionBlock>
 
         <BottomNav activeId="files" onUploadSuccess={refresh} />
         <AdvancedSearchModal

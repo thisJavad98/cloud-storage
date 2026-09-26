@@ -10,6 +10,7 @@ import LanguageSwitcher from "../../components/LanguageSwitcher";
 import ThemeSwitcher from "../../components/ThemeSwitcher";
 import { IconArrow, IconLogout } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
+import { MotionBlock, MotionHeader } from "../../components/PageMotion";
 import UserAvatar from "../../components/UserAvatar";
 import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
@@ -32,6 +33,7 @@ import {
   updateProfile,
   uploadAvatar,
 } from "../../services/auth";
+import { motion } from "motion/react";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -166,7 +168,7 @@ export default function ProfilePage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="relative flex items-center justify-center px-5 pt-6">
+        <MotionHeader className="relative flex items-center justify-center px-5 pt-6">
           <div className="min-w-0 flex-1 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-lg font-extrabold text-cs-ink">
@@ -180,17 +182,27 @@ export default function ProfilePage() {
           >
             <IconArrow className="size-5 rotate-180" />
           </Link>
-        </header>
+        </MotionHeader>
 
-        <section className="flex flex-col items-center px-5 pt-8">
-          <div className="relative">
+        <MotionBlock
+          className="flex flex-col items-center px-5 pt-8"
+          delay={0.12}
+          as="section"
+          variant="scale"
+        >
+          <motion.div
+            className="relative"
+            initial={{ scale: 0.85, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ type: "spring", stiffness: 280, damping: 20, delay: 0.15 }}
+          >
             <UserAvatar user={user} size="lg" className="ring-4 ring-white" />
             {avatarBusy ? (
               <div className="absolute inset-0 flex items-center justify-center rounded-full bg-black/35 text-xs font-semibold text-white">
                 ...
               </div>
             ) : null}
-          </div>
+          </motion.div>
 
           <p className="mt-3 text-base font-bold text-cs-ink">
             {user.fullName || user.email}
@@ -226,9 +238,9 @@ export default function ProfilePage() {
               onChange={handleAvatarChange}
             />
           </div>
-        </section>
+        </MotionBlock>
 
-        <form onSubmit={handleSave} className="mt-8 space-y-5 px-5">
+        <MotionBlock as="form" className="mt-8 space-y-5 px-5" delay={0.22} onSubmit={handleSave}>
           <label className="block">
             <span className="mb-2 block text-sm font-semibold text-cs-ink">
               {t("profile.displayName")}
@@ -264,17 +276,21 @@ export default function ProfilePage() {
             />
           </label>
 
-          <button
+          <motion.button
             type="submit"
             disabled={saving || !dirty || fullName.trim().length < 2}
             className="h-14 w-full rounded-2xl bg-cs-blue text-base font-bold text-white shadow-[0_12px_28px_rgba(31,79,196,0.28)] transition disabled:cursor-not-allowed disabled:opacity-50"
+            whileTap={dirty ? { scale: 0.98 } : undefined}
           >
             {saving ? t("profile.saving") : t("profile.save")}
-          </button>
-        </form>
+          </motion.button>
+        </MotionBlock>
 
-        <section className="mt-6 space-y-3 px-5">
-          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line">
+        <MotionBlock className="mt-6 space-y-3 px-5" delay={0.3} as="section">
+          <motion.div
+            className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
+            whileHover={{ y: -2 }}
+          >
             <div className="flex items-center justify-between gap-3">
               <div className="min-w-0 text-start">
                 <p className="text-sm font-bold text-cs-ink">
@@ -286,9 +302,12 @@ export default function ProfilePage() {
               </div>
               <LanguageSwitcher />
             </div>
-          </div>
+          </motion.div>
 
-          <div className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line">
+          <motion.div
+            className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line"
+            whileHover={{ y: -2 }}
+          >
             <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
               <div className="min-w-0 text-start">
                 <p className="text-sm font-bold text-cs-ink">
@@ -300,19 +319,20 @@ export default function ProfilePage() {
               </div>
               <ThemeSwitcher className="self-start sm:self-auto" />
             </div>
-          </div>
-        </section>
+          </motion.div>
+        </MotionBlock>
 
-        <div className="mt-6 px-5">
-          <button
+        <MotionBlock className="mt-6 px-5" delay={0.36}>
+          <motion.button
             type="button"
             onClick={() => setLogoutOpen(true)}
             className="inline-flex h-12 w-full items-center justify-center gap-2 rounded-2xl bg-white text-sm font-semibold text-red-500 ring-1 ring-cs-line"
+            whileTap={{ scale: 0.98 }}
           >
             <IconLogout className="size-5" />
             {t("profile.logout")}
-          </button>
-        </div>
+          </motion.button>
+        </MotionBlock>
 
         <BottomNav activeId="profile" onUploadSuccess={refresh} />
       </div>

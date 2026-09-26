@@ -3,12 +3,15 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
+import { motion } from "motion/react";
 import AppBrand from "../../components/AppBrand";
 import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow, IconEye } from "../../components/Icons";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { notifyError } from "../../lib/toast";
 import { formatAuthError, login } from "../../services/auth";
+
+const ease = [0.22, 1, 0.36, 1];
 
 export default function LoginPage() {
   const router = useRouter();
@@ -35,11 +38,16 @@ export default function LoginPage() {
   return (
     <main className="auth-screen hex-pattern">
       <div className="phone-shell flex h-full min-h-0 flex-col">
-        <div className="animate-fade-in flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden px-6 pb-1 pt-6">
+        <div className="relative z-0 flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden px-6 pb-1 pt-6">
           <LoginIllustration />
         </div>
 
-        <section className="animate-fade-in-delay shrink-0 rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]">
+        <motion.section
+          className="relative z-10 shrink-0 rounded-t-[2rem] bg-white px-6 pb-8 pt-7 shadow-[0_-12px_40px_rgba(0,0,0,0.18)]"
+          initial={{ opacity: 0, y: 28 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.12, ease }}
+        >
           <div className="mb-5 flex justify-center">
             <AppBrand size="sm" tone="blue" />
           </div>
@@ -49,7 +57,7 @@ export default function LoginPage() {
             </h1>
             <Link
               href="/"
-              className="icon-label inline-flex size-9 shrink-0 items-center justify-center rounded-full text-cs-blue"
+              className="icon-label relative z-10 inline-flex size-9 shrink-0 items-center justify-center rounded-full text-cs-blue"
               aria-label={t("common.back")}
             >
               <IconArrow className="size-5" />
@@ -126,11 +134,11 @@ export default function LoginPage() {
 
           <p className="mt-6 text-center text-sm leading-7 text-cs-muted">
             {t("auth.noAccount")}{" "}
-            <Link href="/signup" className="font-bold text-cs-blue">
+            <Link href="/signup" className="relative z-10 font-bold text-cs-blue">
               {t("auth.signup")}
             </Link>
           </p>
-        </section>
+        </motion.section>
       </div>
     </main>
   );

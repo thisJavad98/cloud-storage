@@ -1,11 +1,14 @@
 "use client";
 
 import Link from "next/link";
+import { motion } from "motion/react";
 import AppBrand from "../components/AppBrand";
 import { IntroIllustration } from "../components/IntroIllustration";
 import PlansBanner from "../components/PlansBanner";
 import { IconArrow, IconFolder, IconUpload } from "../components/Icons";
 import { useI18n } from "../lib/i18n/I18nProvider";
+
+const ease = [0.22, 1, 0.36, 1];
 
 function ShieldIcon({ className = "size-5" }) {
   return (
@@ -51,15 +54,25 @@ export default function IntroPage() {
   return (
     <main className="auth-screen hex-pattern">
       <div className="phone-shell flex h-full min-h-0 flex-col overflow-hidden px-6 pb-5 pt-6 text-white">
-        <header className="animate-fade-in flex shrink-0 items-center justify-center">
+        <motion.header
+          className="flex shrink-0 items-center justify-center"
+          initial={{ opacity: 0, y: -12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5, ease }}
+        >
           <AppBrand tone="white" size="lg" />
-        </header>
+        </motion.header>
 
-        <div className="animate-fade-in-delay flex min-h-0 flex-1 items-center justify-center overflow-hidden py-2">
+        <div className="relative z-0 flex min-h-0 flex-1 items-center justify-center overflow-hidden py-2">
           <IntroIllustration />
         </div>
 
-        <section className="animate-fade-in-delay shrink-0 text-center">
+        <motion.section
+          className="relative z-10 shrink-0 text-center"
+          initial={{ opacity: 0, y: 18 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.15, ease }}
+        >
           <h1 className="text-[1.65rem] font-extrabold leading-tight tracking-tight">
             {t("landing.welcome", { name: brandName })}
           </h1>
@@ -68,12 +81,16 @@ export default function IntroPage() {
           </p>
 
           <ul className="mt-3.5 grid grid-cols-3 gap-2">
-            {features.map((item) => {
+            {features.map((item, index) => {
               const Icon = item.icon;
               return (
-                <li
+                <motion.li
                   key={item.title}
                   className="rounded-2xl bg-white/10 px-2 py-2.5 ring-1 ring-white/15 backdrop-blur-[2px]"
+                  initial={{ opacity: 0, y: 14 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: 0.45, delay: 0.28 + index * 0.08, ease }}
+                  whileHover={{ y: -3, backgroundColor: "rgba(255,255,255,0.16)" }}
                 >
                   <span className="mx-auto mb-1.5 inline-flex size-7 items-center justify-center rounded-xl bg-white/15 text-white">
                     <Icon className="size-3.5" />
@@ -82,13 +99,18 @@ export default function IntroPage() {
                   <p className="mt-0.5 text-[10px] leading-4 text-white/65">
                     {item.text}
                   </p>
-                </li>
+                </motion.li>
               );
             })}
           </ul>
-        </section>
+        </motion.section>
 
-        <div className="mt-4 shrink-0 space-y-2.5 animate-fade-in-delay">
+        <motion.div
+          className="relative z-10 mt-4 shrink-0 space-y-2.5"
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.55, delay: 0.35, ease }}
+        >
           <Link
             href="/login"
             className="inline-flex h-12 w-full items-center justify-between gap-3 rounded-2xl bg-white px-5 text-cs-blue shadow-[0_10px_30px_rgba(0,0,0,0.18)] transition hover:bg-white/95 active:scale-[0.99]"
@@ -100,13 +122,20 @@ export default function IntroPage() {
           </Link>
           <p className="text-center text-xs leading-5 text-white/70">
             {t("landing.noAccount")}{" "}
-            <Link href="/signup" className="font-bold text-white underline-offset-4 hover:underline">
+            <Link href="/signup" className="relative z-10 font-bold text-white underline-offset-4 hover:underline">
               {t("landing.freeSignup")}
             </Link>
           </p>
-        </div>
+        </motion.div>
 
-        <PlansBanner variant="landing" compact className="mt-3 shrink-0" />
+        <motion.div
+          className="relative z-10 mt-3 shrink-0"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ duration: 0.5, delay: 0.5 }}
+        >
+          <PlansBanner variant="landing" compact />
+        </motion.div>
       </div>
     </main>
   );

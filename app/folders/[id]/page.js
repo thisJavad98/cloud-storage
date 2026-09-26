@@ -18,6 +18,7 @@ import {
   IconTrash,
 } from "../../../components/Icons";
 import PageLoader from "../../../components/PageLoader";
+import { MotionBlock, MotionHeader } from "../../../components/PageMotion";
 import Reveal from "../../../components/Reveal";
 import { formatBytes, formatDate, formatDigits } from "../../../lib/format";
 import { useI18n } from "../../../lib/i18n/I18nProvider";
@@ -269,7 +270,7 @@ export default function FolderDetailPage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="relative flex items-center justify-center px-5 pt-6">
+        <MotionHeader className="relative flex items-center justify-center px-5 pt-6">
           <div className="min-w-0 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 truncate text-base font-extrabold leading-7 text-cs-ink">
@@ -287,9 +288,9 @@ export default function FolderDetailPage() {
           >
             <IconArrow className="size-5 rotate-180" />
           </Link>
-        </header>
+        </MotionHeader>
 
-        <section className="px-5 pt-5">
+        <MotionBlock className="px-5 pt-5" delay={0.1} as="section" variant="scale">
           <div className="rounded-[1.4rem] bg-white p-4 shadow-sm ring-1 ring-cs-line">
             <div className="flex items-center gap-3">
               <div className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]">
@@ -343,9 +344,9 @@ export default function FolderDetailPage() {
               </form>
             ) : null}
           </div>
-        </section>
+        </MotionBlock>
 
-        <div className="px-5 pt-4">
+        <MotionBlock className="px-5 pt-4" delay={0.16}>
           <label className="relative block">
             <span className="sr-only">{t("common.search")}</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
@@ -358,9 +359,9 @@ export default function FolderDetailPage() {
               className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
             />
           </label>
-        </div>
+        </MotionBlock>
 
-        <section className="px-5 pt-6">
+        <MotionBlock className="px-5 pt-6" delay={0.22} as="section">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
               {t("folderDetail.subfolders")}
@@ -403,6 +404,7 @@ export default function FolderDetailPage() {
                 as={Link}
                 href={`/folders/${item.id}`}
                 delay={index * 55}
+                hover
                 className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4]">
@@ -427,9 +429,9 @@ export default function FolderDetailPage() {
               </div>
             ) : null}
           </div>
-        </section>
+        </MotionBlock>
 
-        <section className="px-5 pt-7">
+        <MotionBlock className="px-5 pt-7" delay={0.28} as="section">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
               {t("folderDetail.filesInFolder")}
@@ -445,6 +447,7 @@ export default function FolderDetailPage() {
                 key={file.id}
                 as="article"
                 delay={Math.min(index, 10) * 45}
+                hover
                 className="relative rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
@@ -559,7 +562,7 @@ export default function FolderDetailPage() {
               />
             ) : null}
           </div>
-        </section>
+        </MotionBlock>
 
         <BottomNav
           activeId="folders"

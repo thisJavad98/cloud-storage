@@ -1,5 +1,5 @@
 /* Nimbus PWA service worker — network-first for navigations, cache-first for static assets */
-const CACHE_NAME = "nimbus-pwa-v1";
+const CACHE_NAME = "nimbus-pwa-v2";
 const PRECACHE = ["/", "/icon-192.png", "/icon-512.png", "/apple-touch-icon.png"];
 
 self.addEventListener("install", (event) => {
@@ -29,8 +29,8 @@ self.addEventListener("fetch", (event) => {
   const url = new URL(request.url);
   if (url.origin !== self.location.origin) return;
 
-  // Never cache API / auth traffic if proxied same-origin in future
-  if (url.pathname.startsWith("/api/")) return;
+  // Never cache API traffic or Next.js build chunks (stale HMR / module errors)
+  if (url.pathname.startsWith("/api/") || url.pathname.startsWith("/_next/")) return;
 
   if (request.mode === "navigate") {
     event.respondWith(

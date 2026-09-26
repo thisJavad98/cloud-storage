@@ -18,6 +18,7 @@ import {
   IconTrash,
 } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
+import { MotionBlock, MotionHeader } from "../../components/PageMotion";
 import Reveal from "../../components/Reveal";
 import { formatBytes, formatDate, formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
@@ -40,6 +41,7 @@ import {
   trashFile,
   updateFile,
 } from "../../services/files";
+import { motion } from "motion/react";
 
 function fileTone(mimeType = "", index = 0) {
   if (mimeType.startsWith("image/")) return "orange";
@@ -200,23 +202,28 @@ export default function FilesPage() {
   return (
     <main className="min-h-dvh dash-pattern">
       <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="relative flex items-center justify-center px-5 pt-6">
+        <MotionHeader className="relative flex items-center justify-center px-5 pt-6">
           <div className="min-w-0 px-12 text-center">
             <AppBrand size="sm" showLogo={false} className="justify-center" />
             <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
               {t("files.title")}
             </h1>
           </div>
-          <Link
-            href="/dashboard"
-            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
-            aria-label={t("common.back")}
+          <motion.div
+            className="absolute right-5 top-6"
+            whileTap={{ scale: 0.92 }}
           >
-            <IconArrow className="size-5 rotate-180" />
-          </Link>
-        </header>
+            <Link
+              href="/dashboard"
+              className="inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+              aria-label={t("common.back")}
+            >
+              <IconArrow className="size-5 rotate-180" />
+            </Link>
+          </motion.div>
+        </MotionHeader>
 
-        <div className="px-5 pt-5">
+        <MotionBlock className="px-5 pt-5" delay={0.1}>
           <label className="relative block">
             <span className="sr-only">{t("common.search")}</span>
             <span className="search-field-icon pointer-events-none absolute inset-y-0 flex items-center text-cs-muted">
@@ -229,9 +236,9 @@ export default function FilesPage() {
               className="search-field h-12 w-full rounded-2xl border-0 bg-white py-3 text-sm shadow-sm outline-none ring-1 ring-cs-line placeholder:text-cs-muted focus:ring-cs-blue/30"
             />
           </label>
-        </div>
+        </MotionBlock>
 
-        <section className="px-5 pt-6">
+        <MotionBlock className="px-5 pt-6" delay={0.18} as="section">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
               {t("files.foldersSection")}
@@ -252,6 +259,7 @@ export default function FilesPage() {
                 as={Link}
                 href={`/folders/${folder.id}`}
                 delay={index * 55}
+                hover
                 className="rounded-2xl bg-white p-4 shadow-sm ring-1 ring-cs-line transition hover:ring-cs-blue/30"
               >
                 <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4]">
@@ -276,9 +284,9 @@ export default function FilesPage() {
               </div>
             ) : null}
           </div>
-        </section>
+        </MotionBlock>
 
-        <section className="px-5 pt-7">
+        <MotionBlock className="px-5 pt-7" delay={0.26} as="section">
           <div className="mb-3 flex items-center justify-between gap-3">
             <h2 className="text-base font-extrabold leading-7 text-cs-ink">
               {t("files.rootFiles")}
@@ -294,6 +302,7 @@ export default function FilesPage() {
                 key={file.id}
                 as="article"
                 delay={Math.min(index, 10) * 45}
+                hover
                 className="relative rounded-2xl bg-white p-3.5 shadow-sm ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
@@ -408,7 +417,7 @@ export default function FilesPage() {
               />
             ) : null}
           </div>
-        </section>
+        </MotionBlock>
 
         <BottomNav activeId="manage" onUploadSuccess={refresh} />
 

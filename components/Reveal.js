@@ -1,9 +1,11 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { motion, useReducedMotion } from "motion/react";
+import { useMemo } from "react";
+import { revealTransition } from "../lib/motion";
 
 /**
- * Reveals children with a fade/slide animation when scrolled into view.
+ * Scroll / mount reveal with optional polymorphic element (div, article, Link…).
  */
 export default function Reveal({
   as: Comp = "div",
@@ -11,54 +13,43 @@ export default function Reveal({
   className = "",
   children,
   once = true,
+  hover = false,
   ...rest
 }) {
-  const ref = useRef(null);
-  const [visible, setVisible] = useState(false);
-  const { style, className: _ignored, ...other } = rest;
+  const reduce = useReducedMotion();
 
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    if (
-      typeof window !== "undefined" &&
-      window.matchMedia("(prefers-reduced-motion: reduce)").matches
-    ) {
-      setVisible(true);
-      return;
+  const MotionComp = useMemo(() => {
+    if (typeof Comp === "string") {
+      return motion[Comp] || motion.div;
     }
+    return motion.create(Comp);
+  }, [Comp]);
 
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setVisible(true);
-          if (once) observer.unobserve(el);
-        } else if (!once) {
-          setVisible(false);
-        }
-      },
-      {
-        threshold: 0.14,
-        rootMargin: "0px 0px -6% 0px",
-      }
+  if (reduce) {
+    const Static = typeof Comp === "string" ? Comp : Comp;
+    return (
+      <Static className={className} {...rest}>
+        {children}
+      </Static>
     );
-
-    observer.observe(el);
-    return () => observer.disconnect();
-  }, [once]);
+  }
 
   return (
-    <Comp
-      ref={ref}
-      className={`reveal-item${visible ? " is-visible" : ""} ${className}`}
-      style={{
-        ...(style || {}),
-        transitionDelay: visible ? `${delay}ms` : "0ms",
-      }}
-      {...other}
+    <MotionComp
+      className={className}
+      initial={{ opacity: 0, y: 16 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once, amount: 0.12, margin: "0px 0px -5% 0px" }}
+      transition={revealTransition(delay)}
+      {...(hover
+        ? {
+            whileHover: { y: -3, transition: { duration: 0.2 } },
+            whileTap: { scale: 0.98 },
+          }
+        : {})}
+      {...rest}
     >
       {children}
-    </Comp>
+    </MotionComp>
   );
 }
