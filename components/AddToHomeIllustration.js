@@ -17,7 +17,7 @@ export default function AddToHomeIllustration() {
   return (
     <motion.svg
       viewBox="0 0 360 280"
-      className="pointer-events-none mx-auto h-auto max-h-[min(40vh,260px)] w-full max-w-[340px]"
+      className="pointer-events-none mx-auto h-auto max-h-[min(34vh,220px)] w-full max-w-[320px]"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
