@@ -28,6 +28,7 @@ import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
 import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
+import { useLiveUser } from "../../lib/useLiveUser";
 import { openUploadModal } from "../../lib/upload";
 import {
   notifyError,
@@ -71,6 +72,7 @@ export default function FilesPage() {
   const [focusFileId, setFocusFileId] = useState("");
   const focusedOnceRef = useRef(false);
   const bootRef = useRef(true);
+  useLiveUser(setUser);
 
   const refresh = useCallback(async () => {
     if (!hasSession()) {

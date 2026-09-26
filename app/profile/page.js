@@ -22,6 +22,7 @@ import {
   hasSession,
   saveSession,
 } from "../../lib/session";
+import { useLiveUser } from "../../lib/useLiveUser";
 import {
   notifyError,
   notifyInfo,
@@ -52,6 +53,7 @@ export default function ProfilePage() {
   const [removeOpen, setRemoveOpen] = useState(false);
   const [showA2hs, setShowA2hs] = useState(false);
   const bootRef = useRef(true);
+  useLiveUser(setUser);
 
   const refresh = useCallback(async () => {
     if (!hasSession()) {

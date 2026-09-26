@@ -32,6 +32,7 @@ import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
 import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
+import { useLiveUser } from "../../lib/useLiveUser";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
 import { formatFileError, listFiles, listFolders } from "../../services/files";
@@ -53,6 +54,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [previewFile, setPreviewFile] = useState(null);
   const bootRef = useRef(true);
+  useLiveUser(setUser);
 
   const refresh = useCallback(async () => {
     if (!hasSession()) {

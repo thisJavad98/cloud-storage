@@ -22,6 +22,7 @@ import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
+import { useLiveUser } from "../../lib/useLiveUser";
 import {
   notifyError,
   notifySuccess,
@@ -48,6 +49,7 @@ export default function FoldersManagePage() {
   const [showCreate, setShowCreate] = useState(false);
   const [createName, setCreateName] = useState("");
   const [editId, setEditId] = useState("");
+  useLiveUser(setUser);
   const [editName, setEditName] = useState("");
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);

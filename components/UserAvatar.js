@@ -15,7 +15,7 @@ export default function UserAvatar({
         ? "size-8 text-xs"
         : "size-10 text-sm";
 
-  const src = getMediaUrl(user?.avatarUrl);
+  const src = getMediaUrl(user?.avatarUrl, { version: user?.updatedAt });
   const label = alt || user?.fullName || user?.email || "کاربر";
   const initial = (user?.fullName || user?.email || "؟").trim().charAt(0);
 
@@ -23,6 +23,7 @@ export default function UserAvatar({
     return (
       // eslint-disable-next-line @next/next/no-img-element
       <img
+        key={src}
         src={src}
         alt={label}
         className={`${sizeClass} rounded-full object-cover shadow-sm ring-2 ring-white ${className}`}
