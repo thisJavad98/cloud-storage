@@ -6,12 +6,14 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import BottomNav from "../../components/BottomNav";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
+import FilePreviewModal from "../../components/FilePreviewModal";
 import AppBrand from "../../components/AppBrand";
 import {
   FileGlyph,
   IconArrow,
   IconDownload,
   IconEdit,
+  IconEye,
   IconFolder,
   IconPlus,
   IconSearch,
@@ -23,6 +25,7 @@ import Reveal from "../../components/Reveal";
 import { formatBytes, formatDate, formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
+import { canPreviewFile } from "../../lib/preview";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { openUploadModal } from "../../lib/upload";
 import {
@@ -63,6 +66,7 @@ export default function FilesPage() {
   const [renameValue, setRenameValue] = useState("");
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
+  const [previewFile, setPreviewFile] = useState(null);
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
@@ -306,10 +310,19 @@ export default function FilesPage() {
                 className="relative rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
               >
                 <div className="flex items-center gap-3">
-                  <div className="shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setPreviewFile(file)}
+                    className="shrink-0 rounded-xl transition hover:opacity-90"
+                    aria-label={t("files.preview")}
+                  >
                     <FileGlyph tone={fileTone(file.mimeType, index)} />
-                  </div>
-                  <div className="min-w-0 flex-1 text-right">
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewFile(file)}
+                    className="min-w-0 flex-1 text-right"
+                  >
                     <h3 className="truncate text-sm font-bold leading-6 text-cs-ink">
                       {file.name}
                     </h3>
@@ -317,8 +330,14 @@ export default function FilesPage() {
                       {formatDate(file.updatedAt || file.createdAt, locale)}
                       <span className="mx-2 text-cs-line">|</span>
                       {formatBytes(file.sizeBytes, t, locale)}
+                      {canPreviewFile(file) ? (
+                        <>
+                          <span className="mx-2 text-cs-line">|</span>
+                          <span className="text-cs-blue">{t("files.preview")}</span>
+                        </>
+                      ) : null}
                     </p>
-                  </div>
+                  </button>
                   <button
                     type="button"
                     onClick={() =>
@@ -335,9 +354,20 @@ export default function FilesPage() {
                   <div className="mt-3 grid grid-cols-2 gap-2 border-t border-cs-line pt-3">
                     <button
                       type="button"
+                      onClick={() => {
+                        setMenuId("");
+                        setPreviewFile(file);
+                      }}
+                      className="icon-label justify-center rounded-xl bg-cs-blue-soft px-3 py-2.5 text-xs font-semibold text-cs-blue"
+                    >
+                      <IconEye open className="size-4 shrink-0" />
+                      <span>{t("files.preview")}</span>
+                    </button>
+                    <button
+                      type="button"
                       disabled={busyId === file.id}
                       onClick={() => handleDownload(file)}
-                      className="icon-label justify-center rounded-xl bg-cs-blue-soft px-3 py-2.5 text-xs font-semibold text-cs-blue"
+                      className="icon-label justify-center rounded-xl bg-[#eef2ff] px-3 py-2.5 text-xs font-semibold text-cs-blue"
                     >
                       <IconDownload className="size-4 shrink-0" />
                       <span>{t("files.download")}</span>
@@ -366,7 +396,7 @@ export default function FilesPage() {
                       type="button"
                       disabled={busyId === file.id}
                       onClick={() => askDelete(file)}
-                      className="icon-label justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600"
+                      className="icon-label col-span-2 justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600"
                     >
                       <IconTrash className="size-4 shrink-0" />
                       <span>{t("files.deleteForever")}</span>
@@ -432,6 +462,12 @@ export default function FilesPage() {
             if (!confirmLoading) setConfirmAction(null);
           }}
           onConfirm={runConfirmedAction}
+        />
+
+        <FilePreviewModal
+          open={Boolean(previewFile)}
+          file={previewFile}
+          onClose={() => setPreviewFile(null)}
         />
       </div>
     </main>

@@ -189,6 +189,18 @@ export async function deleteFolder(id) {
 }
 
 export async function downloadFile(id, fileName) {
+  const { url } = await fetchFileBlob(id);
+  const anchor = document.createElement("a");
+  anchor.href = url;
+  anchor.download = fileName || "download";
+  document.body.appendChild(anchor);
+  anchor.click();
+  anchor.remove();
+  URL.revokeObjectURL(url);
+}
+
+/** Fetch file binary for in-app preview (caller must revoke object URL). */
+export async function fetchFileBlob(id) {
   const token = requireToken();
   const response = await apiRequest(`/files/${id}/download`, {
     method: "GET",
@@ -197,14 +209,20 @@ export async function downloadFile(id, fileName) {
   });
 
   const blob = await response.blob();
-  const url = URL.createObjectURL(blob);
-  const anchor = document.createElement("a");
-  anchor.href = url;
-  anchor.download = fileName || "download";
-  document.body.appendChild(anchor);
-  anchor.click();
-  anchor.remove();
-  URL.revokeObjectURL(url);
+  const contentType =
+    response.headers.get("content-type") || blob.type || "application/octet-stream";
+  const typedBlob =
+    blob.type && blob.type !== "application/octet-stream"
+      ? blob
+      : new Blob([blob], { type: contentType });
+  const url = URL.createObjectURL(typedBlob);
+
+  return {
+    blob: typedBlob,
+    url,
+    mimeType: typedBlob.type || contentType,
+    size: typedBlob.size,
+  };
 }
 
 export function formatFileError(error) {

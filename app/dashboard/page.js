@@ -8,6 +8,7 @@ import BottomNav from "../../components/BottomNav";
 import EmptyState from "../../components/EmptyState";
 import AdvancedSearchModal from "../../components/AdvancedSearchModal";
 import AppBrand from "../../components/AppBrand";
+import FilePreviewModal from "../../components/FilePreviewModal";
 import {
   FileGlyph,
   IconClose,
@@ -28,6 +29,7 @@ import { formatBytes, formatDate, formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
+import { canPreviewFile } from "../../lib/preview";
 import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
@@ -48,6 +50,7 @@ export default function DashboardPage() {
   const [folders, setFolders] = useState([]);
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [previewFile, setPreviewFile] = useState(null);
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
@@ -357,19 +360,31 @@ export default function DashboardPage() {
                   hover
                   className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
                 >
-                  <div className="shrink-0">
-                    <FileGlyph tone={fileTone(file.mimeType)} />
-                  </div>
-                  <div className="min-w-0 flex-1 text-right">
-                    <h4 className="truncate text-sm font-bold leading-6 text-cs-ink">
-                      {file.name}
-                    </h4>
-                    <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
-                      {formatDate(file.updatedAt || file.createdAt, locale)}
-                      <span className="mx-2 text-cs-line">|</span>
-                      {formatBytes(file.sizeBytes, t, locale)}
-                    </p>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setPreviewFile(file)}
+                    className="flex min-w-0 flex-1 items-center gap-3 text-right"
+                  >
+                    <div className="shrink-0">
+                      <FileGlyph tone={fileTone(file.mimeType)} />
+                    </div>
+                    <div className="min-w-0 flex-1">
+                      <h4 className="truncate text-sm font-bold leading-6 text-cs-ink">
+                        {file.name}
+                      </h4>
+                      <p className="mt-0.5 text-[11px] leading-5 text-cs-muted">
+                        {formatDate(file.updatedAt || file.createdAt, locale)}
+                        <span className="mx-2 text-cs-line">|</span>
+                        {formatBytes(file.sizeBytes, t, locale)}
+                        {canPreviewFile(file) ? (
+                          <>
+                            <span className="mx-2 text-cs-line">|</span>
+                            <span className="text-cs-blue">{t("files.preview")}</span>
+                          </>
+                        ) : null}
+                      </p>
+                    </div>
+                  </button>
                   <Link
                     href="/files"
                     className="inline-flex size-8 shrink-0 items-center justify-center rounded-full text-cs-muted"
@@ -395,6 +410,11 @@ export default function DashboardPage() {
           open={searchOpen}
           onClose={() => setSearchOpen(false)}
           initialQuery={query}
+        />
+        <FilePreviewModal
+          open={Boolean(previewFile)}
+          file={previewFile}
+          onClose={() => setPreviewFile(null)}
         />
       </div>
     </main>
