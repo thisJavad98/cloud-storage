@@ -21,7 +21,7 @@ import Reveal from "../../components/Reveal";
 import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
-import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
+import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
 import {
   notifyError,
   notifySuccess,
@@ -54,8 +54,7 @@ export default function FoldersManagePage() {
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
-    const token = getAccessToken();
-    if (!token) {
+    if (!hasSession()) {
       router.replace("/login");
       return;
     }

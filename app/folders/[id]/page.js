@@ -27,7 +27,7 @@ import { readFocusFileIdFromLocation } from "../../../lib/filesNav";
 import { useI18n } from "../../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../../lib/pageLoading";
 import { canPreviewFile } from "../../../lib/preview";
-import { getAccessToken, getStoredUser, saveSession } from "../../../lib/session";
+import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../../lib/session";
 import { openUploadModal } from "../../../lib/upload";
 import {
   notifyError,
@@ -84,8 +84,7 @@ export default function FolderDetailPage() {
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
-    const token = getAccessToken();
-    if (!token) {
+    if (!hasSession()) {
       router.replace("/login");
       return;
     }

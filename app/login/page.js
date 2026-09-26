@@ -6,6 +6,7 @@ import { useState } from "react";
 import { motion } from "motion/react";
 import AppBrand from "../../components/AppBrand";
 import AuthAurora from "../../components/AuthAurora";
+import AuthRedirect from "../../components/AuthRedirect";
 import { LoginIllustration } from "../../components/LoginIllustration";
 import { IconArrow, IconEye } from "../../components/Icons";
 import { useI18n } from "../../lib/i18n/I18nProvider";
@@ -38,6 +39,7 @@ export default function LoginPage() {
 
   return (
     <main className="auth-screen hex-pattern auth-stage">
+      <AuthRedirect />
       <AuthAurora />
       <div className="phone-shell auth-shell relative z-[1] flex h-full min-h-0 flex-col overflow-hidden">
         <div className="relative z-0 flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden px-6 pb-1 pt-6">

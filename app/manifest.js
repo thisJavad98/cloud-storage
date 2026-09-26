@@ -7,7 +7,7 @@ export default function manifest() {
     name: `${APP_NAME} — ${APP_NAME_EN}`,
     short_name: APP_NAME,
     description: APP_TAGLINE,
-    start_url: "/",
+    start_url: "/dashboard",
     scope: "/",
     display: "standalone",
     display_override: ["standalone", "minimal-ui", "browser"],

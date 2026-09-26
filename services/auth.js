@@ -1,10 +1,11 @@
 import { apiRequest } from "../lib/api";
-import { getAccessToken, saveSession } from "../lib/session";
+import { getAccessToken, getRefreshToken, saveSession } from "../lib/session";
 
 export async function signup({ email, password, fullName }) {
   const payload = await apiRequest("/auth/signup", {
     method: "POST",
     body: { email, password, fullName },
+    skipAuthRefresh: true,
   });
 
   const { user, accessToken, refreshToken } = payload.data;
@@ -16,6 +17,7 @@ export async function login({ email, password }) {
   const payload = await apiRequest("/auth/login", {
     method: "POST",
     body: { email, password },
+    skipAuthRefresh: true,
   });
 
   const { user, accessToken, refreshToken } = payload.data;
@@ -23,15 +25,32 @@ export async function login({ email, password }) {
   return payload.data;
 }
 
+export async function refreshSession() {
+  const refreshToken = getRefreshToken();
+  if (!refreshToken) {
+    throw new Error("نشست منقضی شده است.");
+  }
+
+  const payload = await apiRequest("/auth/refresh", {
+    method: "POST",
+    body: { refreshToken },
+    skipAuthRefresh: true,
+  });
+
+  const { user, accessToken, refreshToken: nextRefresh } = payload.data;
+  saveSession({ user, accessToken, refreshToken: nextRefresh });
+  return payload.data;
+}
+
 export async function getMe() {
   const token = getAccessToken();
-  if (!token) {
+  if (!token && !getRefreshToken()) {
     throw new Error("وارد حساب کاربری نشده‌اید.");
   }
 
   const payload = await apiRequest("/auth/me", {
     method: "GET",
-    token,
+    token: getAccessToken() || undefined,
   });
 
   return payload.data.user;

@@ -1,12 +1,11 @@
 import { apiRequest, getApiUrl } from "../lib/api";
-import { getAccessToken } from "../lib/session";
+import { getAccessToken, hasSession } from "../lib/session";
 
 function requireToken() {
-  const token = getAccessToken();
-  if (!token) {
+  if (!hasSession()) {
     throw new Error("وارد حساب کاربری نشده‌اید.");
   }
-  return token;
+  return getAccessToken();
 }
 
 export async function listFiles(params = {}) {

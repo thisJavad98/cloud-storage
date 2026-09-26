@@ -31,7 +31,7 @@ import { useI18n } from "../../lib/i18n/I18nProvider";
 import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
-import { getAccessToken, getStoredUser, saveSession } from "../../lib/session";
+import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
 import { notifyError } from "../../lib/toast";
 import { getMe } from "../../services/auth";
 import { formatFileError, listFiles, listFolders } from "../../services/files";
@@ -55,8 +55,7 @@ export default function DashboardPage() {
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
-    const token = getAccessToken();
-    if (!token) {
+    if (!hasSession()) {
       router.replace("/login");
       return;
     }

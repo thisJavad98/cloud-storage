@@ -19,6 +19,7 @@ import {
   clearSession,
   getAccessToken,
   getStoredUser,
+  hasSession,
   saveSession,
 } from "../../lib/session";
 import {
@@ -53,8 +54,7 @@ export default function ProfilePage() {
   const bootRef = useRef(true);
 
   const refresh = useCallback(async () => {
-    const token = getAccessToken();
-    if (!token) {
+    if (!hasSession()) {
       router.replace("/login");
       return;
     }
