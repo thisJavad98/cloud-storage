@@ -213,6 +213,90 @@ export function IconFolders({ className = "size-6" }) {
   );
 }
 
+export function IconIsland({ className = "size-6" }) {
+  return (
+    <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">
+      {/* distant wave */}
+      <path
+        d="M2.5 14.2c1.4-.7 2.7-1 4.1-1 1.6 0 2.7.55 4.2.55 1.4 0 2.7-.55 4.1-.55 1.4 0 2.8.4 4.6 1.15"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+        opacity="0.4"
+      />
+      {/* mid wave */}
+      <path
+        d="M2.2 16.6c1.6-.85 3.1-1.25 4.7-1.25 1.7 0 2.9.65 4.5.65s2.9-.65 4.6-.65c1.6 0 3.2.5 5.3 1.35"
+        stroke="currentColor"
+        strokeWidth="1.65"
+        strokeLinecap="round"
+        opacity="0.7"
+      />
+      {/* front wave */}
+      <path
+        d="M2 19.2c1.8-1 3.5-1.45 5.3-1.45 1.85 0 3.15.7 4.9.7 1.8 0 3.15-.7 5-.7 1.7 0 3.4.55 5.6 1.5"
+        stroke="currentColor"
+        strokeWidth="1.85"
+        strokeLinecap="round"
+      />
+      {/* island landmass */}
+      <path
+        d="M7.4 13.6c.55-2.35 1.85-4.1 3.85-4.85 1.35-.5 2.55-.2 3.35.75.7.85.75 2.05.4 3.15-.9.55-2.05.85-3.5.85-1.55 0-2.85-.35-4.1-.9Z"
+        fill="currentColor"
+        opacity="0.92"
+      />
+      {/* sand rim */}
+      <path
+        d="M7.6 13.4c1.15.45 2.35.7 3.9.7 1.4 0 2.45-.25 3.35-.7"
+        stroke="currentColor"
+        strokeWidth="1.2"
+        strokeLinecap="round"
+        opacity="0.35"
+      />
+      {/* palm trunk */}
+      <path
+        d="M13.05 9.1c.2-1.15.7-2.15 1.45-2.85"
+        stroke="currentColor"
+        strokeWidth="1.45"
+        strokeLinecap="round"
+      />
+      {/* palm fronds */}
+      <path
+        d="M14.5 6.3c-1.35-.55-2.35-1.35-2.7-1.85.95.55 1.85 1.2 2.7 1.85Z"
+        fill="currentColor"
+        opacity="0.9"
+      />
+      <path
+        d="M14.5 6.3c1.25-.7 2.2-1.15 2.95-1.35-.55.75-1.45 1.25-2.95 1.35Z"
+        fill="currentColor"
+        opacity="0.75"
+      />
+      <path
+        d="M14.5 6.3c.85.15 1.55.7 1.85 1.25-.55-.2-1.15-.4-1.85-1.25Z"
+        fill="currentColor"
+        opacity="0.65"
+      />
+      {/* tiny data chip / file on island */}
+      <rect
+        x="9.15"
+        y="10.15"
+        width="3.4"
+        height="2.55"
+        rx="0.45"
+        fill="currentColor"
+        opacity="0.28"
+      />
+      <path
+        d="M9.55 11h2.55M9.55 11.85h1.7"
+        stroke="currentColor"
+        strokeWidth="0.85"
+        strokeLinecap="round"
+        opacity="0.95"
+      />
+    </svg>
+  );
+}
+
 export function IconUser({ className = "size-6" }) {
   return (
     <svg viewBox="0 0 24 24" className={className} fill="none" aria-hidden="true">

@@ -8,6 +8,7 @@ import BottomNav from "../../components/BottomNav";
 import EmptyState from "../../components/EmptyState";
 import AdvancedSearchModal from "../../components/AdvancedSearchModal";
 import AppBrand from "../../components/AppBrand";
+import CreateFolderModal from "../../components/CreateFolderModal";
 import FilePreviewModal from "../../components/FilePreviewModal";
 import {
   FileGlyph,
@@ -16,12 +17,14 @@ import {
   IconFilters,
   IconFolder,
   IconMenu,
+  IconPlus,
   IconSearch,
   StorageRing,
 } from "../../components/Icons";
 import PageLoader from "../../components/PageLoader";
 import { MotionBlock } from "../../components/PageMotion";
 import PlansBanner from "../../components/PlansBanner";
+import DataSeaBanner from "../../components/DataSeaBanner";
 import Reveal from "../../components/Reveal";
 import SectionMoreLink from "../../components/SectionMoreLink";
 import UserAvatar from "../../components/UserAvatar";
@@ -31,7 +34,12 @@ import { useI18n } from "../../lib/i18n/I18nProvider";
 import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
-import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
+import {
+  getAccessToken,
+  getStoredUser,
+  hasSession,
+  saveSession,
+} from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
 import { useLibrarySync } from "../../lib/useLibrarySync";
 import { notifyError } from "../../lib/toast";
@@ -54,6 +62,7 @@ export default function DashboardPage() {
   const [files, setFiles] = useState([]);
   const [loading, setLoading] = useState(true);
   const [previewFile, setPreviewFile] = useState(null);
+  const [createFolderOpen, setCreateFolderOpen] = useState(false);
   const bootRef = useRef(true);
   useLiveUser(setUser);
 
@@ -220,7 +229,15 @@ export default function DashboardPage() {
           ) : null}
         </MotionBlock>
 
-        <MotionBlock className="px-5 pt-5" delay={0.2} variant="scale" as="section">
+        <MotionBlock
+          onClick={() => {
+            router.replace("/data-island");
+          }}
+          className="px-5 pt-5"
+          delay={0.2}
+          variant="scale"
+          as="section"
+        >
           <motion.div
             className="storage-card rounded-[1.7rem] p-5 text-white"
             whileHover={{ y: -2 }}
@@ -239,7 +256,12 @@ export default function DashboardPage() {
               <motion.div
                 initial={{ rotate: -20, opacity: 0 }}
                 animate={{ rotate: 0, opacity: 1 }}
-                transition={{ type: "spring", stiffness: 200, damping: 18, delay: 0.35 }}
+                transition={{
+                  type: "spring",
+                  stiffness: 200,
+                  damping: 18,
+                  delay: 0.35,
+                }}
               >
                 <StorageRing
                   percent={storage.percent || 1}
@@ -266,6 +288,10 @@ export default function DashboardPage() {
           </motion.div>
         </MotionBlock>
 
+        <MotionBlock delay={0.24}>
+          <DataSeaBanner className="px-5 pt-4" />
+        </MotionBlock>
+
         <MotionBlock delay={0.28}>
           <PlansBanner className="px-5 pt-4" />
         </MotionBlock>
@@ -281,47 +307,72 @@ export default function DashboardPage() {
                   {t("dashboard.folderCount", {
                     count: formatDigits(
                       query.trim() ? filteredFolders.length : folders.length,
-                      locale
+                      locale,
                     ),
                   })}
                 </p>
               ) : null}
             </div>
-            <SectionMoreLink
-              href="/folders"
-              count={folders.length > 4 ? folders.length : undefined}
-            />
+            <div className="flex shrink-0 items-center gap-2">
+              <motion.button
+                type="button"
+                onClick={() => setCreateFolderOpen(true)}
+                className="inline-flex size-9 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm shadow-cs-blue/25"
+                aria-label={t("dashboard.createFolder")}
+                title={t("dashboard.createFolder")}
+                whileHover={{ scale: 1.06, rotate: 90 }}
+                whileTap={{ scale: 0.92 }}
+                transition={{ type: "spring", stiffness: 400, damping: 22 }}
+              >
+                <IconPlus className="size-4" />
+              </motion.button>
+              <SectionMoreLink
+                href="/folders"
+                count={folders.length > 4 ? folders.length : undefined}
+              />
+            </div>
           </div>
 
           <div className="grid grid-cols-2 gap-3">
-            {(visibleFolders.length ? visibleFolders : []).map((folder, index) => (
-              <Reveal
-                key={folder.id}
-                as={Link}
-                href={`/folders/${folder.id}`}
-                delay={index * 60}
-                hover
-                className="pressable rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:ring-cs-blue/35"
-              >
-                <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
-                  <IconFolder className="size-7 text-cs-folder" />
-                </div>
-                <h4 className="mt-3 truncate text-sm font-bold leading-6 text-cs-ink">
-                  {folder.name}
-                </h4>
-                <p className="mt-1 text-xs leading-5 text-cs-muted">
-                  {formatDigits(folder.fileCount ?? 0, locale)} {t("common.file")}
-                </p>
-              </Reveal>
-            ))}
+            {(visibleFolders.length ? visibleFolders : []).map(
+              (folder, index) => (
+                <Reveal
+                  key={folder.id}
+                  as={Link}
+                  href={`/folders/${folder.id}`}
+                  delay={index * 60}
+                  hover
+                  className="pressable rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:ring-cs-blue/35"
+                >
+                  <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
+                    <IconFolder className="size-7 text-cs-folder" />
+                  </div>
+                  <h4 className="mt-3 truncate text-sm font-bold leading-6 text-cs-ink">
+                    {folder.name}
+                  </h4>
+                  <p className="mt-1 text-xs leading-5 text-cs-muted">
+                    {formatDigits(folder.fileCount ?? 0, locale)}{" "}
+                    {t("common.file")}
+                  </p>
+                </Reveal>
+              ),
+            )}
             {!folders.length ? (
-              <div className="col-span-2">
+              <div className="col-span-2 space-y-3">
                 <EmptyState
                   variant="folders"
                   compact
                   title={t("dashboard.emptyFoldersTitle")}
                   description={t("dashboard.emptyFoldersDesc")}
                 />
+                <button
+                  type="button"
+                  onClick={() => setCreateFolderOpen(true)}
+                  className="flex w-full items-center justify-center gap-2 rounded-2xl bg-cs-blue px-4 py-3 text-sm font-bold text-white shadow-sm shadow-cs-blue/25"
+                >
+                  <IconPlus className="size-4" />
+                  {t("dashboard.createFolder")}
+                </button>
               </div>
             ) : !visibleFolders.length ? (
               <div className="col-span-2 rounded-2xl bg-white px-4 py-6 text-center text-sm text-cs-muted shadow-sm ring-1 ring-cs-line">
@@ -342,7 +393,7 @@ export default function DashboardPage() {
                   {t("dashboard.recentCount", {
                     count: formatDigits(
                       Math.min(filteredFiles.length, 8),
-                      locale
+                      locale,
                     ),
                   })}
                 </p>
@@ -383,7 +434,9 @@ export default function DashboardPage() {
                         {canPreviewFile(file) ? (
                           <>
                             <span className="mx-2 text-cs-line">|</span>
-                            <span className="text-cs-blue">{t("files.preview")}</span>
+                            <span className="text-cs-blue">
+                              {t("files.preview")}
+                            </span>
                           </>
                         ) : null}
                       </p>
@@ -420,6 +473,13 @@ export default function DashboardPage() {
           open={Boolean(previewFile)}
           file={previewFile}
           onClose={() => setPreviewFile(null)}
+        />
+        <CreateFolderModal
+          open={createFolderOpen}
+          onClose={() => setCreateFolderOpen(false)}
+          onCreated={async () => {
+            await refresh();
+          }}
         />
       </div>
     </main>

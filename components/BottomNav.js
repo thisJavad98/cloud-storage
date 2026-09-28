@@ -7,8 +7,8 @@ import UploadModal from "./UploadModal";
 import {
   IconFolder,
   IconFolders,
+  IconIsland,
   IconPlus,
-  IconUpload,
   IconUser,
 } from "./Icons";
 import { useI18n } from "../lib/i18n/I18nProvider";
@@ -16,7 +16,7 @@ import { easeOut } from "../lib/motion";
 
 const leftItems = [
   { id: "files", href: "/dashboard", icon: IconFolder, labelKey: "nav.home" },
-  { id: "manage", href: "/files", icon: IconUpload, labelKey: "nav.manage" },
+  { id: "manage", href: "/data-island", icon: IconIsland, labelKey: "nav.dataIsland" },
 ];
 
 const rightItems = [
@@ -55,7 +55,9 @@ export default function BottomNav({
     }
     if (item.id === "manage") {
       if (activeId && activeId !== "manage") return false;
-      return pathname.startsWith("/files");
+      return (
+        pathname.startsWith("/data-island") || pathname.startsWith("/files")
+      );
     }
     if (item.id === "files") {
       if (activeId && activeId !== "files") return false;
@@ -166,7 +168,7 @@ export default function BottomNav({
 
   return (
     <>
-      <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-40 flex justify-center">
+      <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-center">
         <motion.div
           className="pointer-events-auto relative w-full max-w-[390px]"
           initial={reduce ? false : { y: 64, opacity: 0 }}

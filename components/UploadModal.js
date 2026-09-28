@@ -1,13 +1,14 @@
 "use client";
 
-import Link from "next/link";
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { EmptyFoldersIllu, LoadingCloudIllu } from "./MotionIllustrations";
 import { IconFolder, IconPlus, IconUpload } from "./Icons";
 import { formatBytes, formatDigits } from "../lib/format";
 import { useI18n } from "../lib/i18n/I18nProvider";
 import { notifyError, notifySuccess, notifyWarning } from "../lib/toast";
 import {
+  createFolder,
   formatFileError,
   listFolders,
   uploadFile,
@@ -21,14 +22,23 @@ export default function UploadModal({
 }) {
   const { t, locale } = useI18n();
   const fileInputRef = useRef(null);
+  const createInputRef = useRef(null);
   const uploadingRef = useRef(false);
+  const [mounted, setMounted] = useState(false);
   const [folders, setFolders] = useState([]);
   const [loadingFolders, setLoadingFolders] = useState(false);
   const [folderId, setFolderId] = useState(defaultFolderId || "root");
   const [selectedFile, setSelectedFile] = useState(null);
   const [uploading, setUploading] = useState(false);
+  const [showCreateFolder, setShowCreateFolder] = useState(false);
+  const [newFolderName, setNewFolderName] = useState("");
+  const [creatingFolder, setCreatingFolder] = useState(false);
 
-  uploadingRef.current = uploading;
+  uploadingRef.current = uploading || creatingFolder;
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   useEffect(() => {
     if (!open) return undefined;
@@ -36,6 +46,9 @@ export default function UploadModal({
     setFolderId(defaultFolderId || "root");
     setSelectedFile(null);
     setUploading(false);
+    setShowCreateFolder(false);
+    setNewFolderName("");
+    setCreatingFolder(false);
 
     let cancelled = false;
     async function loadFolders() {
@@ -66,12 +79,65 @@ export default function UploadModal({
     };
   }, [open, defaultFolderId, onClose]);
 
-  if (!open) return null;
+  useEffect(() => {
+    if (!open) return;
+    setFolderId(defaultFolderId || "root");
+  }, [open, defaultFolderId]);
+
+  useEffect(() => {
+    if (showCreateFolder) {
+      const timer = window.setTimeout(() => createInputRef.current?.focus(), 40);
+      return () => window.clearTimeout(timer);
+    }
+    return undefined;
+  }, [showCreateFolder]);
+
+  if (!open || !mounted) return null;
 
   function handleFileChange(event) {
     const file = event.target.files?.[0] || null;
     event.target.value = "";
     setSelectedFile(file);
+  }
+
+  async function refreshFolders() {
+    setLoadingFolders(true);
+    try {
+      const rows = await listFolders();
+      setFolders(rows || []);
+      return rows || [];
+    } catch (err) {
+      notifyError(formatFileError(err));
+      return folders;
+    } finally {
+      setLoadingFolders(false);
+    }
+  }
+
+  async function handleCreateFolder(event) {
+    event.preventDefault();
+    const trimmed = newFolderName.trim();
+    if (!trimmed) {
+      notifyWarning(t("folders.namePlaceholder"));
+      return;
+    }
+
+    setCreatingFolder(true);
+    try {
+      const folder = await createFolder({ name: trimmed });
+      notifySuccess(t("folders.created"));
+      setNewFolderName("");
+      setShowCreateFolder(false);
+      const rows = await refreshFolders();
+      const created =
+        rows.find((item) => item.id === folder?.id) || folder || null;
+      if (created?.id) setFolderId(created.id);
+      await onSuccess?.();
+    } catch (err) {
+      notifyError(formatFileError(err));
+    } finally {
+      setCreatingFolder(false);
+    }
   }
 
   async function handleUpload() {
@@ -87,7 +153,6 @@ export default function UploadModal({
       notifySuccess(t("upload.success"));
       onClose?.();
       await onSuccess?.();
-      // uploadFile already emits library sync; ensure UI refreshes even if listener missed it.
       try {
         const { emitLibrarySync } = await import("../lib/sync");
         emitLibrarySync("upload");
@@ -106,12 +171,14 @@ export default function UploadModal({
       ? t("upload.root")
       : folders.find((item) => item.id === folderId)?.name || t("common.folder");
 
-  return (
+  const busy = uploading || creatingFolder;
+
+  const modal = (
     <div
-      className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/45 px-4 pb-6 pt-10 sm:items-center"
+      className="fixed inset-0 z-[10000] flex items-end justify-center bg-black/45 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-10 sm:items-center"
       role="presentation"
       onClick={() => {
-        if (!uploading) onClose?.();
+        if (!busy) onClose?.();
       }}
     >
       <div
@@ -139,7 +206,47 @@ export default function UploadModal({
             </div>
           </div>
 
-          <p className="mb-2 text-sm font-bold text-cs-ink">{t("upload.folder")}</p>
+          <div className="mb-2 flex items-center justify-between gap-2">
+            <p className="text-sm font-bold text-cs-ink">{t("upload.folder")}</p>
+            <button
+              type="button"
+              disabled={busy}
+              onClick={() => setShowCreateFolder((v) => !v)}
+              className="inline-flex items-center gap-1 rounded-full bg-cs-blue-soft px-2.5 py-1 text-[11px] font-bold text-cs-blue disabled:opacity-60"
+            >
+              <IconPlus className="size-3.5" />
+              {t("upload.createFolder")}
+            </button>
+          </div>
+
+          {showCreateFolder ? (
+            <form
+              onSubmit={handleCreateFolder}
+              className="mb-2 rounded-2xl bg-[#f7f8fc] p-3 ring-1 ring-cs-line"
+            >
+              <p className="mb-2 text-xs font-bold text-cs-ink">
+                {t("folders.createTitle")}
+              </p>
+              <div className="flex items-center gap-2">
+                <input
+                  ref={createInputRef}
+                  value={newFolderName}
+                  onChange={(e) => setNewFolderName(e.target.value)}
+                  placeholder={t("folders.namePlaceholder")}
+                  disabled={creatingFolder}
+                  className="h-10 min-w-0 flex-1 rounded-xl bg-white px-3 text-sm outline-none ring-1 ring-cs-line focus:ring-cs-blue/30 disabled:opacity-70"
+                />
+                <button
+                  type="submit"
+                  disabled={creatingFolder || !newFolderName.trim()}
+                  className="h-10 shrink-0 rounded-xl bg-cs-blue px-3 text-xs font-bold text-white disabled:opacity-60"
+                >
+                  {creatingFolder ? t("folders.creating") : t("folders.create")}
+                </button>
+              </div>
+            </form>
+          ) : null}
+
           <div className="max-h-48 space-y-2 overflow-y-auto rounded-2xl bg-[#f7f8fc] p-2">
             <button
               type="button"
@@ -224,13 +331,14 @@ export default function UploadModal({
                 <p className="mt-2 text-xs leading-6 text-cs-muted">
                   {t("upload.noFolders")}
                 </p>
-                <Link
-                  href="/folders"
-                  onClick={onClose}
-                  className="mt-2 inline-flex text-xs font-bold text-cs-blue"
+                <button
+                  type="button"
+                  onClick={() => setShowCreateFolder(true)}
+                  className="mt-2 inline-flex items-center gap-1 text-xs font-bold text-cs-blue"
                 >
+                  <IconPlus className="size-3.5" />
                   {t("upload.createFolder")}
-                </Link>
+                </button>
               </div>
             ) : null}
           </div>
@@ -283,7 +391,7 @@ export default function UploadModal({
         <div className="grid grid-cols-2 gap-3 border-t border-cs-line px-5 py-4">
           <button
             type="button"
-            disabled={uploading}
+            disabled={busy}
             onClick={onClose}
             className="h-12 rounded-2xl bg-[#f1f3f8] text-sm font-bold text-cs-ink disabled:opacity-60"
           >
@@ -291,7 +399,7 @@ export default function UploadModal({
           </button>
           <button
             type="button"
-            disabled={uploading || !selectedFile}
+            disabled={busy || !selectedFile}
             onClick={handleUpload}
             className="h-12 rounded-2xl bg-cs-blue text-sm font-bold text-white transition hover:bg-cs-blue-deep disabled:opacity-60"
           >
@@ -308,4 +416,6 @@ export default function UploadModal({
       </div>
     </div>
   );
+
+  return createPortal(modal, document.body);
 }

@@ -155,6 +155,27 @@ export async function listFolders(params = {}) {
   return payload.data.folders;
 }
 
+/** Combined folders + files for Data Island (one round-trip). */
+export async function browseIsland(params = {}) {
+  const token = requireToken();
+  const query = new URLSearchParams();
+  if (params.parentId !== undefined) {
+    query.set(
+      "parentId",
+      params.parentId === null ? "root" : String(params.parentId)
+    );
+  }
+  if (params.limit) query.set("limit", String(params.limit));
+  if (params.offset) query.set("offset", String(params.offset));
+
+  const suffix = query.toString() ? `?${query.toString()}` : "";
+  const payload = await apiRequest(`/files/island${suffix}`, {
+    method: "GET",
+    token,
+  });
+  return payload.data;
+}
+
 export async function getFolder(id) {
   const token = requireToken();
   const payload = await apiRequest(`/files/folders/${id}`, {
