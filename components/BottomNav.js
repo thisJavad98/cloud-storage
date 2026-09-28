@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { usePathname, useRouter } from "next/navigation";
 import { AnimatePresence, LayoutGroup, motion, useReducedMotion } from "motion/react";
 import UploadModal from "./UploadModal";
@@ -38,6 +38,10 @@ export default function BottomNav({
   const { t } = useI18n();
   const reduce = useReducedMotion();
   const [uploadOpen, setUploadOpen] = useState(false);
+  const closeUpload = useCallback(() => setUploadOpen(false), []);
+  const handleUploadSuccess = useCallback(() => {
+    onUploadSuccess?.();
+  }, [onUploadSuccess]);
 
   useEffect(() => {
     function openUpload() {
@@ -234,12 +238,10 @@ export default function BottomNav({
       {showUpload ? (
         <UploadModal
           open={uploadOpen}
-          onClose={() => setUploadOpen(false)}
+          onClose={closeUpload}
           defaultFolderId={defaultFolderId}
           folders={folders}
-          onSuccess={() => {
-            onUploadSuccess?.();
-          }}
+          onSuccess={handleUploadSuccess}
         />
       ) : null}
     </>

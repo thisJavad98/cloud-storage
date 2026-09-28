@@ -13,6 +13,7 @@ import {
   listFolders,
   uploadFile,
 } from "../services/files";
+import { setUploadUiOpen } from "../lib/upload";
 
 export default function UploadModal({
   open,
@@ -25,6 +26,8 @@ export default function UploadModal({
   const fileInputRef = useRef(null);
   const createInputRef = useRef(null);
   const uploadingRef = useRef(false);
+  const wasOpenRef = useRef(false);
+  const onCloseRef = useRef(onClose);
   const [mounted, setMounted] = useState(false);
   const [folders, setFolders] = useState(foldersProp || []);
   const [loadingFolders, setLoadingFolders] = useState(false);
@@ -36,65 +39,93 @@ export default function UploadModal({
   const [creatingFolder, setCreatingFolder] = useState(false);
 
   uploadingRef.current = uploading || creatingFolder;
+  onCloseRef.current = onClose;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  // Keep folder list fresh without wiping the selected file / form.
   useEffect(() => {
+    if (!open) return;
     if (Array.isArray(foldersProp)) {
       setFolders(foldersProp);
     }
-  }, [foldersProp]);
+  }, [open, foldersProp]);
+
+  // Reset form only when the modal opens (false → true), never on parent re-renders
+  // from /auth/me or library sync (those used to clear the picked file).
+  useEffect(() => {
+    const justOpened = open && !wasOpenRef.current;
+    wasOpenRef.current = open;
+
+    if (!open) {
+      setUploadUiOpen(false);
+      return undefined;
+    }
+
+    setUploadUiOpen(true);
+
+    if (justOpened) {
+      setFolderId(defaultFolderId || "root");
+      setSelectedFile(null);
+      setUploading(false);
+      setShowCreateFolder(false);
+      setNewFolderName("");
+      setCreatingFolder(false);
+
+      let cancelled = false;
+      async function loadFolders() {
+        if (Array.isArray(foldersProp)) {
+          setFolders(foldersProp);
+          setLoadingFolders(false);
+          return;
+        }
+        setLoadingFolders(true);
+        try {
+          const rows = await listFolders();
+          if (!cancelled) setFolders(rows || []);
+        } catch (err) {
+          if (!cancelled) notifyError(formatFileError(err));
+        } finally {
+          if (!cancelled) setLoadingFolders(false);
+        }
+      }
+      loadFolders();
+
+      return () => {
+        cancelled = true;
+      };
+    }
+
+    return undefined;
+  }, [open, defaultFolderId, foldersProp]);
 
   useEffect(() => {
     if (!open) return undefined;
 
-    setFolderId(defaultFolderId || "root");
-    setSelectedFile(null);
-    setUploading(false);
-    setShowCreateFolder(false);
-    setNewFolderName("");
-    setCreatingFolder(false);
-
-    let cancelled = false;
-    async function loadFolders() {
-      if (Array.isArray(foldersProp)) {
-        setFolders(foldersProp);
-        setLoadingFolders(false);
-        return;
-      }
-      setLoadingFolders(true);
-      try {
-        const rows = await listFolders();
-        if (!cancelled) setFolders(rows || []);
-      } catch (err) {
-        if (!cancelled) notifyError(formatFileError(err));
-      } finally {
-        if (!cancelled) setLoadingFolders(false);
-      }
-    }
-
-    loadFolders();
-
     function onKeyDown(event) {
-      if (event.key === "Escape" && !uploadingRef.current) onClose?.();
+      if (event.key === "Escape" && !uploadingRef.current) {
+        onCloseRef.current?.();
+      }
     }
     document.addEventListener("keydown", onKeyDown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = "hidden";
 
     return () => {
-      cancelled = true;
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, defaultFolderId, onClose, foldersProp]);
+  }, [open]);
 
+  // Apply default folder only when opening or when parent folder context changes
+  // while idle (no file picked yet).
   useEffect(() => {
     if (!open) return;
+    if (selectedFile || uploading || creatingFolder) return;
     setFolderId(defaultFolderId || "root");
-  }, [open, defaultFolderId]);
+  }, [open, defaultFolderId, selectedFile, uploading, creatingFolder]);
 
   useEffect(() => {
     if (showCreateFolder) {
@@ -103,6 +134,10 @@ export default function UploadModal({
     }
     return undefined;
   }, [showCreateFolder]);
+
+  useEffect(() => {
+    return () => setUploadUiOpen(false);
+  }, []);
 
   if (!open || !mounted) return null;
 
@@ -163,9 +198,16 @@ export default function UploadModal({
       const targetFolderId = folderId === "root" ? null : folderId;
       await uploadFile(selectedFile, { folderId: targetFolderId || undefined });
       notifySuccess(t("upload.success"));
+      setUploadUiOpen(false);
       onClose?.();
-      // uploadFile already emits library-sync; avoid a second/third refresh.
       onSuccess?.();
+      // Re-broadcast after close — sync during open is intentionally paused.
+      import("../lib/sync")
+        .then(({ emitLibrarySync }) => emitLibrarySync("upload-done"))
+        .catch(() => {});
+      import("../services/auth")
+        .then(({ getMe }) => getMe())
+        .catch(() => {});
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {

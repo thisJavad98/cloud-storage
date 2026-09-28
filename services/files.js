@@ -1,6 +1,7 @@
 import { apiRequest, getApiUrl } from "../lib/api";
 import { getAccessToken, hasSession } from "../lib/session";
 import { emitLibrarySync } from "../lib/sync";
+import { isUploadUiOpen } from "../lib/upload";
 
 function requireToken() {
   if (!hasSession()) {
@@ -11,10 +12,13 @@ function requireToken() {
 
 function afterMutation(result) {
   emitLibrarySync("mutation");
-  // Refresh quota/profile quietly (deduped); does not refetch library again.
-  import("../services/auth")
-    .then(({ getMe }) => getMe())
-    .catch(() => {});
+  // Avoid /auth/me while the upload modal is open — it re-rendered parents
+  // and used to wipe the selected file.
+  if (!isUploadUiOpen()) {
+    import("../services/auth")
+      .then(({ getMe }) => getMe())
+      .catch(() => {});
+  }
   return result;
 }
 

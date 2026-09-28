@@ -8,6 +8,7 @@ import {
   getStoredDataRevision,
   setStoredDataRevision,
 } from "../lib/sync";
+import { isUploadUiOpen } from "../lib/upload";
 
 /** Poll profile quietly; library refetch only when dataRevision changes. */
 const POLL_MS = 60_000;
@@ -27,6 +28,8 @@ export default function AccountSync() {
   useEffect(() => {
     async function syncAccount() {
       if (!hasSession() || inFlight.current) return;
+      // Don't poke /auth/me (or library sync) while the user is picking a file.
+      if (isUploadUiOpen()) return;
 
       const now = Date.now();
       if (now - lastSyncAt.current < MIN_GAP_MS) return;
