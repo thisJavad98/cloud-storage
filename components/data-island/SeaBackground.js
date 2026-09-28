@@ -115,8 +115,7 @@ function RedFish({ size = 32, flip = false, sheenId = "fishSheen" }) {
       viewBox="0 0 64 36"
       width={size}
       height={size * 0.56}
-      className="drop-shadow-[0_3px_6px_rgba(127,29,29,0.35)]"
-      style={{ transform: flip ? "scaleX(-1)" : undefined }}
+      className={`drop-shadow-[0_3px_6px_rgba(127,29,29,0.35)] ${flip ? "sea-flip" : ""}`}
       aria-hidden="true"
     >
       <defs>
@@ -153,8 +152,7 @@ function Shark({ size = 80, flip = false, sheenId = "sharkSheen" }) {
       viewBox="0 0 120 52"
       width={size}
       height={h}
-      className="drop-shadow-[0_4px_10px_rgba(15,23,42,0.35)]"
-      style={{ transform: flip ? "scaleX(-1)" : undefined }}
+      className={`drop-shadow-[0_4px_10px_rgba(15,23,42,0.35)] ${flip ? "sea-flip" : ""}`}
       aria-hidden="true"
     >
       <defs>
@@ -164,27 +162,20 @@ function Shark({ size = 80, flip = false, sheenId = "sharkSheen" }) {
           <stop offset="100%" stopColor="#0f172a" />
         </linearGradient>
       </defs>
-      {/* body */}
       <path
         d="M18 28 C28 12 52 8 78 14 C96 18 108 24 114 28 C108 32 96 38 78 40 C52 44 28 40 18 28 Z"
         fill={`url(#${sheenId})`}
       />
-      {/* belly */}
       <path
         d="M34 30 C48 34 68 34 86 30 C74 36 52 38 36 32 Z"
         fill="#cbd5e1"
         opacity="0.55"
       />
-      {/* dorsal fin */}
       <path d="M58 14 L66 2 L74 16 Z" fill="#1e293b" />
-      {/* pectoral fin */}
       <path d="M54 32 L68 42 L62 32 Z" fill="#334155" />
-      {/* tail */}
       <path d="M18 28 L4 10 L10 28 L4 44 Z" fill="#1e293b" />
-      {/* eye */}
       <circle cx="96" cy="24" r="2.4" fill="#e2e8f0" />
       <circle cx="96.6" cy="24" r="1.2" fill="#0f172a" />
-      {/* gill lines */}
       <path
         d="M84 22 v10M88 21.5 v11M92 22 v10"
         stroke="#94a3b8"
@@ -192,7 +183,6 @@ function Shark({ size = 80, flip = false, sheenId = "sharkSheen" }) {
         strokeLinecap="round"
         opacity="0.55"
       />
-      {/* snout tip */}
       <path
         d="M110 26 C114 27 116 28 114 30"
         stroke="#94a3b8"
@@ -205,95 +195,78 @@ function Shark({ size = 80, flip = false, sheenId = "sharkSheen" }) {
   );
 }
 
-function SwimmingCreature({
-  item,
-  index,
-  reduce,
-  kind = "fish",
-}) {
+function SwimmingCreature({ item, index, reduce, kind = "fish" }) {
   const goingRight = item.direction === 1;
-  const height =
-    kind === "shark" ? item.size * 0.42 : item.size * 0.56;
+  const height = kind === "shark" ? item.size * 0.42 : item.size * 0.56;
+  const bobDuration = kind === "shark" ? 3.6 : 2.8 + (index % 3) * 0.4;
+  const wiggleDuration = kind === "shark" ? 0.9 : 0.55;
+
+  if (reduce) {
+    return (
+      <div
+        className="sea-creature absolute"
+        style={{
+          top: item.top,
+          left: `${12 + (index * 11) % 70}%`,
+          width: item.size,
+          height,
+          opacity: item.opacity,
+          zIndex: kind === "shark" ? 3 : 2,
+        }}
+      >
+        {kind === "shark" ? (
+          <Shark size={item.size} flip={!goingRight} sheenId={`sharkSheen-${index}`} />
+        ) : (
+          <RedFish size={item.size} flip={!goingRight} sheenId={`fishSheen-${index}`} />
+        )}
+      </div>
+    );
+  }
 
   return (
-    <motion.div
-      className="sea-creature absolute"
+    <div
+      className={`sea-creature sea-swim-track ${goingRight ? "sea-swim-ltr" : "sea-swim-rtl"}`}
       style={{
         top: item.top,
         width: item.size,
         height,
         opacity: item.opacity,
         zIndex: kind === "shark" ? 3 : 2,
+        animationDuration: `${item.duration}s`,
+        animationDelay: `${item.delay}s`,
       }}
-      initial={false}
-      animate={
-        reduce
-          ? { left: kind === "shark" ? "55%" : "40%" }
-          : {
-              left: goingRight ? ["-16%", "116%"] : ["116%", "-16%"],
-              y: [0, -item.bob, item.bob * 0.55, -item.bob * 0.35, 0],
-              rotate: goingRight
-                ? [0, -3, 2.5, -1.5, 0]
-                : [0, 3, -2.5, 1.5, 0],
-            }
-      }
-      transition={
-        reduce
-          ? undefined
-          : {
-              left: {
-                duration: item.duration,
-                delay: item.delay,
-                repeat: Infinity,
-                ease: "linear",
-              },
-              y: {
-                duration: kind === "shark" ? 3.6 : 2.8 + (index % 3) * 0.4,
-                delay: item.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-              rotate: {
-                duration: kind === "shark" ? 2.4 : 1.6 + (index % 2) * 0.3,
-                delay: item.delay,
-                repeat: Infinity,
-                ease: "easeInOut",
-              },
-            }
-      }
     >
-      <motion.div
-        animate={
-          reduce
-            ? undefined
-            : {
-                scaleX: [1, 1.03, 0.98, 1.02, 1],
-                scaleY: [1, 0.97, 1.03, 0.99, 1],
-              }
-        }
-        transition={{
-          duration: kind === "shark" ? 0.9 : 0.55,
-          delay: item.delay * 0.08,
-          repeat: Infinity,
-          ease: "easeInOut",
+      <div
+        className="sea-creature-bob"
+        style={{
+          animationDuration: `${bobDuration}s`,
+          animationDelay: `${item.delay * 0.15}s`,
         }}
-        style={{ transformOrigin: goingRight ? "25% 50%" : "75% 50%" }}
       >
-        {kind === "shark" ? (
-          <Shark
-            size={item.size}
-            flip={!goingRight}
-            sheenId={`sharkSheen-${index}`}
-          />
-        ) : (
-          <RedFish
-            size={item.size}
-            flip={!goingRight}
-            sheenId={`fishSheen-${index}`}
-          />
-        )}
-      </motion.div>
-    </motion.div>
+        <div
+          className="sea-creature-wiggle"
+          style={{
+            animationDuration: `${wiggleDuration}s`,
+            animationDelay: `${item.delay * 0.08}s`,
+            transformOrigin: goingRight ? "25% 50%" : "75% 50%",
+          }}
+        >
+          {kind === "shark" ? (
+            <Shark
+              size={item.size}
+              flip={!goingRight}
+              sheenId={`sharkSheen-${index}`}
+            />
+          ) : (
+            <RedFish
+              size={item.size}
+              flip={!goingRight}
+              sheenId={`fishSheen-${index}`}
+            />
+          )}
+        </div>
+      </div>
+    </div>
   );
 }
 

@@ -28,7 +28,7 @@ function MiniFish({ size = 14, flip = false }) {
       viewBox="0 0 64 36"
       width={size}
       height={size * 0.56}
-      style={{ transform: flip ? "scaleX(-1)" : undefined }}
+      className={flip ? "sea-flip" : undefined}
       aria-hidden="true"
     >
       <ellipse cx="30" cy="18" rx="18" ry="11" fill="#ef4444" />
@@ -46,7 +46,8 @@ function MiniShark({ size = 32, flip = false }) {
       viewBox="0 0 120 52"
       width={size}
       height={size * 0.42}
-      style={{ transform: flip ? "scaleX(-1)" : undefined, opacity: 0.85 }}
+      className={flip ? "sea-flip" : undefined}
+      style={{ opacity: 0.85 }}
       aria-hidden="true"
     >
       <path
@@ -176,66 +177,56 @@ export default function DataSeaBanner({ className = "" }) {
             ))
           : null}
 
-        {/* swimming fish + sharks */}
+        {/* swimming fish + sharks (CSS transform — mobile-safe) */}
         {!reduce
           ? FISH.map((fish, i) => (
-              <motion.span
+              <span
                 key={`fish-${i}`}
-                className="pointer-events-none absolute"
-                style={{ top: fish.top }}
-                animate={{
-                  left:
-                    fish.dir === 1 ? ["-8%", "108%"] : ["108%", "-8%"],
-                  y: [0, -4, 3, 0],
-                }}
-                transition={{
-                  left: {
-                    duration: fish.duration,
-                    delay: fish.delay,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                  y: {
-                    duration: 2.2,
-                    delay: fish.delay,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  },
+                className={`pointer-events-none sea-swim-track ${
+                  fish.dir === 1 ? "sea-swim-ltr" : "sea-swim-rtl"
+                }`}
+                style={{
+                  top: fish.top,
+                  animationDuration: `${fish.duration}s`,
+                  animationDelay: `${fish.delay}s`,
                 }}
               >
-                <MiniFish size={fish.size} flip={fish.dir === -1} />
-              </motion.span>
+                <span
+                  className="sea-creature-bob"
+                  style={{
+                    animationDuration: "2.2s",
+                    animationDelay: `${fish.delay * 0.1}s`,
+                  }}
+                >
+                  <MiniFish size={fish.size} flip={fish.dir === -1} />
+                </span>
+              </span>
             ))
           : null}
 
         {!reduce
           ? SHARKS.map((shark, i) => (
-              <motion.span
+              <span
                 key={`shark-${i}`}
-                className="pointer-events-none absolute"
-                style={{ top: shark.top }}
-                animate={{
-                  left:
-                    shark.dir === 1 ? ["-18%", "118%"] : ["118%", "-18%"],
-                  y: [0, -3, 2, 0],
-                }}
-                transition={{
-                  left: {
-                    duration: shark.duration,
-                    delay: shark.delay,
-                    repeat: Infinity,
-                    ease: "linear",
-                  },
-                  y: {
-                    duration: 3,
-                    delay: shark.delay,
-                    repeat: Infinity,
-                    ease: "easeInOut",
-                  },
+                className={`pointer-events-none sea-swim-track ${
+                  shark.dir === 1 ? "sea-swim-ltr" : "sea-swim-rtl"
+                }`}
+                style={{
+                  top: shark.top,
+                  animationDuration: `${shark.duration}s`,
+                  animationDelay: `${shark.delay}s`,
                 }}
               >
-                <MiniShark size={shark.size} flip={shark.dir === -1} />
-              </motion.span>
+                <span
+                  className="sea-creature-bob"
+                  style={{
+                    animationDuration: "3s",
+                    animationDelay: `${shark.delay * 0.1}s`,
+                  }}
+                >
+                  <MiniShark size={shark.size} flip={shark.dir === -1} />
+                </span>
+              </span>
             ))
           : null}
 

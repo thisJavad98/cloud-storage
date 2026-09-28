@@ -1600,6 +1600,89 @@ html[data-theme="dark"] .ring-\[\#f3f5fa\] {
   will-change: transform;
 }
 
+/* Fish / shark swim — CSS transforms (reliable on mobile Safari/Chrome) */
+@keyframes sea-swim-ltr {
+  from {
+    transform: translate3d(-25vw, 0, 0);
+  }
+  to {
+    transform: translate3d(125vw, 0, 0);
+  }
+}
+
+@keyframes sea-swim-rtl {
+  from {
+    transform: translate3d(125vw, 0, 0);
+  }
+  to {
+    transform: translate3d(-25vw, 0, 0);
+  }
+}
+
+@keyframes sea-creature-bob {
+  0%,
+  100% {
+    transform: translate3d(0, 0, 0);
+  }
+  50% {
+    transform: translate3d(0, -8px, 0);
+  }
+}
+
+@keyframes sea-creature-wiggle {
+  0%,
+  100% {
+    transform: scaleX(1) scaleY(1);
+  }
+  25% {
+    transform: scaleX(1.04) scaleY(0.96);
+  }
+  75% {
+    transform: scaleX(0.97) scaleY(1.04);
+  }
+}
+
+.sea-swim-track {
+  position: absolute;
+  left: 0;
+  will-change: transform;
+  backface-visibility: hidden;
+  animation-timing-function: linear;
+  animation-iteration-count: infinite;
+  animation-fill-mode: both;
+}
+
+.sea-swim-ltr {
+  animation-name: sea-swim-ltr;
+}
+
+.sea-swim-rtl {
+  animation-name: sea-swim-rtl;
+}
+
+.sea-creature-bob {
+  display: inline-block;
+  will-change: transform;
+  backface-visibility: hidden;
+  animation-name: sea-creature-bob;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.sea-creature-wiggle {
+  display: inline-block;
+  transform-origin: center center;
+  will-change: transform;
+  animation-name: sea-creature-wiggle;
+  animation-timing-function: ease-in-out;
+  animation-iteration-count: infinite;
+}
+
+.sea-flip {
+  transform: scaleX(-1);
+  transform-origin: center center;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .sea-shimmer,
   .sea-horizon,
@@ -1607,6 +1690,12 @@ html[data-theme="dark"] .ring-\[\#f3f5fa\] {
   .sea-bubble,
   .sea-caustics,
   .sea-swell {
+    animation: none !important;
+  }
+
+  .sea-swim-track,
+  .sea-creature-bob,
+  .sea-creature-wiggle {
     animation: none !important;
   }
 }
