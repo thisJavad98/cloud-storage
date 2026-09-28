@@ -47,6 +47,7 @@ export default function AdvancedSearchModal({
   open,
   onClose,
   initialQuery = "",
+  folders: foldersProp,
 }) {
   const { t, locale } = useI18n();
   const searchingRef = useRef(false);
@@ -57,7 +58,7 @@ export default function AdvancedSearchModal({
   const [scope, setScope] = useState("all");
   const [mimeType, setMimeType] = useState("");
   const [folderId, setFolderId] = useState("any");
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState(foldersProp || []);
   const [loadingFolders, setLoadingFolders] = useState(false);
   const [searching, setSearching] = useState(false);
   const [searched, setSearched] = useState(false);
@@ -137,6 +138,11 @@ export default function AdvancedSearchModal({
 
     let cancelled = false;
     async function loadFolders() {
+      if (Array.isArray(foldersProp)) {
+        setFolders(foldersProp);
+        setLoadingFolders(false);
+        return;
+      }
       setLoadingFolders(true);
       try {
         const rows = await listFolders();
@@ -167,7 +173,7 @@ export default function AdvancedSearchModal({
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, initialQuery, onClose]);
+  }, [open, initialQuery, onClose, foldersProp]);
 
   useEffect(() => {
     if (!open) return;

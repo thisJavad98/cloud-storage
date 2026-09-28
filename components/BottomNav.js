@@ -31,6 +31,7 @@ export default function BottomNav({
   defaultFolderId = null,
   onUploadSuccess,
   showUpload = true,
+  folders,
 }) {
   const router = useRouter();
   const pathname = usePathname();
@@ -235,8 +236,9 @@ export default function BottomNav({
           open={uploadOpen}
           onClose={() => setUploadOpen(false)}
           defaultFolderId={defaultFolderId}
-          onSuccess={async () => {
-            await onUploadSuccess?.();
+          folders={folders}
+          onSuccess={() => {
+            onUploadSuccess?.();
           }}
         />
       ) : null}

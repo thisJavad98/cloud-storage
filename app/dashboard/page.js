@@ -35,15 +35,12 @@ import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
 import {
-  getAccessToken,
   getStoredUser,
   hasSession,
-  saveSession,
 } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
 import { useLibrarySync } from "../../lib/useLibrarySync";
 import { notifyError } from "../../lib/toast";
-import { getMe } from "../../services/auth";
 import { formatFileError, listFiles, listFolders } from "../../services/files";
 
 function fileTone(mimeType = "") {
@@ -76,13 +73,12 @@ export default function DashboardPage() {
     const isBoot = bootRef.current;
 
     try {
-      const [me, folderRows, fileResult] = await Promise.all([
-        getMe(),
+      const [folderRows, fileResult] = await Promise.all([
         listFolders(),
         listFiles({ limit: 20 }),
       ]);
-      saveSession({ user: me });
-      setUser(me);
+      const stored = getStoredUser();
+      if (stored) setUser(stored);
       setFolders(folderRows || []);
       setFiles(fileResult?.files || []);
     } catch (err) {
@@ -463,11 +459,12 @@ export default function DashboardPage() {
           </div>
         </MotionBlock>
 
-        <BottomNav activeId="files" onUploadSuccess={refresh} />
+        <BottomNav activeId="files" folders={folders} />
         <AdvancedSearchModal
           open={searchOpen}
           onClose={() => setSearchOpen(false)}
           initialQuery={query}
+          folders={folders}
         />
         <FilePreviewModal
           open={Boolean(previewFile)}
@@ -477,9 +474,6 @@ export default function DashboardPage() {
         <CreateFolderModal
           open={createFolderOpen}
           onClose={() => setCreateFolderOpen(false)}
-          onCreated={async () => {
-            await refresh();
-          }}
         />
       </div>
     </main>

@@ -18,11 +18,10 @@ import { formatBytes, formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { easeOut } from "../../lib/motion";
 import { finishPageLoad } from "../../lib/pageLoading";
-import { getStoredUser, hasSession, saveSession } from "../../lib/session";
+import { getStoredUser, hasSession } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
 import { useLibrarySync } from "../../lib/useLibrarySync";
 import { notifyError } from "../../lib/toast";
-import { getMe } from "../../services/auth";
 import { browseIsland, formatFileError } from "../../services/files";
 
 function itemKey(kind, id) {
@@ -76,12 +75,9 @@ export default function DataIslandPage() {
     const isBoot = bootRef.current;
 
     try {
-      const [me, island] = await Promise.all([
-        getMe(),
-        browseIsland({ parentId, limit: 100 }),
-      ]);
-      saveSession({ user: me });
-      setUser(me);
+      const island = await browseIsland({ parentId, limit: 100 });
+      const stored = getStoredUser();
+      if (stored) setUser(stored);
       setFolder(island.folder || null);
       setFolders(island.folders || []);
       setFiles(island.files || []);
@@ -366,7 +362,7 @@ export default function DataIslandPage() {
         <BottomNav
           activeId="manage"
           defaultFolderId={parentId}
-          onUploadSuccess={refresh}
+          folders={folders}
         />
       </div>
     </div>

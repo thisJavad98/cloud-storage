@@ -11,6 +11,10 @@ function requireToken() {
 
 function afterMutation(result) {
   emitLibrarySync("mutation");
+  // Refresh quota/profile quietly (deduped); does not refetch library again.
+  import("../services/auth")
+    .then(({ getMe }) => getMe())
+    .catch(() => {});
   return result;
 }
 

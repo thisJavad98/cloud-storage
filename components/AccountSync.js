@@ -9,21 +9,23 @@ import {
   setStoredDataRevision,
 } from "../lib/sync";
 
-const POLL_MS = 8000;
-const MIN_GAP_MS = 2000;
+/** Poll profile quietly; library refetch only when dataRevision changes. */
+const POLL_MS = 60_000;
+const MIN_GAP_MS = 5_000;
+const FOCUS_DEBOUNCE_MS = 800;
 
 /**
- * Keeps the whole account in sync across devices:
- * - avatar / profile via /auth/me
- * - files + folders via library-sync events when dataRevision changes
- * - also polls while the app is visible
+ * Keeps account profile in sync across devices.
+ * Library lists refresh only when the server dataRevision changes —
+ * not on every focus/tab return.
  */
 export default function AccountSync() {
   const inFlight = useRef(false);
   const lastSyncAt = useRef(0);
+  const focusTimer = useRef(0);
 
   useEffect(() => {
-    async function syncAccount({ forceLibrary = false } = {}) {
+    async function syncAccount() {
       if (!hasSession() || inFlight.current) return;
 
       const now = Date.now();
@@ -38,9 +40,9 @@ export default function AccountSync() {
         const previous = getStoredDataRevision();
         const next = me?.dataRevision != null ? String(me.dataRevision) : null;
 
-        if (forceLibrary || (next && next !== previous)) {
-          if (next) setStoredDataRevision(next);
-          emitLibrarySync(forceLibrary ? "focus" : "revision");
+        if (next && next !== previous) {
+          setStoredDataRevision(next);
+          emitLibrarySync("revision");
         } else if (!previous && next) {
           setStoredDataRevision(next);
         }
@@ -51,32 +53,38 @@ export default function AccountSync() {
       }
     }
 
+    function scheduleSync() {
+      window.clearTimeout(focusTimer.current);
+      focusTimer.current = window.setTimeout(() => {
+        if (document.visibilityState === "visible") {
+          syncAccount();
+        }
+      }, FOCUS_DEBOUNCE_MS);
+    }
+
     function onVisibility() {
       if (document.visibilityState === "visible") {
-        syncAccount({ forceLibrary: true });
+        scheduleSync();
       }
     }
 
-    function onFocus() {
-      syncAccount({ forceLibrary: true });
-    }
+    // Soft first sync (no forced library refetch — page refresh owns that).
+    syncAccount();
 
-    // First paint: pull latest account state.
-    syncAccount({ forceLibrary: true });
-
-    window.addEventListener("focus", onFocus);
+    window.addEventListener("focus", scheduleSync);
     document.addEventListener("visibilitychange", onVisibility);
 
     const pollId = window.setInterval(() => {
       if (document.visibilityState === "visible") {
-        syncAccount({ forceLibrary: false });
+        syncAccount();
       }
     }, POLL_MS);
 
     return () => {
-      window.removeEventListener("focus", onFocus);
+      window.removeEventListener("focus", scheduleSync);
       document.removeEventListener("visibilitychange", onVisibility);
       window.clearInterval(pollId);
+      window.clearTimeout(focusTimer.current);
     };
   }, []);
 

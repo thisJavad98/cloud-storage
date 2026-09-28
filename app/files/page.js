@@ -27,7 +27,7 @@ import { readFocusFileIdFromLocation } from "../../lib/filesNav";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
 import { canPreviewFile } from "../../lib/preview";
-import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
+import { getStoredUser, hasSession } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
 import { useLibrarySync } from "../../lib/useLibrarySync";
 import { openUploadModal } from "../../lib/upload";
@@ -37,7 +37,6 @@ import {
   notifySuccess,
   notifyWarning,
 } from "../../lib/toast";
-import { getMe } from "../../services/auth";
 import {
   deleteFile,
   downloadFile,
@@ -85,13 +84,12 @@ export default function FilesPage() {
     const isBoot = bootRef.current;
 
     try {
-      const [me, folderRows, fileResult] = await Promise.all([
-        getMe(),
+      const [folderRows, fileResult] = await Promise.all([
         listFolders(),
         listFiles({ folderId: null, limit: 100 }),
       ]);
-      saveSession({ user: me });
-      setUser(me);
+      const stored = getStoredUser();
+      if (stored) setUser(stored);
       setFolders(folderRows || []);
       setFiles(fileResult?.files || []);
     } catch (err) {
@@ -162,7 +160,6 @@ export default function FilesPage() {
       setRenameId("");
       setMenuId("");
       notifySuccess(t("files.renamed"));
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -209,7 +206,6 @@ export default function FilesPage() {
       }
       setMenuId("");
       setConfirmAction(null);
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -486,7 +482,7 @@ export default function FilesPage() {
           </div>
         </MotionBlock>
 
-        <BottomNav activeId="manage" onUploadSuccess={refresh} />
+        <BottomNav activeId="manage" folders={folders} />
 
         <ConfirmModal
           open={Boolean(confirmAction)}

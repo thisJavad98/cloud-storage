@@ -1,13 +1,13 @@
 import { apiRequest } from "../lib/api";
 import { getAccessToken, getRefreshToken, saveSession } from "../lib/session";
-import { emitLibrarySync, setStoredDataRevision } from "../lib/sync";
+import { setStoredDataRevision } from "../lib/sync";
 
 function persistUser(user) {
   saveSession({ user });
   if (user?.dataRevision != null) {
     setStoredDataRevision(user.dataRevision);
   }
-  emitLibrarySync("profile");
+  // Do not emitLibrarySync here — profile-only updates must not refetch files.
   return user;
 }
 export async function signup({ email, password, fullName }) {
@@ -54,18 +54,30 @@ export async function refreshSession() {
   return payload.data;
 }
 
+let meInFlight = null;
+
 export async function getMe() {
   const token = getAccessToken();
   if (!token && !getRefreshToken()) {
     throw new Error("وارد حساب کاربری نشده‌اید.");
   }
 
-  const payload = await apiRequest("/auth/me", {
-    method: "GET",
-    token: getAccessToken() || undefined,
+  if (meInFlight) return meInFlight;
+
+  meInFlight = (async () => {
+    const payload = await apiRequest("/auth/me", {
+      method: "GET",
+      token: getAccessToken() || undefined,
+    });
+    const user = payload.data.user;
+    saveSession({ user });
+    if (user?.dataRevision != null) setStoredDataRevision(user.dataRevision);
+    return user;
+  })().finally(() => {
+    meInFlight = null;
   });
 
-  return payload.data.user;
+  return meInFlight;
 }
 
 export async function updateProfile({ fullName, bio }) {

@@ -27,7 +27,7 @@ import { readFocusFileIdFromLocation } from "../../../lib/filesNav";
 import { useI18n } from "../../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../../lib/pageLoading";
 import { canPreviewFile } from "../../../lib/preview";
-import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../../lib/session";
+import { getStoredUser, hasSession } from "../../../lib/session";
 import { useLiveUser } from "../../../lib/useLiveUser";
 import { useLibrarySync } from "../../../lib/useLibrarySync";
 import { openUploadModal } from "../../../lib/upload";
@@ -37,7 +37,6 @@ import {
   notifySuccess,
   notifyWarning,
 } from "../../../lib/toast";
-import { getMe } from "../../../services/auth";
 import {
   createFolder,
   deleteFile,
@@ -97,14 +96,13 @@ export default function FolderDetailPage() {
     const isBoot = bootRef.current;
 
     try {
-      const [me, folderData, childFolders, fileResult] = await Promise.all([
-        getMe(),
+      const [folderData, childFolders, fileResult] = await Promise.all([
         getFolder(folderId),
         listFolders({ parentId: folderId }),
         listFiles({ folderId, limit: 100 }),
       ]);
-      saveSession({ user: me });
-      setUser(me);
+      const stored = getStoredUser();
+      if (stored) setUser(stored);
       setFolder(folderData);
       setSubfolders(childFolders || []);
       setFiles(fileResult?.files || []);
@@ -178,7 +176,6 @@ export default function FolderDetailPage() {
       setFolderName("");
       setShowFolderForm(false);
       notifySuccess(t("folderDetail.subfolderCreated"));
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -197,7 +194,6 @@ export default function FolderDetailPage() {
       await updateFolder(folderId, { name: folderRenameValue.trim() });
       setRenameFolderOpen(false);
       notifySuccess(t("folders.renamed"));
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -216,7 +212,6 @@ export default function FolderDetailPage() {
       setRenameId("");
       setMenuId("");
       notifySuccess(t("files.renamed"));
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -291,7 +286,6 @@ export default function FolderDetailPage() {
       }
       setMenuId("");
       setConfirmAction(null);
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -635,7 +629,7 @@ export default function FolderDetailPage() {
         <BottomNav
           activeId="folders"
           defaultFolderId={folderId}
-          onUploadSuccess={refresh}
+          folders={subfolders}
         />
 
         <ConfirmModal

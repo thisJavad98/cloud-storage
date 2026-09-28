@@ -20,10 +20,8 @@ import {
   getAccessToken,
   getStoredUser,
   hasSession,
-  saveSession,
 } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
-import { useLibrarySync } from "../../lib/useLibrarySync";
 import {
   notifyError,
   notifyInfo,
@@ -67,7 +65,6 @@ export default function ProfilePage() {
 
     try {
       const me = await getMe();
-      saveSession({ user: me });
       setUser(me);
       setFullName(me.fullName || "");
       setBio(me.bio || "");
@@ -83,8 +80,6 @@ export default function ProfilePage() {
     }
   }, [router]);
 
-  useLibrarySync(refresh);
-
   useEffect(() => {
     const stored = getStoredUser();
     if (!stored) {
@@ -97,6 +92,13 @@ export default function ProfilePage() {
     setBio(stored.bio || "");
     refresh();
   }, [router, refresh]);
+
+  // Keep form fields aligned when AccountSync / avatar updates the session user.
+  useEffect(() => {
+    if (!user) return;
+    setFullName(user.fullName || "");
+    setBio(user.bio || "");
+  }, [user]);
 
   async function handleSave(event) {
     event.preventDefault();
@@ -364,7 +366,7 @@ export default function ProfilePage() {
           </motion.button>
         </MotionBlock>
 
-        <BottomNav activeId="profile" onUploadSuccess={refresh} />
+        <BottomNav activeId="profile" />
       </div>
 
       <ConfirmModal

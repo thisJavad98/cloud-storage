@@ -19,13 +19,14 @@ export default function UploadModal({
   onClose,
   defaultFolderId = null,
   onSuccess,
+  folders: foldersProp,
 }) {
   const { t, locale } = useI18n();
   const fileInputRef = useRef(null);
   const createInputRef = useRef(null);
   const uploadingRef = useRef(false);
   const [mounted, setMounted] = useState(false);
-  const [folders, setFolders] = useState([]);
+  const [folders, setFolders] = useState(foldersProp || []);
   const [loadingFolders, setLoadingFolders] = useState(false);
   const [folderId, setFolderId] = useState(defaultFolderId || "root");
   const [selectedFile, setSelectedFile] = useState(null);
@@ -41,6 +42,12 @@ export default function UploadModal({
   }, []);
 
   useEffect(() => {
+    if (Array.isArray(foldersProp)) {
+      setFolders(foldersProp);
+    }
+  }, [foldersProp]);
+
+  useEffect(() => {
     if (!open) return undefined;
 
     setFolderId(defaultFolderId || "root");
@@ -52,6 +59,11 @@ export default function UploadModal({
 
     let cancelled = false;
     async function loadFolders() {
+      if (Array.isArray(foldersProp)) {
+        setFolders(foldersProp);
+        setLoadingFolders(false);
+        return;
+      }
       setLoadingFolders(true);
       try {
         const rows = await listFolders();
@@ -77,7 +89,7 @@ export default function UploadModal({
       document.removeEventListener("keydown", onKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, defaultFolderId, onClose]);
+  }, [open, defaultFolderId, onClose, foldersProp]);
 
   useEffect(() => {
     if (!open) return;
@@ -132,7 +144,7 @@ export default function UploadModal({
       const created =
         rows.find((item) => item.id === folder?.id) || folder || null;
       if (created?.id) setFolderId(created.id);
-      await onSuccess?.();
+      // Library sync from createFolder mutation refreshes the page — no onSuccess.
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -152,13 +164,8 @@ export default function UploadModal({
       await uploadFile(selectedFile, { folderId: targetFolderId || undefined });
       notifySuccess(t("upload.success"));
       onClose?.();
-      await onSuccess?.();
-      try {
-        const { emitLibrarySync } = await import("../lib/sync");
-        emitLibrarySync("upload");
-      } catch {
-        // ignore
-      }
+      // uploadFile already emits library-sync; avoid a second/third refresh.
+      onSuccess?.();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {

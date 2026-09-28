@@ -21,7 +21,7 @@ import Reveal from "../../components/Reveal";
 import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
-import { getAccessToken, getStoredUser, hasSession, saveSession } from "../../lib/session";
+import { getStoredUser, hasSession } from "../../lib/session";
 import { useLiveUser } from "../../lib/useLiveUser";
 import { useLibrarySync } from "../../lib/useLibrarySync";
 import {
@@ -29,7 +29,6 @@ import {
   notifySuccess,
   notifyWarning,
 } from "../../lib/toast";
-import { getMe } from "../../services/auth";
 import {
   createFolder,
   deleteFolder,
@@ -66,9 +65,9 @@ export default function FoldersManagePage() {
     const isBoot = bootRef.current;
 
     try {
-      const [me, folderRows] = await Promise.all([getMe(), listFolders()]);
-      saveSession({ user: me });
-      setUser(me);
+      const folderRows = await listFolders();
+      const stored = getStoredUser();
+      if (stored) setUser(stored);
       setFolders(folderRows || []);
     } catch (err) {
       notifyError(formatFileError(err));
@@ -113,7 +112,6 @@ export default function FoldersManagePage() {
       setCreateName("");
       setShowCreate(false);
       notifySuccess(t("folders.created"));
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -135,7 +133,6 @@ export default function FoldersManagePage() {
       setEditId("");
       setEditName("");
       notifySuccess(t("folders.renamed"));
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -164,7 +161,6 @@ export default function FoldersManagePage() {
         setEditId("");
         setEditName("");
       }
-      await refresh();
     } catch (err) {
       notifyError(formatFileError(err));
     } finally {
@@ -379,7 +375,7 @@ export default function FoldersManagePage() {
           </div>
         </MotionBlock>
 
-        <BottomNav activeId="folders" />
+        <BottomNav activeId="folders" folders={folders} />
 
         <ConfirmModal
           open={Boolean(confirmAction)}
