@@ -286,17 +286,15 @@ export default function DataIslandPage() {
               ) : islands.length === 0 ? (
                 <div className="flex h-full flex-col items-center justify-center px-6 text-center">
                   <motion.div
-                    className="mb-3 size-20 rounded-[42%] bg-gradient-to-b from-emerald-300/80 to-emerald-700/90 shadow-[0_12px_28px_rgba(8,47,73,0.4)]"
+                    className="mb-3 flex size-20 items-center justify-center rounded-full bg-gradient-to-b from-emerald-300 to-emerald-600 shadow-[0_12px_28px_rgba(8,47,73,0.4)] ring-4 ring-emerald-200/35"
                     animate={
-                      reduce
-                        ? undefined
-                        : { y: [0, -8, 0], rotate: [0, 2, 0] }
+                      reduce ? undefined : { y: [0, -8, 0], rotate: [0, 2, 0] }
                     }
                     transition={{ duration: 3.2, repeat: Infinity }}
-                  />
-                  <p className="text-base font-bold text-white">
-                    {t("dataIsland.emptyTitle")}
-                  </p>
+                  >
+                    <IconIsland className="size-9 text-white drop-shadow-sm" />
+                  </motion.div>
+
                   <p className="mt-1 text-sm text-cyan-100/80">
                     {t("dataIsland.emptyBody")}
                   </p>
@@ -312,7 +310,7 @@ export default function DataIslandPage() {
                         ? t("dataIsland.folderMeta", {
                             count: formatDigits(
                               entry.item.fileCount ?? 0,
-                              locale
+                              locale,
                             ),
                           })
                         : formatBytes(entry.item.sizeBytes || 0, t, locale);
@@ -348,7 +346,11 @@ export default function DataIslandPage() {
             <motion.div
               className="pointer-events-none absolute inset-x-0 bottom-4 h-12 rounded-[100%] bg-[#022c44]/4 blur-lg"
               animate={{ scaleX: [1, 1.06, 1], opacity: [0.3, 0.5, 0.3] }}
-              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+              transition={{
+                duration: 4.5,
+                repeat: Infinity,
+                ease: "easeInOut",
+              }}
             />
           ) : null}
         </div>
