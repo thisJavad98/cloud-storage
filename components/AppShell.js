@@ -120,7 +120,7 @@ export default function AppShell({
             <motion.button
               type="button"
               onClick={() => setUploadOpen(true)}
-              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-[#f5a85a] to-cs-file-orange px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(242,154,74,0.35)]"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-[#2dd4bf] to-[#0f766e] px-4 py-3 text-sm font-bold text-white shadow-[0_10px_24px_rgba(15,118,110,0.35)]"
               whileHover={reduce ? undefined : { y: -2, scale: 1.02 }}
               whileTap={reduce ? undefined : { scale: 0.97 }}
               transition={{ duration: 0.25, ease: easeOut }}

@@ -192,7 +192,7 @@ export default function BottomNav({
                   onUploadClick ? onUploadClick() : setUploadOpen(true)
                 }
                 aria-label={t("nav.uploadFile")}
-                className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[var(--cs-nav-ring)]"
+                className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#2dd4bf] to-[#0f766e] text-white shadow-[0_10px_24px_rgba(15,118,110,0.42)] ring-[6px] ring-[var(--cs-nav-ring)]"
                 whileHover={reduce ? undefined : { scale: 1.06 }}
                 whileTap={reduce ? undefined : { scale: 0.94 }}
                 animate={
@@ -201,9 +201,9 @@ export default function BottomNav({
                     : {
                         y: [0, -3, 0],
                         boxShadow: [
-                          "0 10px 24px rgba(242,154,74,0.4)",
-                          "0 14px 28px rgba(242,154,74,0.55)",
-                          "0 10px 24px rgba(242,154,74,0.4)",
+                          "0 10px 24px rgba(15,118,110,0.38)",
+                          "0 14px 28px rgba(13,148,136,0.52)",
+                          "0 10px 24px rgba(15,118,110,0.38)",
                         ],
                       }
                 }
