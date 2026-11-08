@@ -221,21 +221,21 @@ export default function BottomNav({
 
           <div className="border-t border-cs-line/80 bg-white/92 px-3 pb-2.5 pt-3 shadow-[0_-8px_28px_rgba(21,32,56,0.06)] backdrop-blur-md">
             <LayoutGroup id="bottom-nav">
-              <div
-                className={`grid items-center gap-1 ${
-                  showUpload ? "grid-cols-[1fr_3.5rem_1fr]" : "grid-cols-1"
-                }`}
-              >
-                <div className="flex items-center justify-around">
-                  {leftItems.map(renderItem)}
+              {showUpload ? (
+                <div className="grid grid-cols-[1fr_3.5rem_1fr] items-center gap-1">
+                  <div className="flex items-center justify-around">
+                    {leftItems.map(renderItem)}
+                  </div>
+                  <div aria-hidden="true" className="h-12" />
+                  <div className="flex items-center justify-around">
+                    {rightItems.map(renderItem)}
+                  </div>
                 </div>
-
-                {showUpload ? <div aria-hidden="true" className="h-12" /> : null}
-
-                <div className="flex items-center justify-around">
-                  {rightItems.map(renderItem)}
+              ) : (
+                <div className="flex items-center justify-around gap-1">
+                  {[...leftItems, ...rightItems].map(renderItem)}
                 </div>
-              </div>
+              )}
             </LayoutGroup>
           </div>
         </motion.div>

@@ -294,9 +294,10 @@ html[dir="ltr"] .landing-page .landing-body {
   pointer-events: none;
 }
 
-/* Hide credit bar on auth shells and while any dialog / island preview is open */
+/* Hide credit bar on auth, immersive island, and open overlays */
 body:has(.auth-screen) .site-footer,
 body:has(.a2hs-shell) .site-footer,
+body:has(.app-desktop--immersive) .site-footer,
 body:has([aria-modal="true"]) .site-footer,
 body:has(.island-preview-dock--open) .site-footer {
   display: none;
