@@ -300,7 +300,7 @@ export default function ProfilePage() {
         <MotionBlock className="mt-6 space-y-3 px-5" delay={0.3} as="section">
           {showA2hs ? (
             <motion.div
-              className="rounded-2xl bg-gradient-to-br from-cs-blue to-[#1542b0] p-4 text-white shadow-[0_12px_28px_rgba(30,85,214,0.28)]"
+              className="rounded-2xl bg-gradient-to-br from-cs-blue to-cs-blue-deep p-4 text-white shadow-[0_12px_28px_rgba(232,120,42,0.28)]"
               whileHover={{ y: -2 }}
             >
               <div className="flex items-center justify-between gap-3">

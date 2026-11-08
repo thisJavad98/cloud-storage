@@ -7,19 +7,19 @@ import { useI18n } from "../lib/i18n/I18nProvider";
 import { easeOut } from "../lib/motion";
 
 const FISH = [
-  { top: "18%", size: 13, duration: 9, delay: 0, dir: 1 },
-  { top: "28%", size: 16, duration: 10, delay: 0.6, dir: 1 },
-  { top: "36%", size: 11, duration: 12, delay: 3.4, dir: -1 },
-  { top: "42%", size: 14, duration: 11, delay: 1.5, dir: 1 },
-  { top: "52%", size: 12, duration: 14, delay: 5.2, dir: -1 },
-  { top: "58%", size: 15, duration: 13, delay: 2.2, dir: -1 },
-  { top: "68%", size: 10, duration: 10.5, delay: 6.8, dir: 1 },
-  { top: "74%", size: 13, duration: 12.5, delay: 4, dir: -1 },
+  { top: "18%", size: 13, duration: 16, delay: 0, dir: 1 },
+  { top: "28%", size: 16, duration: 18, delay: 1.1, dir: 1 },
+  { top: "36%", size: 11, duration: 21, delay: 5.5, dir: -1 },
+  { top: "42%", size: 14, duration: 19, delay: 2.4, dir: 1 },
+  { top: "52%", size: 12, duration: 24, delay: 8.5, dir: -1 },
+  { top: "58%", size: 15, duration: 22, delay: 3.6, dir: -1 },
+  { top: "68%", size: 10, duration: 18.5, delay: 11, dir: 1 },
+  { top: "74%", size: 13, duration: 21.5, delay: 6.5, dir: -1 },
 ];
 
 const SHARKS = [
-  { top: "40%", size: 34, duration: 16, delay: 1.2, dir: 1 },
-  { top: "62%", size: 28, duration: 19, delay: 7, dir: -1 },
+  { top: "40%", size: 34, duration: 28, delay: 2, dir: 1 },
+  { top: "62%", size: 28, duration: 34, delay: 12, dir: -1 },
 ];
 
 function MiniFish({ size = 14, flip = false }) {
@@ -116,7 +116,7 @@ export default function DataSeaBanner({ className = "" }) {
               ? undefined
               : { backgroundPosition: ["0% 0%", "100% 50%", "0% 0%"] }
           }
-          transition={{ duration: 14, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 24, repeat: Infinity, ease: "easeInOut" }}
         />
 
         {/* horizon shimmer */}
@@ -127,29 +127,34 @@ export default function DataSeaBanner({ className = "" }) {
               "linear-gradient(180deg, rgba(224,242,254,0.55), transparent)",
           }}
           animate={reduce ? undefined : { opacity: [0.45, 0.8, 0.5] }}
-          transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
+          transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
         />
 
-        {/* animated wave strips */}
-        <svg
-          className="pointer-events-none absolute inset-x-0 bottom-0 h-[70%] w-[220%] max-w-none"
-          viewBox="0 0 1440 180"
-          preserveAspectRatio="none"
-          aria-hidden="true"
-        >
-          <motion.path
-            d="M0,70 C180,30 360,110 540,70 C720,30 900,110 1080,70 C1260,30 1380,90 1440,70 L1440,180 L0,180 Z"
-            fill="rgba(14,116,144,0.35)"
-            animate={reduce ? undefined : { x: [0, -120, 0] }}
-            transition={{ duration: 9, repeat: Infinity, ease: "easeInOut" }}
-          />
-          <motion.path
-            d="M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100 C1320,80 1400,110 1440,100 L1440,180 L0,180 Z"
-            fill="rgba(8,47,73,0.4)"
-            animate={reduce ? undefined : { x: [0, -180, 0] }}
-            transition={{ duration: 12, repeat: Infinity, ease: "easeInOut" }}
-          />
-        </svg>
+        {/* seamless full-width waves (CSS marquee — no motion % gaps) */}
+        <div className="sea-wave-viewport pointer-events-none absolute inset-x-0 bottom-0 h-[70%]">
+          <div
+            className={`sea-wave-track ${reduce ? "" : "sea-wave-track--run"}`}
+            aria-hidden="true"
+          >
+            {[0, 1].map((copy) => (
+              <svg
+                key={copy}
+                className="sea-wave-panel"
+                viewBox="0 0 1440 180"
+                preserveAspectRatio="none"
+              >
+                <path
+                  d="M0,70 C180,30 360,110 540,70 C720,30 900,110 1080,70 C1260,30 1380,90 1440,70 L1440,180 L0,180 Z"
+                  fill="rgba(14,116,144,0.35)"
+                />
+                <path
+                  d="M0,100 C200,60 400,140 600,100 C800,60 1000,140 1200,100 C1320,80 1400,110 1440,100 L1440,180 L0,180 Z"
+                  fill="rgba(8,47,73,0.4)"
+                />
+              </svg>
+            ))}
+          </div>
+        </div>
 
         {/* floating bubbles */}
         {!reduce
@@ -168,8 +173,8 @@ export default function DataSeaBanner({ className = "" }) {
                   scale: [0.6, 1.1, 0.8],
                 }}
                 transition={{
-                  duration: 3.5 + i * 0.4,
-                  delay: i * 0.45,
+                  duration: 6 + i * 0.7,
+                  delay: i * 0.8,
                   repeat: Infinity,
                   ease: "easeOut",
                 }}
@@ -194,7 +199,7 @@ export default function DataSeaBanner({ className = "" }) {
                 <span
                   className="sea-creature-bob"
                   style={{
-                    animationDuration: "2.2s",
+                    animationDuration: "3.8s",
                     animationDelay: `${fish.delay * 0.1}s`,
                   }}
                 >
@@ -220,7 +225,7 @@ export default function DataSeaBanner({ className = "" }) {
                 <span
                   className="sea-creature-bob"
                   style={{
-                    animationDuration: "3s",
+                    animationDuration: "5.2s",
                     animationDelay: `${shark.delay * 0.1}s`,
                   }}
                 >
@@ -239,13 +244,13 @@ export default function DataSeaBanner({ className = "" }) {
                 ? undefined
                 : { y: [0, -4, 0], rotate: [0, 2, -1, 0] }
             }
-            transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 6.2, repeat: Infinity, ease: "easeInOut" }}
           >
             <MiniIsland className="size-[58px] drop-shadow-[0_8px_12px_rgba(8,47,73,0.35)]" />
             <motion.span
               className="pointer-events-none absolute -inset-1 rounded-full border border-cyan-100/30"
               animate={{ opacity: [0, 0.55, 0], scale: [0.9, 1.15, 1.25] }}
-              transition={{ duration: 2.8, repeat: Infinity, ease: "easeOut" }}
+              transition={{ duration: 4.8, repeat: Infinity, ease: "easeOut" }}
             />
           </motion.div>
 
@@ -280,7 +285,7 @@ export default function DataSeaBanner({ className = "" }) {
           <motion.span
             className="inline-flex size-9 shrink-0 items-center justify-center rounded-full bg-white/18 text-white ring-1 ring-white/25 backdrop-blur-sm transition group-hover:bg-white/28"
             animate={reduce ? undefined : { x: [0, -3, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeInOut" }}
+            transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }}
             aria-hidden="true"
           >
             <svg viewBox="0 0 24 24" className="size-4 rtl:rotate-180" fill="none">
@@ -300,7 +305,7 @@ export default function DataSeaBanner({ className = "" }) {
           <motion.div
             className="pointer-events-none absolute inset-y-0 w-16 bg-gradient-to-r from-transparent via-white/20 to-transparent"
             animate={{ left: ["-20%", "120%"] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+            transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1.5 }}
           />
         ) : null}
       </Link>

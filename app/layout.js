@@ -28,12 +28,12 @@ const landingFont = Rubik({
   display: "swap",
 });
 
-const THEME_COLOR = "#1e55d6";
+const THEME_COLOR = "#e8782a";
 
 export const viewport = {
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: THEME_COLOR },
-    { media: "(prefers-color-scheme: dark)", color: "#0f131c" },
+    { media: "(prefers-color-scheme: dark)", color: "#12100e" },
   ],
   width: "device-width",
   initialScale: 1,

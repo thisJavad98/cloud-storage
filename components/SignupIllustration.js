@@ -30,11 +30,11 @@ export function SignupIllustration({ className = "" }) {
       <defs>
         <linearGradient id="sCloud" x1="180" y1="12" x2="180" y2="100" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#c5d9ff" />
+          <stop offset="1" stopColor="#ffd7b0" />
         </linearGradient>
         <linearGradient id="sCard" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#e8f0ff" />
+          <stop offset="1" stopColor="#fff0e4" />
         </linearGradient>
         <linearGradient id="sPlus" x1="0" y1="0" x2="1" y2="1">
           <stop stopColor="#8bffbf" />
@@ -45,7 +45,7 @@ export function SignupIllustration({ className = "" }) {
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <filter id="sShadow" x="-30%" y="-30%" width="160%" height="170%">
-          <feDropShadow dx="0" dy="6" stdDeviation="6.5" floodColor="#06153f" floodOpacity="0.3" />
+          <feDropShadow dx="0" dy="6" stdDeviation="6.5" floodColor="#4a2a10" floodOpacity="0.3" />
         </filter>
       </defs>
 
@@ -58,7 +58,7 @@ export function SignupIllustration({ className = "" }) {
         cy="228"
         rx="110"
         ry="11"
-        fill="#0a2268"
+        fill="#9a4a12"
         opacity="0.38"
         animate={{ scaleX: [1, 1.06, 1] }}
         transition={{ duration: 3.4, repeat: Infinity, ease: "easeInOut" }}
@@ -86,7 +86,7 @@ export function SignupIllustration({ className = "" }) {
       {/* Invite beams into card */}
       <motion.path
         d="M48 145 C90 145 100 165 124 170"
-        stroke="#8eb4ff"
+        stroke="#f5a85a"
         strokeWidth="1.7"
         strokeLinecap="round"
         strokeDasharray="3 5"
@@ -110,8 +110,8 @@ export function SignupIllustration({ className = "" }) {
         transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
       >
         <rect x="108" y="120" width="144" height="96" rx="18" fill="url(#sCard)" />
-        <rect x="108" y="120" width="144" height="32" rx="18" fill="#6ea0ff" />
-        <rect x="108" y="138" width="144" height="14" fill="#6ea0ff" />
+        <rect x="108" y="120" width="144" height="32" rx="18" fill="#e8782a" />
+        <rect x="108" y="138" width="144" height="14" fill="#e8782a" />
         <circle cx="142" cy="136" r="16" fill="#ffd4ba" />
         <path d="M128 124c9-11 22-8 24 4-9 1-17 1-24-4Z" fill="#1f2433" />
         <rect x="168" y="128" width="60" height="7" rx="3.5" fill="#fff" opacity="0.92" />
@@ -122,7 +122,7 @@ export function SignupIllustration({ className = "" }) {
           width="112"
           height="11"
           rx="5.5"
-          fill="#c5d4f5"
+          fill="#ffd7b0"
           animate={{ opacity: [0.55, 1, 0.55] }}
           transition={{ duration: 2, repeat: Infinity }}
         />
@@ -132,7 +132,7 @@ export function SignupIllustration({ className = "" }) {
           width="112"
           height="11"
           rx="5.5"
-          fill="#d7e4ff"
+          fill="#ffe8d0"
           animate={{ opacity: [0.55, 1, 0.55] }}
           transition={{ duration: 2, delay: 0.25, repeat: Infinity }}
         />
@@ -145,7 +145,7 @@ export function SignupIllustration({ className = "" }) {
         <circle cx="48" cy="134" r="24" fill="#fff" />
         <circle cx="48" cy="126" r="10" fill="#ffd0b5" />
         <path d="M38 117c6-8 15-6 16 3-6 0-11 0-16-3Z" fill="#1f2433" />
-        <path d="M32 142c2-9 28-9 32 0v10H32v-10Z" fill="#3d6fe0" />
+        <path d="M32 142c2-9 28-9 32 0v10H32v-10Z" fill="#e8782a" />
         <motion.g
           animate={{ scale: [1, 1.12, 1] }}
           transition={{ duration: 1.8, repeat: Infinity }}
@@ -172,7 +172,7 @@ export function SignupIllustration({ className = "" }) {
         transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
       >
         <rect x="286" y="48" width="52" height="38" rx="7" fill="#fff" />
-        <path d="M286 55 312 72 338 55" stroke="#6ea0ff" strokeWidth="2.4" strokeLinejoin="round" fill="none" />
+        <path d="M286 55 312 72 338 55" stroke="#e8782a" strokeWidth="2.4" strokeLinejoin="round" fill="none" />
         <path d="M286 78 304 64" stroke="#9db7ef" strokeWidth="1.7" strokeLinecap="round" />
         <path d="M338 78 320 64" stroke="#9db7ef" strokeWidth="1.7" strokeLinecap="round" />
         <circle cx="328" cy="78" r="7" fill="#f6c344" />
@@ -184,7 +184,7 @@ export function SignupIllustration({ className = "" }) {
         { x: 96, y: 110, c: "#f6c344", d: 0 },
         { x: 248, y: 114, c: "#7dffb2", d: 0.35 },
         { x: 232, y: 124, c: "#ff8f6b", d: 0.7 },
-        { x: 88, y: 128, c: "#8eb4ff", d: 0.2 },
+        { x: 88, y: 128, c: "#f5a85a", d: 0.2 },
       ].map((p) => (
         <motion.rect
           key={`${p.x}-${p.y}`}

@@ -29,8 +29,8 @@ export function IntroIllustration() {
     >
       <defs>
         <linearGradient id="iDesk" x1="180" y1="130" x2="180" y2="220" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#6ea8ff" />
-          <stop offset="1" stopColor="#1e55d6" />
+          <stop stopColor="#f5a85a" />
+          <stop offset="1" stopColor="#e8782a" />
         </linearGradient>
         <linearGradient id="iScreen" x1="180" y1="140" x2="180" y2="190" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
@@ -38,7 +38,7 @@ export function IntroIllustration() {
         </linearGradient>
         <linearGradient id="iCloud" x1="180" y1="10" x2="180" y2="95" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#c5d9ff" />
+          <stop offset="1" stopColor="#ffd7b0" />
         </linearGradient>
         <linearGradient id="iFolder" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#ffe69a" />
@@ -46,14 +46,14 @@ export function IntroIllustration() {
         </linearGradient>
         <linearGradient id="iServer" x1="0" y1="0" x2="1" y2="1">
           <stop stopColor="#9ec0ff" />
-          <stop offset="1" stopColor="#1e55d6" />
+          <stop offset="1" stopColor="#e8782a" />
         </linearGradient>
         <radialGradient id="iGlow" cx="50%" cy="42%" r="55%">
           <stop stopColor="#fff" stopOpacity="0.38" />
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
         <filter id="iShadow" x="-35%" y="-35%" width="170%" height="190%">
-          <feDropShadow dx="0" dy="7" stdDeviation="7" floodColor="#06153f" floodOpacity="0.3" />
+          <feDropShadow dx="0" dy="7" stdDeviation="7" floodColor="#4a2a10" floodOpacity="0.3" />
         </filter>
       </defs>
 
@@ -68,7 +68,7 @@ export function IntroIllustration() {
         cy="248"
         rx="126"
         ry="12"
-        fill="#0a2268"
+        fill="#9a4a12"
         opacity="0.4"
         animate={{ scaleX: [1, 1.07, 1], opacity: [0.32, 0.48, 0.32] }}
         transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
@@ -128,7 +128,7 @@ export function IntroIllustration() {
       />
       <motion.path
         d="M42 190 C90 150 120 130 160 120"
-        stroke="#8eb4ff"
+        stroke="#f5a85a"
         strokeWidth="1.6"
         strokeLinecap="round"
         strokeDasharray="3 5"
@@ -163,7 +163,7 @@ export function IntroIllustration() {
       {/* Desk / dashboard */}
       <g filter="url(#iShadow)">
         <rect x="82" y="136" width="196" height="84" rx="18" fill="url(#iDesk)" />
-        <rect x="82" y="136" width="196" height="20" rx="18" fill="#8eb4ff" opacity="0.35" />
+        <rect x="82" y="136" width="196" height="20" rx="18" fill="#f5a85a" opacity="0.35" />
         <rect x="96" y="150" width="168" height="54" rx="11" fill="url(#iScreen)" />
         <circle cx="110" cy="161" r="3.2" fill="#ff7b7b" />
         <circle cx="121" cy="161" r="3.2" fill="#f6c344" />
@@ -171,7 +171,7 @@ export function IntroIllustration() {
         {[
           ["#9ec0ff", 108],
           ["#f6c344", 146],
-          ["#6ea0ff", 184],
+          ["#e8782a", 184],
           ["#ff9a6b", 222],
         ].map(([color, x], i) => (
           <motion.g
@@ -192,7 +192,7 @@ export function IntroIllustration() {
           width="48"
           height="4"
           rx="2"
-          fill="#4d7cf0"
+          fill="#e8782a"
           animate={{ x: [96, 200, 96], opacity: [0.4, 0.9, 0.4] }}
           transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
         />
@@ -239,7 +239,7 @@ export function IntroIllustration() {
         <rect x="298" y="40" width="42" height="52" rx="9" fill="#fff" />
         <rect x="306" y="52" width="26" height="3.5" rx="1.5" fill="#9db7ef" />
         <rect x="306" y="60" width="18" height="3.5" rx="1.5" fill="#9db7ef" />
-        <rect x="306" y="68" width="22" height="3.5" rx="1.5" fill="#c5d4f5" />
+        <rect x="306" y="68" width="22" height="3.5" rx="1.5" fill="#ffd7b0" />
         <circle cx="319" cy="82" r="6" fill="#5ad98c" opacity="0.85" />
         <path d="M316 82 318 84 323 79" stroke="#fff" strokeWidth="1.6" strokeLinecap="round" />
       </motion.g>
@@ -248,7 +248,7 @@ export function IntroIllustration() {
       <motion.g {...floatY(0.2, 5, 3)}>
         <circle cx="86" cy="118" r="14" fill="#ffd0b5" />
         <path d="M72 105c8-12 22-8 24 3-9 1-16 1-24-3Z" fill="#1f2433" />
-        <path d="M70 136c2-12 28-12 30 0v26H70v-26Z" fill="#3d6fe0" />
+        <path d="M70 136c2-12 28-12 30 0v26H70v-26Z" fill="#e8782a" />
         <rect x="70" y="160" width="12" height="26" rx="3" fill="#163d9e" />
         <rect x="88" y="160" width="12" height="26" rx="3" fill="#163d9e" />
         <circle cx="82" cy="116" r="1.5" fill="#5a3a2a" opacity="0.5" />
@@ -259,7 +259,7 @@ export function IntroIllustration() {
         <circle cx="180" cy="102" r="16" fill="#ffc9a8" />
         <path d="M164 87c10-14 28-10 32 4-11 0-22 0-32-4Z" fill="#1a1f2e" />
         <path d="M160 124c3-16 38-16 42 0v32h-42v-32Z" fill="#fff" />
-        <rect x="170" y="134" width="24" height="11" rx="3" fill="#6ea0ff" />
+        <rect x="170" y="134" width="24" height="11" rx="3" fill="#e8782a" />
         <rect x="166" y="154" width="13" height="30" rx="3" fill="#163d9e" />
         <rect x="185" y="154" width="13" height="30" rx="3" fill="#163d9e" />
         <circle cx="175" cy="100" r="1.6" fill="#5a3a2a" opacity="0.5" />

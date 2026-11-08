@@ -28,7 +28,7 @@ export default function LandingHighlight() {
         >
           <Float3D className="landing-blob -start-8 top-0 size-40 bg-[var(--landing-lilac)] opacity-80" amplitude={12} duration={6} />
           <Tilt3D max={9} scale={1.02}>
-            <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#5b7cff] to-[#1e55d6] p-7 text-white shadow-[var(--landing-shadow)] md:p-9">
+            <div className="relative overflow-hidden rounded-[1.75rem] bg-gradient-to-br from-[#f5a85a] to-[#e8782a] p-7 text-white shadow-[var(--landing-shadow)] md:p-9">
               <p className="text-sm font-semibold text-white/80">{t("landing.highlightCardEyebrow")}</p>
               <h3 className="landing-display mt-2 text-3xl" style={{ transform: "translateZ(24px)" }}>
                 {t("landing.highlightCardTitle")}

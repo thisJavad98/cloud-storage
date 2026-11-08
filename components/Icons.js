@@ -366,7 +366,7 @@ export function IconLogout({ className = "size-6" }) {
 }
 
 export function FileGlyph({ tone = "orange" }) {
-  const fill = tone === "blue" ? "#4d7cf0" : "#f29a4a";
+  const fill = tone === "blue" ? "#e8782a" : "#f29a4a";
   return (
     <div
       className="flex size-11 items-center justify-center rounded-xl"

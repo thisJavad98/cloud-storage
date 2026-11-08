@@ -28,7 +28,7 @@ export function PlansIllustration({ className = "mx-auto h-auto w-full max-w-[28
         </linearGradient>
         <linearGradient id="pB" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#5b8cff" />
-          <stop offset="1" stopColor="#1e55d6" />
+          <stop offset="1" stopColor="#e8782a" />
         </linearGradient>
         <linearGradient id="pC" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#ffd56a" />

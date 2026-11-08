@@ -40,7 +40,7 @@ export function DashboardPreview({ locale = "fa", labels }) {
 
   return (
     <div className="flex h-full flex-col bg-[#eef2fb] text-cs-ink">
-      <div className="bg-gradient-to-br from-[#1e55d6] via-[#1849c4] to-[#1542b0] px-4 pb-5 pt-10 text-white">
+      <div className="bg-gradient-to-br from-[#e8782a] via-[#c96118] to-[#c96118] px-4 pb-5 pt-10 text-white">
         <div className="flex items-start justify-between gap-3">
           <div>
             <p className="text-[11px] font-semibold text-white/75">{labels.greeting}</p>
@@ -156,7 +156,7 @@ export function IslandPreview({ labels }) {
         <div className="relative size-40">
           <span className="absolute inset-6 rounded-full bg-white/10 blur-md" aria-hidden />
           <span className="absolute left-[18%] top-[22%] size-12 rounded-2xl bg-[#f5c03d] shadow-lg shadow-black/20" />
-          <span className="absolute right-[14%] top-[36%] size-10 rounded-2xl bg-[#6ea8ff] shadow-lg shadow-black/20" />
+          <span className="absolute right-[14%] top-[36%] size-10 rounded-2xl bg-[#f5a85a] shadow-lg shadow-black/20" />
           <span className="absolute bottom-[18%] left-[34%] size-14 rounded-[1.25rem] bg-white/90 shadow-lg shadow-black/25" />
           <span className="absolute left-[46%] top-[12%] size-8 rounded-xl bg-[#f08a3a] shadow-md shadow-black/20" />
         </div>

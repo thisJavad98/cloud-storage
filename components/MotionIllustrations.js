@@ -60,7 +60,7 @@ export function EmptyFoldersIllu({ className = "mx-auto h-auto w-40" }) {
         cx="160"
         cy="78"
         r="2.5"
-        fill="#4d7cf0"
+        fill="#e8782a"
         animate={{ opacity: [0.35, 0.9, 0.35] }}
         transition={{ duration: 1.8, delay: 0.6, repeat: Infinity }}
       />
@@ -110,8 +110,8 @@ export function EmptyFilesIllu({ className = "mx-auto h-auto w-40" }) {
       >
         <rect x="58" y="48" width="58" height="72" rx="10" fill="#ffffff" stroke="#e6e9f0" strokeWidth="2" />
         <rect x="70" y="64" width="34" height="5" rx="2.5" fill="#9db7ef" />
-        <rect x="70" y="76" width="26" height="5" rx="2.5" fill="#c5d4f5" />
-        <rect x="70" y="88" width="30" height="5" rx="2.5" fill="#c5d4f5" />
+        <rect x="70" y="76" width="26" height="5" rx="2.5" fill="#ffd7b0" />
+        <rect x="70" y="88" width="30" height="5" rx="2.5" fill="#ffd7b0" />
         <circle cx="98" cy="108" r="8" fill="#1f4fc4" opacity="0.15" />
         <path d="M94 108h8M98 104v8" stroke="#1f4fc4" strokeWidth="2" strokeLinecap="round" />
       </motion.g>

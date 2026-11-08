@@ -17,7 +17,7 @@ export function PageLoaderIllu({ className = "mx-auto h-auto w-full max-w-[220px
           <stop offset="1" stopColor="#d4e3ff" />
         </linearGradient>
         <linearGradient id="pl-ring" x1="0" y1="0" x2="1" y2="1">
-          <stop stopColor="#4d7cf0" />
+          <stop stopColor="#e8782a" />
           <stop offset="1" stopColor="#1f4fc4" />
         </linearGradient>
         <filter id="pl-shadow" x="-30%" y="-30%" width="160%" height="170%">
@@ -59,15 +59,15 @@ export function PageLoaderIllu({ className = "mx-auto h-auto w-full max-w-[220px
       {/* upload beams */}
       <g className="page-loader-illu__beam" opacity="0.55">
         <path d="M120 104 L108 132 L132 132 Z" fill="#1f4fc4" opacity="0.18" />
-        <path d="M120 108 L112 128 L128 128 Z" fill="#4d7cf0" opacity="0.28" />
+        <path d="M120 108 L112 128 L128 128 Z" fill="#e8782a" opacity="0.28" />
       </g>
 
       {/* floating file cards */}
       <g className="page-loader-illu__card page-loader-illu__card--l" filter="url(#pl-shadow)">
         <rect x="18" y="78" width="40" height="50" rx="9" fill="#ffffff" stroke="#e6e9f0" strokeWidth="1.5" />
         <rect x="26" y="90" width="24" height="4" rx="2" fill="#9db7ef" />
-        <rect x="26" y="100" width="16" height="4" rx="2" fill="#c5d4f5" />
-        <rect x="26" y="110" width="20" height="4" rx="2" fill="#c5d4f5" />
+        <rect x="26" y="100" width="16" height="4" rx="2" fill="#ffd7b0" />
+        <rect x="26" y="110" width="20" height="4" rx="2" fill="#ffd7b0" />
       </g>
       <g className="page-loader-illu__card page-loader-illu__card--r" filter="url(#pl-shadow)">
         <rect x="182" y="70" width="40" height="50" rx="9" fill="#ffffff" stroke="#e6e9f0" strokeWidth="1.5" />
@@ -79,7 +79,7 @@ export function PageLoaderIllu({ className = "mx-auto h-auto w-full max-w-[220px
       {/* bouncing dots under cloud */}
       <g>
         <circle className="page-loader-illu__dot page-loader-illu__dot--a" cx="100" cy="142" r="4" fill="#1f4fc4" />
-        <circle className="page-loader-illu__dot page-loader-illu__dot--b" cx="120" cy="142" r="4" fill="#4d7cf0" />
+        <circle className="page-loader-illu__dot page-loader-illu__dot--b" cx="120" cy="142" r="4" fill="#e8782a" />
         <circle className="page-loader-illu__dot page-loader-illu__dot--c" cx="140" cy="142" r="4" fill="#1f4fc4" />
       </g>
 
@@ -94,7 +94,7 @@ export function PageLoaderIllu({ className = "mx-auto h-auto w-full max-w-[220px
         d="M64 42l1.6 3.8 3.8 1.6-3.8 1.6-1.6 3.8-1.6-3.8-3.8-1.6 3.8-1.6Z"
         fill="#f29a4a"
       />
-      <circle className="page-loader-illu__spark page-loader-illu__spark--c" cx="188" cy="118" r="2.4" fill="#4d7cf0" opacity="0.55" />
+      <circle className="page-loader-illu__spark page-loader-illu__spark--c" cx="188" cy="118" r="2.4" fill="#e8782a" opacity="0.55" />
     </svg>
   );
 }

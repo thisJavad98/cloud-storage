@@ -487,7 +487,7 @@ export default function FolderDetailPage() {
                 hover
                 className={`relative rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 transition ${
                   focusFileId === file.id
-                    ? "ring-2 ring-cs-blue shadow-[0_12px_28px_rgba(30,85,214,0.18)]"
+                    ? "ring-2 ring-cs-blue shadow-[0_12px_28px_rgba(232,120,42,0.18)]"
                     : "ring-cs-line"
                 }`}
               >
@@ -549,7 +549,7 @@ export default function FolderDetailPage() {
                       type="button"
                       disabled={busyId === file.id}
                       onClick={() => handleDownload(file)}
-                      className="icon-label justify-center rounded-xl bg-[#eef2ff] px-3 py-2.5 text-xs font-semibold text-cs-blue"
+                      className="icon-label justify-center rounded-xl bg-[#fff0e4] px-3 py-2.5 text-xs font-semibold text-cs-blue"
                     >
                       <IconDownload className="size-4 shrink-0" />
                       <span>{t("files.download")}</span>

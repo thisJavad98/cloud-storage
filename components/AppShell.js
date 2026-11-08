@@ -141,7 +141,7 @@ export default function AppShell({
                   onClick={() => router.push(item.href)}
                   className={`group relative flex w-full items-center gap-3 rounded-2xl px-3.5 py-3 text-sm font-bold transition-colors ${
                     active
-                      ? "bg-cs-blue text-white shadow-[0_10px_24px_rgba(30,85,214,0.28)]"
+                      ? "bg-cs-blue text-white shadow-[0_10px_24px_rgba(232,120,42,0.28)]"
                       : "text-cs-muted hover:bg-white hover:text-cs-blue"
                   }`}
                   aria-current={active ? "page" : undefined}

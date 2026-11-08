@@ -28,8 +28,8 @@ export default function AddToHomeIllustration() {
     >
       <defs>
         <linearGradient id="a2hsPhone" x1="90" y1="20" x2="270" y2="260" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#2a6af0" />
-          <stop offset="1" stopColor="#1542b0" />
+          <stop stopColor="#f5a85a" />
+          <stop offset="1" stopColor="#c96118" />
         </linearGradient>
         <linearGradient id="a2hsScreen" x1="0" y1="0" x2="0" y2="1">
           <stop stopColor="#f4f7ff" />
@@ -40,8 +40,8 @@ export default function AddToHomeIllustration() {
           <stop offset="1" stopColor="#eef3ff" />
         </linearGradient>
         <linearGradient id="a2hsIcon" x1="0" y1="0" x2="1" y2="1">
-          <stop stopColor="#2a6af0" />
-          <stop offset="1" stopColor="#1e55d6" />
+          <stop stopColor="#f5a85a" />
+          <stop offset="1" stopColor="#e8782a" />
         </linearGradient>
         <filter id="a2hsShadow" x="-30%" y="-30%" width="160%" height="180%">
           <feDropShadow dx="0" dy="10" stdDeviation="10" floodColor="#06153f" floodOpacity="0.28" />
@@ -74,7 +74,7 @@ export default function AddToHomeIllustration() {
 
         {/* Fake Safari chrome */}
         <rect x="128" y="58" width="104" height="18" rx="9" fill="#fff" opacity="0.95" />
-        <circle cx="140" cy="67" r="3.5" fill="#1e55d6" opacity="0.55" />
+        <circle cx="140" cy="67" r="3.5" fill="#e8782a" opacity="0.55" />
         <rect x="150" y="64" width="60" height="6" rx="3" fill="#c5d4f5" />
 
         {/* Content cards */}
@@ -84,7 +84,7 @@ export default function AddToHomeIllustration() {
           width="96"
           height="28"
           rx="10"
-          fill="#1e55d6"
+          fill="#e8782a"
           opacity="0.18"
           animate={{ opacity: [0.14, 0.28, 0.14] }}
           transition={{ duration: 2.6, repeat: Infinity, ease: "easeInOut" }}
@@ -100,16 +100,16 @@ export default function AddToHomeIllustration() {
           style={{ transformOrigin: "180px 231px" }}
         >
           {/* iOS share icon */}
-          <rect x="172" y="226" width="16" height="12" rx="2.5" stroke="#1e55d6" strokeWidth="1.8" fill="none" />
+          <rect x="172" y="226" width="16" height="12" rx="2.5" stroke="#e8782a" strokeWidth="1.8" fill="none" />
           <path
             d="M180 222v10"
-            stroke="#1e55d6"
+            stroke="#e8782a"
             strokeWidth="1.8"
             strokeLinecap="round"
           />
           <path
             d="M175.5 226.5 180 222l4.5 4.5"
-            stroke="#1e55d6"
+            stroke="#e8782a"
             strokeWidth="1.8"
             strokeLinecap="round"
             strokeLinejoin="round"
@@ -123,7 +123,7 @@ export default function AddToHomeIllustration() {
           cy="231"
           r="10"
           fill="none"
-          stroke="#1e55d6"
+          stroke="#e8782a"
           strokeWidth="1.5"
           initial={{ opacity: 0, scale: 0.4 }}
           animate={{ opacity: [0, 0.7, 0], scale: [0.5, 1.6, 1.9] }}
@@ -151,10 +151,10 @@ export default function AddToHomeIllustration() {
           transition={{ duration: 1.4, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformOrigin: "180px 204px" }}
         >
-          <rect x="134" y="192" width="92" height="22" rx="9" fill="#1e55d6" />
+          <rect x="134" y="192" width="92" height="22" rx="9" fill="#e8782a" />
           <rect x="142" y="198" width="10" height="10" rx="2.5" fill="#fff" opacity="0.95" />
           {/* plus on square */}
-          <path d="M147 200.5v5M144.5 203h5" stroke="#1e55d6" strokeWidth="1.3" strokeLinecap="round" />
+          <path d="M147 200.5v5M144.5 203h5" stroke="#e8782a" strokeWidth="1.3" strokeLinecap="round" />
           <rect x="158" y="200" width="52" height="6" rx="3" fill="#fff" opacity="0.92" />
         </motion.g>
 

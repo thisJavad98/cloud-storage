@@ -30,12 +30,12 @@ export function LoginIllustration({ className = "" }) {
       <defs>
         <linearGradient id="lArch" x1="180" y1="30" x2="180" y2="220" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" stopOpacity="0.96" />
-          <stop offset="0.5" stopColor="#c8dbff" stopOpacity="0.55" />
-          <stop offset="1" stopColor="#6ea8ff" stopOpacity="0.08" />
+          <stop offset="0.5" stopColor="#ffd7b0" stopOpacity="0.55" />
+          <stop offset="1" stopColor="#f5a85a" stopOpacity="0.08" />
         </linearGradient>
         <linearGradient id="lCloud" x1="180" y1="14" x2="180" y2="90" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
-          <stop offset="1" stopColor="#c5d9ff" />
+          <stop offset="1" stopColor="#ffd7b0" />
         </linearGradient>
         <linearGradient id="lRay" x1="180" y1="70" x2="180" y2="180" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" stopOpacity="0.8" />
@@ -132,7 +132,7 @@ export function LoginIllustration({ className = "" }) {
         transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
       >
         <rect x="18" y="116" width="52" height="62" rx="10" fill="#fff" />
-        <rect x="18" y="116" width="52" height="16" rx="10" fill="#6ea0ff" />
+        <rect x="18" y="116" width="52" height="16" rx="10" fill="#e8782a" />
         <rect x="28" y="123" width="24" height="3.5" rx="1.5" fill="#fff" opacity="0.85" />
         <rect x="30" y="142" width="30" height="3.5" rx="1.5" fill="#9db7ef" />
         <rect x="30" y="151" width="22" height="3.5" rx="1.5" fill="#9db7ef" />
@@ -173,7 +173,7 @@ export function LoginIllustration({ className = "" }) {
         <circle cx="146" cy="132" r="16" fill="#ffd4ba" />
         <path d="M130 110c11-15 28-11 30 5-11 1-21 1-30-5Z" fill="#1f2433" />
         <path d="M128 152c3-15 34-15 36 0v30h-36v-30Z" fill="#fff" />
-        <rect x="138" y="160" width="20" height="9" rx="2.5" fill="#6ea0ff" />
+        <rect x="138" y="160" width="20" height="9" rx="2.5" fill="#e8782a" />
         <path d="M132 180l-7 34h14l6-34h-13Z" fill="#1b3f9a" />
         <path d="M152 180l9 34h14l-10-34h-13Z" fill="#163d9e" />
         <motion.path

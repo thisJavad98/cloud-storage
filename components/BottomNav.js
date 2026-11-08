@@ -101,7 +101,7 @@ export default function BottomNav({
           <motion.span
             layoutId="nav-active-circle"
             className="pointer-events-none absolute inset-0 rounded-full bg-cs-blue"
-            style={{ boxShadow: "0 8px 20px rgba(30,85,214,0.38)" }}
+            style={{ boxShadow: "0 8px 20px rgba(232,120,42,0.38)" }}
             initial={false}
             animate={
               reduce
@@ -109,9 +109,9 @@ export default function BottomNav({
                 : {
                     scale: [1, 1.05, 1],
                     boxShadow: [
-                      "0 8px 18px rgba(30,85,214,0.32)",
-                      "0 12px 26px rgba(30,85,214,0.48)",
-                      "0 8px 18px rgba(30,85,214,0.32)",
+                      "0 8px 18px rgba(232,120,42,0.32)",
+                      "0 12px 26px rgba(232,120,42,0.48)",
+                      "0 8px 18px rgba(232,120,42,0.32)",
                     ],
                   }
             }

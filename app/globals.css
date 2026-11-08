@@ -1,48 +1,49 @@
 @import "tailwindcss";
 
 :root {
-  --cs-blue: #1e55d6;
-  --cs-blue-deep: #1542b0;
-  --cs-blue-soft: #e9f0ff;
-  --cs-sky: #6ea8ff;
-  --cs-ink: #152038;
-  --cs-muted: #7d89a3;
-  --cs-line: #e2e8f4;
-  --cs-surface: #eef2fb;
+  /* Primary accent is orange; token name kept for existing class usage */
+  --cs-blue: #e8782a;
+  --cs-blue-deep: #c96118;
+  --cs-blue-soft: #fff0e4;
+  --cs-sky: #f5a85a;
+  --cs-ink: #1c1612;
+  --cs-muted: #8a7e72;
+  --cs-line: #ebe4dc;
+  --cs-surface: #f7f4f0;
   --cs-card: #ffffff;
-  --cs-input: #f3f5fb;
-  --cs-folder: #f5c03d;
-  --cs-folder-dark: #e0a61a;
-  --cs-file-orange: #f08a3a;
-  --cs-file-blue: #4d7cf0;
-  --cs-nav-ring: #eef2fb;
-  --cs-shadow: 0 10px 28px rgba(21, 32, 56, 0.08);
-  --cs-shadow-lg: 0 18px 48px rgba(21, 32, 56, 0.14);
+  --cs-input: #f3efe9;
+  --cs-folder: #f0b429;
+  --cs-folder-dark: #d99a12;
+  --cs-file-orange: #e8782a;
+  --cs-file-blue: #d4a574;
+  --cs-nav-ring: #f7f4f0;
+  --cs-shadow: 0 10px 28px rgba(28, 22, 18, 0.08);
+  --cs-shadow-lg: 0 18px 48px rgba(28, 22, 18, 0.14);
   --site-footer-h: 1.85rem;
   --background: var(--cs-blue);
   --foreground: #ffffff;
 }
 
 html[data-theme="dark"] {
-  --cs-blue: #5b8cff;
-  --cs-blue-deep: #4074e8;
-  --cs-blue-soft: #1a2438;
-  --cs-sky: #7eb0ff;
-  --cs-ink: #e9eef9;
-  --cs-muted: #97a4bf;
-  --cs-line: #2c364c;
-  --cs-surface: #0e121a;
-  --cs-card: #161d2c;
-  --cs-input: #1f2738;
-  --cs-folder: #f5c03d;
-  --cs-folder-dark: #e0a61a;
+  --cs-blue: #f08a3a;
+  --cs-blue-deep: #ff9f5a;
+  --cs-blue-soft: #2a1f16;
+  --cs-sky: #ffb06a;
+  --cs-ink: #f6f1eb;
+  --cs-muted: #a89888;
+  --cs-line: #322a22;
+  --cs-surface: #12100e;
+  --cs-card: #1a1612;
+  --cs-input: #221c17;
+  --cs-folder: #f0b429;
+  --cs-folder-dark: #d99a12;
   --cs-file-orange: #f08a3a;
-  --cs-file-blue: #6b93f5;
-  --cs-nav-ring: #0e121a;
-  --cs-shadow: 0 10px 28px rgba(0, 0, 0, 0.35);
-  --cs-shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.45);
-  --background: #0e121a;
-  --foreground: #e9eef9;
+  --cs-file-blue: #c9956a;
+  --cs-nav-ring: #12100e;
+  --cs-shadow: 0 10px 28px rgba(0, 0, 0, 0.4);
+  --cs-shadow-lg: 0 18px 48px rgba(0, 0, 0, 0.5);
+  --background: #12100e;
+  --foreground: #f6f1eb;
 }
 
 @theme inline {
@@ -156,17 +157,17 @@ body.has-site-footer {
 /* Full-bleed Leafnik-inspired marketing landing; other routes stay phone-shell */
 .landing-page {
   --landing-bg: #ffffff;
-  --landing-ink: #141824;
-  --landing-muted: #6b7388;
-  --landing-line: #e7ebf3;
-  --landing-sky: #e8f3ff;
-  --landing-peach: #ffe8d6;
-  --landing-lilac: #efe8ff;
-  --landing-mint: #e5f7ef;
-  --landing-accent: #1e55d6;
-  --landing-accent-soft: #6ea8ff;
-  --landing-shadow: 0 24px 60px -28px rgba(20, 24, 36, 0.28);
-  --landing-shadow-soft: 0 14px 40px -20px rgba(30, 85, 214, 0.28);
+  --landing-ink: #1c1612;
+  --landing-muted: #8a7e72;
+  --landing-line: #ebe4dc;
+  --landing-sky: #fff0e4;
+  --landing-peach: #ffe4d0;
+  --landing-lilac: #fff5eb;
+  --landing-mint: #fff8f0;
+  --landing-accent: #e8782a;
+  --landing-accent-soft: #f5a85a;
+  --landing-shadow: 0 24px 60px -28px rgba(28, 22, 18, 0.28);
+  --landing-shadow-soft: 0 14px 40px -20px rgba(232, 120, 42, 0.28);
 
   position: relative;
   isolation: isolate;
@@ -184,7 +185,7 @@ body.has-site-footer {
 }
 
 .landing-dot-grid {
-  background-image: radial-gradient(circle at 1px 1px, rgba(30, 85, 214, 0.16) 1px, transparent 0);
+  background-image: radial-gradient(circle at 1px 1px, rgba(232, 120, 42, 0.18) 1px, transparent 0);
   background-size: 18px 18px;
 }
 
@@ -1356,13 +1357,13 @@ body:has(.auth-screen) {
 .hex-pattern {
   position: relative;
   isolation: isolate;
-  background-color: #1849c4;
+  background-color: #c96118;
   background-image:
-    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(110, 168, 255, 0.55), transparent 55%),
-    radial-gradient(ellipse 70% 50% at 100% 80%, rgba(245, 192, 61, 0.18), transparent 50%),
-    radial-gradient(ellipse 60% 40% at 0% 70%, rgba(255, 255, 255, 0.12), transparent 45%),
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(255, 186, 120, 0.55), transparent 55%),
+    radial-gradient(ellipse 70% 50% at 100% 80%, rgba(255, 209, 102, 0.22), transparent 50%),
+    radial-gradient(ellipse 60% 40% at 0% 70%, rgba(255, 255, 255, 0.14), transparent 45%),
     radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.14) 1px, transparent 0),
-    linear-gradient(160deg, #1e55d6 0%, #1542b0 48%, #123a9a 100%);
+    linear-gradient(160deg, #f08a3a 0%, #e8782a 48%, #c96118 100%);
   background-size:
     auto,
     auto,
@@ -1395,13 +1396,13 @@ body:has(.auth-screen) {
   }
 
   .auth-stage.hex-pattern {
-    background-color: #0f2f8a;
+    background-color: #9a4a12;
     background-image:
-      radial-gradient(ellipse 55% 70% at 12% 18%, rgba(110, 168, 255, 0.45), transparent 60%),
-      radial-gradient(ellipse 50% 55% at 88% 22%, rgba(245, 192, 61, 0.22), transparent 58%),
-      radial-gradient(ellipse 70% 60% at 70% 92%, rgba(80, 140, 255, 0.28), transparent 55%),
+      radial-gradient(ellipse 55% 70% at 12% 18%, rgba(255, 186, 120, 0.45), transparent 60%),
+      radial-gradient(ellipse 50% 55% at 88% 22%, rgba(255, 209, 102, 0.24), transparent 58%),
+      radial-gradient(ellipse 70% 60% at 70% 92%, rgba(232, 120, 42, 0.35), transparent 55%),
       radial-gradient(ellipse 90% 50% at 50% -5%, rgba(255, 255, 255, 0.18), transparent 50%),
-      linear-gradient(145deg, #1a4cc8 0%, #143da8 38%, #0f2f8a 72%, #0c2674 100%);
+      linear-gradient(145deg, #f08a3a 0%, #e8782a 38%, #c96118 72%, #9a4a12 100%);
     background-size: auto;
   }
 
@@ -1443,7 +1444,7 @@ body:has(.auth-screen) {
     height: min(42vw, 420px);
     top: -8%;
     left: -6%;
-    background: radial-gradient(circle, rgba(140, 190, 255, 0.45), transparent 68%);
+    background: radial-gradient(circle, rgba(255, 186, 120, 0.48), transparent 68%);
   }
 
   .auth-aurora__orb--b {
@@ -1451,7 +1452,7 @@ body:has(.auth-screen) {
     height: min(36vw, 360px);
     top: 8%;
     right: -4%;
-    background: radial-gradient(circle, rgba(255, 210, 110, 0.28), transparent 70%);
+    background: radial-gradient(circle, rgba(255, 210, 110, 0.32), transparent 70%);
     animation-delay: -4s;
     animation-direction: reverse;
   }
@@ -1461,7 +1462,7 @@ body:has(.auth-screen) {
     height: min(48vw, 480px);
     bottom: -18%;
     left: 28%;
-    background: radial-gradient(circle, rgba(70, 130, 255, 0.35), transparent 70%);
+    background: radial-gradient(circle, rgba(232, 120, 42, 0.38), transparent 70%);
     animation-delay: -7s;
   }
 
@@ -1476,11 +1477,11 @@ body:has(.auth-screen) {
       180deg,
       rgba(255, 255, 255, 0.1) 0%,
       rgba(255, 255, 255, 0.04) 28%,
-      rgba(8, 28, 90, 0.18) 100%
+      rgba(154, 74, 18, 0.18) 100%
     );
     box-shadow:
       0 0 0 1px rgba(255, 255, 255, 0.14),
-      0 28px 80px rgba(4, 18, 60, 0.45),
+      0 28px 80px rgba(74, 42, 16, 0.45),
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
@@ -1495,9 +1496,9 @@ body:has(.auth-screen) {
 
   .auth-desktop-panel {
     background:
-      radial-gradient(ellipse 70% 55% at 20% 15%, rgba(110, 168, 255, 0.35), transparent 60%),
-      radial-gradient(ellipse 55% 45% at 90% 80%, rgba(245, 192, 61, 0.18), transparent 55%),
-      linear-gradient(160deg, #1e55d6 0%, #1542b0 48%, #0f2f8a 100%);
+      radial-gradient(ellipse 70% 55% at 20% 15%, rgba(255, 186, 120, 0.4), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 90% 80%, rgba(255, 209, 102, 0.2), transparent 55%),
+      linear-gradient(160deg, #f08a3a 0%, #e8782a 48%, #c96118 100%);
   }
 
   .auth-desktop-panel__glow {
@@ -1551,14 +1552,14 @@ body:has(.auth-screen) {
 }
 
 .storage-card {
-  background: linear-gradient(145deg, #2a6af0 0%, #1e55d6 42%, #1542b0 100%);
-  box-shadow: 0 18px 44px rgba(30, 85, 214, 0.34);
+  background: linear-gradient(145deg, #f5a85a 0%, #e8782a 42%, #c96118 100%);
+  box-shadow: 0 18px 44px rgba(232, 120, 42, 0.34);
 }
 
 .auth-sheet {
   background: var(--cs-card);
   border-radius: 2rem 2rem 0 0;
-  box-shadow: 0 -16px 48px rgba(10, 30, 90, 0.22);
+  box-shadow: 0 -16px 48px rgba(154, 74, 18, 0.22);
 }
 
 .auth-sheet::before {
@@ -1603,7 +1604,7 @@ body:has(.auth-screen) {
 }
 
 .a2hs-header {
-  background: linear-gradient(180deg, rgba(10, 30, 90, 0.22), transparent);
+  background: linear-gradient(180deg, rgba(154, 74, 18, 0.22), transparent);
 }
 
 .a2hs-chip {
@@ -1632,7 +1633,7 @@ body:has(.auth-screen) {
   background: rgba(255, 255, 255, 0.1);
   box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.16),
-    0 12px 40px rgba(4, 18, 60, 0.22),
+    0 12px 40px rgba(74, 42, 16, 0.22),
     0 0 0 1px rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(20px) saturate(1.3);
   -webkit-backdrop-filter: blur(20px) saturate(1.3);
@@ -1640,7 +1641,7 @@ body:has(.auth-screen) {
 
 .a2hs-step-active {
   background: rgba(255, 255, 255, 0.16);
-  box-shadow: 0 10px 28px rgba(4, 18, 60, 0.18);
+  box-shadow: 0 10px 28px rgba(74, 42, 16, 0.18);
 }
 
 .a2hs-footer {
@@ -1668,17 +1669,17 @@ body:has(.auth-screen) {
       180deg,
       rgba(255, 255, 255, 0.14) 0%,
       rgba(255, 255, 255, 0.06) 30%,
-      rgba(8, 28, 90, 0.28) 100%
+      rgba(154, 74, 18, 0.28) 100%
     );
   }
 }
 
 html[data-theme="dark"] .hex-pattern {
-  background-color: #152448;
+  background-color: #1a120c;
   background-image:
-    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(91, 140, 255, 0.35), transparent 55%),
+    radial-gradient(ellipse 120% 80% at 50% -10%, rgba(240, 138, 58, 0.28), transparent 55%),
     radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.08) 1px, transparent 0),
-    linear-gradient(160deg, #1a2d55 0%, #121c33 100%);
+    linear-gradient(160deg, #2a1f16 0%, #12100e 100%);
   background-size:
     auto,
     18px 18px,
@@ -1696,6 +1697,7 @@ html[data-theme="dark"] .bg-white\/95 {
 
 html[data-theme="dark"] .bg-\[\#f1f3f8\],
 html[data-theme="dark"] .bg-\[\#f7f8fc\],
+html[data-theme="dark"] .bg-\[\#fff0e4\],
 html[data-theme="dark"] .bg-\[\#fff4d4\] {
   background-color: var(--cs-input) !important;
 }
@@ -1866,11 +1868,47 @@ html[data-theme="dark"] .ring-\[\#f3f5fa\] {
   mix-blend-mode: soft-light;
 }
 
-.sea-wave-svg {
+.sea-wave-viewport {
+  overflow: hidden;
+  width: 100%;
+}
+
+.sea-wave-track {
+  position: absolute;
+  inset-block: 0;
+  inset-inline-start: 0;
+  display: flex;
   width: 200%;
-  min-width: 200%;
   height: 100%;
+  /* keep physical LTR tiling so -50% scroll stays seamless in RTL */
+  direction: ltr;
   will-change: transform;
+}
+
+.sea-wave-panel {
+  display: block;
+  flex: 0 0 50%;
+  width: 50%;
+  height: 100%;
+}
+
+@keyframes sea-wave-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.sea-wave-track--run {
+  animation: sea-wave-scroll 28s linear infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .sea-wave-track--run {
+    animation: none;
+  }
 }
 
 /* Fish / shark swim — CSS transforms (reliable on mobile Safari/Chrome) */
