@@ -75,6 +75,15 @@ body.has-site-footer {
   padding-bottom: calc(var(--site-footer-h) + env(safe-area-inset-bottom, 0px));
 }
 
+/* Full-screen auth / overlays: collapse footer height for nav + body padding */
+body:has(.auth-screen),
+body:has(.a2hs-shell),
+body:has([aria-modal="true"]),
+body:has(.island-preview-dock--open),
+body:has(.app-desktop--immersive) {
+  --site-footer-h: 0px;
+}
+
 /* Feature card hover: zoom media without layout thrash */
 .landing-hover-card .landing-media-zoom {
   transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
@@ -152,6 +161,7 @@ body.has-site-footer {
   body:has(.app-desktop) .site-footer {
     inset-inline-start: 16.5rem;
   }
+
 }
 
 /* Full-bleed Leafnik-inspired marketing landing; other routes stay phone-shell */
@@ -270,7 +280,8 @@ html[dir="ltr"] .landing-page .landing-body {
   position: fixed;
   inset-inline: 0;
   bottom: 0;
-  z-index: 55;
+  /* Below bottom nav (60) and preview docks; never over modals */
+  z-index: 40;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -281,6 +292,14 @@ html[dir="ltr"] .landing-page .landing-body {
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
   pointer-events: none;
+}
+
+/* Hide credit bar on auth shells and while any dialog / island preview is open */
+body:has(.auth-screen) .site-footer,
+body:has(.a2hs-shell) .site-footer,
+body:has([aria-modal="true"]) .site-footer,
+body:has(.island-preview-dock--open) .site-footer {
+  display: none;
 }
 
 .site-footer__text {

@@ -121,11 +121,11 @@ export default function IslandPreviewDock({ open, file, onClose }) {
   return (
     <AnimatePresence>
       {open && file ? (
-        <>
+        <div className="island-preview-dock--open contents">
           <motion.button
             type="button"
             aria-label={t("common.close")}
-            className="absolute inset-0 z-40 bg-[#042f3a]/55 backdrop-blur-[2px]"
+            className="absolute inset-0 z-[70] bg-[#042f3a]/55 backdrop-blur-[2px]"
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
@@ -135,7 +135,7 @@ export default function IslandPreviewDock({ open, file, onClose }) {
             role="dialog"
             aria-modal="true"
             aria-label={file.name}
-            className="absolute inset-x-3 bottom-[5.75rem] z-50 mx-auto w-auto max-w-none overflow-hidden rounded-[28px] border border-cyan-100/25 bg-gradient-to-b from-[#0ea5e9]/25 via-[#0c4a6e]/92 to-[#082f49] shadow-[0_24px_60px_rgba(8,47,73,0.55)] backdrop-blur-xl md:max-w-[430px]"
+            className="absolute inset-x-3 bottom-[5.75rem] z-[80] mx-auto w-auto max-w-none overflow-hidden rounded-[28px] border border-cyan-100/25 bg-gradient-to-b from-[#0ea5e9]/25 via-[#0c4a6e]/92 to-[#082f49] shadow-[0_24px_60px_rgba(8,47,73,0.55)] backdrop-blur-xl md:max-w-[430px] lg:bottom-6"
             initial={reduce ? false : { y: 80, opacity: 0, scale: 0.94 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 60, opacity: 0, scale: 0.96 }}
@@ -224,7 +224,7 @@ export default function IslandPreviewDock({ open, file, onClose }) {
               </button>
             </div>
           </motion.div>
-        </>
+        </div>
       ) : null}
     </AnimatePresence>
   );
