@@ -149,7 +149,7 @@ export default function FilePreviewModal({ open, file, onClose }) {
             role="dialog"
             aria-modal="true"
             aria-labelledby="file-preview-title"
-            className="flex max-h-[min(92dvh,820px)] w-full max-w-[520px] flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-[0_28px_70px_rgba(0,0,0,0.35)]"
+            className="flex max-h-[min(92dvh,820px)] w-full max-w-none flex-col overflow-hidden rounded-[1.75rem] bg-white shadow-[0_28px_70px_rgba(0,0,0,0.35)] sm:max-w-[520px]"
             initial={{ opacity: 0, y: 28, scale: 0.97 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 18, scale: 0.98 }}

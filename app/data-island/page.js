@@ -3,7 +3,7 @@
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { AnimatePresence, motion, useReducedMotion } from "motion/react";
-import BottomNav from "../../components/BottomNav";
+import AppShell from "../../components/AppShell";
 import SeaBackground from "../../components/data-island/SeaBackground";
 import IslandNode from "../../components/data-island/IslandNode";
 import IslandPreviewDock from "../../components/data-island/IslandPreviewDock";
@@ -188,11 +188,19 @@ export default function DataIslandPage() {
   }
 
   return (
-    <div className="relative h-dvh min-h-dvh w-full bg-[#0284c7]">
+    <AppShell
+      activeId="manage"
+      folders={folders}
+      defaultFolderId={parentId}
+      pattern="none"
+      immersive
+      contentClassName="!min-h-0"
+    >
+    <div className="relative h-dvh min-h-dvh w-full bg-[#0284c7] lg:rounded-[1.75rem] lg:my-3 lg:me-3 lg:overflow-hidden">
       <div className="absolute inset-0 overflow-hidden">
         <SeaBackground />
       </div>
-      <div className="relative z-10 mx-auto flex h-dvh min-h-dvh w-full max-w-[390px] flex-col">
+      <div className="relative z-10 mx-auto flex h-dvh min-h-dvh w-full max-w-none flex-col lg:max-w-none">
         <header className="relative z-20 shrink-0 px-3 pb-1.5 pt-[max(0.75rem,env(safe-area-inset-top))]">
           <motion.div
             className="flex items-center gap-2 rounded-3xl bg-[#082f49]/45 px-3 py-2.5 shadow-[0_12px_28px_rgba(8,47,73,0.35)] backdrop-blur-md ring-1 ring-cyan-100/20"
@@ -361,12 +369,8 @@ export default function DataIslandPage() {
           onClose={() => setPreviewFile(null)}
         />
 
-        <BottomNav
-          activeId="manage"
-          defaultFolderId={parentId}
-          folders={folders}
-        />
       </div>
     </div>
+    </AppShell>
   );
 }

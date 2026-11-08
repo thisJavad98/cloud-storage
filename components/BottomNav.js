@@ -32,24 +32,28 @@ export default function BottomNav({
   onUploadSuccess,
   showUpload = true,
   folders,
+  /** When set, FAB opens parent-owned upload UI instead of an embedded modal. */
+  onUploadClick = null,
 }) {
   const router = useRouter();
   const pathname = usePathname();
   const { t } = useI18n();
   const reduce = useReducedMotion();
   const [uploadOpen, setUploadOpen] = useState(false);
+  const ownsModal = showUpload && !onUploadClick;
   const closeUpload = useCallback(() => setUploadOpen(false), []);
   const handleUploadSuccess = useCallback(() => {
     onUploadSuccess?.();
   }, [onUploadSuccess]);
 
   useEffect(() => {
+    if (!ownsModal) return undefined;
     function openUpload() {
       setUploadOpen(true);
     }
     window.addEventListener("cs:open-upload", openUpload);
     return () => window.removeEventListener("cs:open-upload", openUpload);
-  }, []);
+  }, [ownsModal]);
 
   function isActive(item) {
     if (activeId === item.id) return true;
@@ -173,9 +177,9 @@ export default function BottomNav({
 
   return (
     <>
-      <nav className="pointer-events-none fixed inset-x-0 bottom-0 z-[60] flex justify-center">
+      <nav className="pointer-events-none fixed inset-x-0 bottom-[calc(var(--site-footer-h)+env(safe-area-inset-bottom,0px))] z-[60] flex justify-center">
         <motion.div
-          className="pointer-events-auto relative w-full max-w-[390px]"
+          className="pointer-events-auto relative w-full max-w-none md:max-w-[430px]"
           initial={reduce ? false : { y: 64, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ duration: 0.55, ease: easeOut, delay: 0.15 }}
@@ -184,7 +188,9 @@ export default function BottomNav({
             <div className="pointer-events-none absolute inset-x-0 -top-7 z-10 flex justify-center">
               <motion.button
                 type="button"
-                onClick={() => setUploadOpen(true)}
+                onClick={() =>
+                  onUploadClick ? onUploadClick() : setUploadOpen(true)
+                }
                 aria-label={t("nav.uploadFile")}
                 className="pointer-events-auto relative inline-flex size-14 items-center justify-center rounded-full bg-gradient-to-b from-[#f5a85a] to-cs-file-orange text-white shadow-[0_10px_24px_rgba(242,154,74,0.45)] ring-[6px] ring-[var(--cs-nav-ring)]"
                 whileHover={reduce ? undefined : { scale: 1.06 }}
@@ -213,7 +219,7 @@ export default function BottomNav({
             </div>
           ) : null}
 
-          <div className="border-t border-cs-line/80 bg-white/92 px-3 pb-[max(0.65rem,env(safe-area-inset-bottom))] pt-3 shadow-[0_-8px_28px_rgba(21,32,56,0.06)] backdrop-blur-md">
+          <div className="border-t border-cs-line/80 bg-white/92 px-3 pb-2.5 pt-3 shadow-[0_-8px_28px_rgba(21,32,56,0.06)] backdrop-blur-md">
             <LayoutGroup id="bottom-nav">
               <div
                 className={`grid items-center gap-1 ${
@@ -235,7 +241,7 @@ export default function BottomNav({
         </motion.div>
       </nav>
 
-      {showUpload ? (
+      {ownsModal ? (
         <UploadModal
           open={uploadOpen}
           onClose={closeUpload}

@@ -1,7 +1,8 @@
-import { Lalezar, Vazirmatn } from "next/font/google";
+import { Lalezar, Rubik, Vazirmatn } from "next/font/google";
 import AppToaster from "../components/AppToaster";
 import Providers from "../components/Providers";
 import RegisterSW from "../components/RegisterSW";
+import SiteFooter from "../components/SiteFooter";
 import { APP_NAME, APP_TAGLINE, APP_TITLE } from "../lib/brand";
 import "./globals.css";
 
@@ -9,12 +10,22 @@ const vazirmatn = Vazirmatn({
   variable: "--font-vazirmatn",
   subsets: ["arabic", "latin"],
   weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 const brandFont = Lalezar({
   variable: "--font-brand",
   subsets: ["arabic", "latin"],
   weight: "400",
+  display: "swap",
+});
+
+/** Landing face: Rubik for FA+EN marketing type; softer and more modern than Cairo. */
+const landingFont = Rubik({
+  variable: "--font-landing",
+  subsets: ["arabic", "latin"],
+  weight: ["400", "500", "600", "700", "800", "900"],
+  display: "swap",
 });
 
 const THEME_COLOR = "#1e55d6";
@@ -67,14 +78,15 @@ export default function RootLayout({ children }) {
       lang="fa"
       dir="rtl"
       data-theme="light"
-      className={`${vazirmatn.variable} ${brandFont.variable} h-full antialiased`}
+      className={`${vazirmatn.variable} ${brandFont.variable} ${landingFont.variable} h-full antialiased`}
       suppressHydrationWarning
     >
-      <body className="min-h-full font-sans text-cs-ink">
+      <body className="min-h-full font-sans text-cs-ink has-site-footer">
         <Providers>
           {children}
           <AppToaster />
           <RegisterSW />
+          <SiteFooter />
         </Providers>
       </body>
     </html>

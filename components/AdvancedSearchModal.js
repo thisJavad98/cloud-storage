@@ -205,7 +205,7 @@ export default function AdvancedSearchModal({
         role="dialog"
         aria-modal="true"
         aria-labelledby="advanced-search-title"
-        className="flex max-h-[min(92dvh,720px)] w-full max-w-[390px] flex-col overflow-hidden rounded-[1.5rem] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.28)] animate-fade-up"
+        className="flex max-h-[min(92dvh,720px)] w-full max-w-none flex-col overflow-hidden rounded-[1.5rem] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.28)] animate-fade-up sm:max-w-[430px]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="shrink-0 border-b border-cs-line px-5 pb-4 pt-5">

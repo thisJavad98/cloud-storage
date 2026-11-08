@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import BottomNav from "../../../components/BottomNav";
+import AppShell from "../../../components/AppShell";
 import ConfirmModal from "../../../components/ConfirmModal";
 import EmptyState from "../../../components/EmptyState";
 import FilePreviewModal from "../../../components/FilePreviewModal";
@@ -299,12 +299,17 @@ export default function FolderDetailPage() {
   }
 
   return (
-    <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <MotionHeader className="flex items-center justify-center px-5 pt-6">
-          <div className="min-w-0 px-12 text-center">
-            <AppBrand size="sm" showLogo={false} className="justify-center" />
-            <h1 className="mt-0.5 truncate text-base font-extrabold leading-7 text-cs-ink">
+    <AppShell
+      activeId="folders"
+      folders={subfolders}
+      defaultFolderId={folderId}
+    >
+        <MotionHeader className="flex items-center justify-center px-5 pt-6 lg:justify-between lg:px-6">
+          <div className="min-w-0 px-12 text-center lg:px-0 lg:text-start">
+            <div className="app-header-brand">
+              <AppBrand size="sm" showLogo={false} className="justify-center lg:justify-start" />
+            </div>
+            <h1 className="mt-0.5 truncate text-base font-extrabold leading-7 text-cs-ink lg:text-xl">
               {folder.name}
             </h1>
             <p className="text-[11px] leading-5 text-cs-muted">
@@ -314,7 +319,7 @@ export default function FolderDetailPage() {
           </div>
           <Link
             href="/folders"
-            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line lg:static lg:right-auto lg:top-auto"
             aria-label={t("common.back")}
           >
             <IconArrow className="size-5 rotate-180" />
@@ -626,12 +631,6 @@ export default function FolderDetailPage() {
           </div>
         </MotionBlock>
 
-        <BottomNav
-          activeId="folders"
-          defaultFolderId={folderId}
-          folders={subfolders}
-        />
-
         <ConfirmModal
           open={Boolean(confirmAction)}
           title={confirmAction?.title}
@@ -650,7 +649,6 @@ export default function FolderDetailPage() {
           file={previewFile}
           onClose={() => setPreviewFile(null)}
         />
-      </div>
-    </main>
+    </AppShell>
   );
 }

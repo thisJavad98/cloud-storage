@@ -83,7 +83,7 @@ export default function CreateFolderModal({
         aria-modal="true"
         aria-labelledby="create-folder-title"
         onSubmit={handleSubmit}
-        className="w-full max-w-[360px] overflow-hidden rounded-[1.5rem] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.28)] animate-fade-up"
+        className="w-full max-w-none overflow-hidden rounded-[1.5rem] bg-white shadow-[0_24px_60px_rgba(0,0,0,0.28)] animate-fade-up sm:max-w-[420px]"
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start gap-3 px-5 pb-3 pt-5">

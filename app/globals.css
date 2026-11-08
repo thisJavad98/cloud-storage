@@ -18,6 +18,7 @@
   --cs-nav-ring: #eef2fb;
   --cs-shadow: 0 10px 28px rgba(21, 32, 56, 0.08);
   --cs-shadow-lg: 0 18px 48px rgba(21, 32, 56, 0.14);
+  --site-footer-h: 1.85rem;
   --background: var(--cs-blue);
   --foreground: #ffffff;
 }
@@ -67,6 +68,239 @@ body {
   background: var(--cs-surface);
   color: var(--cs-ink);
   font-family: var(--font-vazirmatn), Tahoma, sans-serif;
+}
+
+body.has-site-footer {
+  padding-bottom: calc(var(--site-footer-h) + env(safe-area-inset-bottom, 0px));
+}
+
+/* Feature card hover: zoom media without layout thrash */
+.landing-hover-card .landing-media-zoom {
+  transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
+}
+
+.landing-hover-card:hover .landing-media-zoom,
+.landing-hover-card:focus-within .landing-media-zoom {
+  transform: scale(1.05);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-hover-card .landing-media-zoom {
+    transition: none;
+  }
+
+  .landing-hover-card:hover .landing-media-zoom,
+  .landing-hover-card:focus-within .landing-media-zoom {
+    transform: none;
+  }
+}
+
+/* Desktop product shell — quiet sidebar + wide content */
+.app-desktop {
+  position: relative;
+  isolation: isolate;
+}
+
+@media (min-width: 1024px) {
+  .app-desktop {
+    display: grid;
+    grid-template-columns: 16.5rem minmax(0, 1fr);
+    min-height: 100dvh;
+  }
+
+  .app-sidebar {
+    position: sticky;
+    top: 0;
+    z-index: 40;
+    height: 100dvh;
+    flex-direction: column;
+    border-inline-end: 1px solid color-mix(in srgb, var(--cs-line) 85%, transparent);
+    background: color-mix(in srgb, var(--cs-card) 92%, transparent);
+    backdrop-filter: blur(12px);
+  }
+
+  .app-main {
+    min-width: 0;
+  }
+
+  .app-content {
+    width: 100%;
+    max-width: 72rem;
+    margin-inline: auto;
+    padding-inline: 1.5rem;
+  }
+
+  .app-desktop--immersive .app-content {
+    max-width: none;
+    padding-inline: 0;
+    height: 100dvh;
+    min-height: 100dvh;
+  }
+
+  /* Inside desktop shell, drop the legacy phone column lock */
+  .app-desktop .phone-shell {
+    max-width: none;
+  }
+
+  .app-desktop .app-header-brand {
+    display: none;
+  }
+
+  /* Site strip sits under phone nav; on desktop app chrome keep it quiet */
+  body:has(.app-desktop) .site-footer {
+    inset-inline-start: 16.5rem;
+  }
+}
+
+/* Full-bleed Leafnik-inspired marketing landing; other routes stay phone-shell */
+.landing-page {
+  --landing-bg: #ffffff;
+  --landing-ink: #141824;
+  --landing-muted: #6b7388;
+  --landing-line: #e7ebf3;
+  --landing-sky: #e8f3ff;
+  --landing-peach: #ffe8d6;
+  --landing-lilac: #efe8ff;
+  --landing-mint: #e5f7ef;
+  --landing-accent: #1e55d6;
+  --landing-accent-soft: #6ea8ff;
+  --landing-shadow: 0 24px 60px -28px rgba(20, 24, 36, 0.28);
+  --landing-shadow-soft: 0 14px 40px -20px rgba(30, 85, 214, 0.28);
+
+  position: relative;
+  isolation: isolate;
+  overflow-x: clip;
+  background: var(--landing-bg);
+  color: var(--landing-ink);
+  font-family: var(--font-landing), var(--font-vazirmatn), Tahoma, sans-serif;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.landing-page .landing-nav {
+  max-width: 100%;
+}
+
+.landing-dot-grid {
+  background-image: radial-gradient(circle at 1px 1px, rgba(30, 85, 214, 0.16) 1px, transparent 0);
+  background-size: 18px 18px;
+}
+
+.landing-blob {
+  position: absolute;
+  border-radius: 9999px;
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.landing-page .landing-display {
+  font-family: var(--font-landing), var(--font-vazirmatn), Tahoma, sans-serif;
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1.18;
+  text-wrap: balance;
+}
+
+.landing-page .landing-display-lg {
+  font-family: var(--font-landing), var(--font-vazirmatn), Tahoma, sans-serif;
+  font-weight: 900;
+  letter-spacing: -0.03em;
+  line-height: 1.12;
+  text-wrap: balance;
+}
+
+.landing-page .landing-body {
+  font-family: var(--font-landing), var(--font-vazirmatn), Tahoma, sans-serif;
+  font-weight: 400;
+  line-height: 1.75;
+  letter-spacing: 0;
+  text-wrap: pretty;
+  color: var(--landing-muted);
+}
+
+.landing-page .landing-ui {
+  font-family: var(--font-landing), var(--font-vazirmatn), Tahoma, sans-serif;
+  font-weight: 600;
+  letter-spacing: 0.005em;
+  line-height: 1.35;
+}
+
+.landing-page .landing-cta {
+  font-family: var(--font-landing), var(--font-vazirmatn), Tahoma, sans-serif;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  line-height: 1;
+}
+
+html[dir="rtl"] .landing-page .landing-display,
+html[dir="rtl"] .landing-page .landing-display-lg {
+  letter-spacing: -0.01em;
+  line-height: 1.28;
+}
+
+html[dir="ltr"] .landing-page .landing-display-lg {
+  letter-spacing: -0.04em;
+  line-height: 1.02;
+}
+
+html[dir="ltr"] .landing-page .landing-body {
+  line-height: 1.65;
+}
+
+@media (min-width: 768px) {
+  .landing-page {
+    width: 100%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .landing-page * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+
+.site-footer {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 55;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(var(--site-footer-h) + env(safe-area-inset-bottom, 0px));
+  padding: 0.35rem 0.75rem calc(0.35rem + env(safe-area-inset-bottom, 0px));
+  border-top: 1px solid color-mix(in srgb, var(--cs-line) 80%, transparent);
+  background: color-mix(in srgb, var(--cs-card) 92%, transparent);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  pointer-events: none;
+}
+
+.site-footer__text {
+  margin: 0;
+  font-size: 0.72rem;
+  line-height: 1.2;
+  letter-spacing: 0.02em;
+  color: var(--cs-muted);
+  pointer-events: auto;
+}
+
+.site-footer__link {
+  color: var(--cs-blue);
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.site-footer__link:hover,
+.site-footer__link:focus-visible {
+  text-decoration: underline;
+  outline: none;
 }
 
 .font-brand {
@@ -1062,12 +1296,24 @@ body {
 
 .phone-shell {
   width: 100%;
-  max-width: 390px;
+  max-width: none; /* full-bleed on phones / small tablets */
   min-height: 100dvh;
   margin-inline: auto;
   position: relative;
   /* clip (not hidden) so sticky headers still work while containing horizontal overflow */
   overflow-x: clip;
+}
+
+@media (min-width: 768px) {
+  .phone-shell {
+    max-width: 430px;
+  }
+}
+
+@media (min-width: 1024px) {
+  .phone-shell-wide {
+    max-width: 56rem;
+  }
 }
 
 /* Lock document scroll on auth / intro screens so entrance motion never flashes a scrollbar */
@@ -1221,10 +1467,11 @@ body:has(.auth-screen) {
 
   .auth-screen.auth-stage .auth-shell {
     width: 100%;
-    max-width: 420px;
+    max-width: min(460px, 100%);
     height: min(860px, calc(100dvh - 4.5rem));
     max-height: min(860px, calc(100dvh - 4.5rem));
     border-radius: 2rem;
+    transition: max-width 0.35s ease, height 0.35s ease;
     background: linear-gradient(
       180deg,
       rgba(255, 255, 255, 0.1) 0%,
@@ -1237,6 +1484,32 @@ body:has(.auth-screen) {
       inset 0 1px 0 rgba(255, 255, 255, 0.12);
     backdrop-filter: blur(10px);
     -webkit-backdrop-filter: blur(10px);
+  }
+}
+
+/* Desktop auth: full-bleed stage + split brand / form */
+@media (min-width: 1024px) {
+  .auth-screen.auth-stage.auth-desktop {
+    padding: 1.75rem 1.5rem;
+  }
+
+  .auth-desktop-panel {
+    background:
+      radial-gradient(ellipse 70% 55% at 20% 15%, rgba(110, 168, 255, 0.35), transparent 60%),
+      radial-gradient(ellipse 55% 45% at 90% 80%, rgba(245, 192, 61, 0.18), transparent 55%),
+      linear-gradient(160deg, #1e55d6 0%, #1542b0 48%, #0f2f8a 100%);
+  }
+
+  .auth-desktop-panel__glow {
+    background:
+      radial-gradient(circle at 50% 40%, rgba(255, 255, 255, 0.12), transparent 45%),
+      radial-gradient(circle at 1px 1px, rgba(255, 255, 255, 0.14) 1px, transparent 0);
+    background-size: auto, 22px 22px;
+    opacity: 0.9;
+  }
+
+  html[dir="rtl"] .auth-screen.auth-stage.auth-desktop > .max-w-\[1200px\] {
+    direction: rtl;
   }
 }
 

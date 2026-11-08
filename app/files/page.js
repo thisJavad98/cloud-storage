@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import BottomNav from "../../components/BottomNav";
+import AppShell from "../../components/AppShell";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
 import FilePreviewModal from "../../components/FilePreviewModal";
@@ -232,17 +232,18 @@ export default function FilesPage() {
   }
 
   return (
-    <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <MotionHeader className="flex items-center justify-center px-5 pt-6">
-          <div className="min-w-0 px-12 text-center">
-            <AppBrand size="sm" showLogo={false} className="justify-center" />
-            <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
+    <AppShell activeId="manage" folders={folders}>
+        <MotionHeader className="flex items-center justify-center px-5 pt-6 lg:justify-between lg:px-6">
+          <div className="min-w-0 px-12 text-center lg:px-0 lg:text-start">
+            <div className="app-header-brand">
+              <AppBrand size="sm" showLogo={false} className="justify-center lg:justify-start" />
+            </div>
+            <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink lg:text-xl">
               {t("files.title")}
             </h1>
           </div>
           <motion.div
-            className="absolute right-5 top-6"
+            className="absolute right-5 top-6 lg:static lg:right-auto lg:top-auto"
             whileTap={{ scale: 0.92 }}
           >
             <Link
@@ -328,7 +329,7 @@ export default function FilesPage() {
             </span>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
             {filteredFiles.map((file, index) => (
               <Reveal
                 key={file.id}
@@ -482,8 +483,6 @@ export default function FilesPage() {
           </div>
         </MotionBlock>
 
-        <BottomNav activeId="manage" folders={folders} />
-
         <ConfirmModal
           open={Boolean(confirmAction)}
           title={confirmAction?.title}
@@ -502,7 +501,6 @@ export default function FilesPage() {
           file={previewFile}
           onClose={() => setPreviewFile(null)}
         />
-      </div>
-    </main>
+    </AppShell>
   );
 }

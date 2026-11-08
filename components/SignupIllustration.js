@@ -14,11 +14,11 @@ const pulse = (delay = 0) => ({
   transition: { duration: 2.2, delay, repeat: Infinity, ease: "easeInOut" },
 });
 
-export function SignupIllustration() {
+export function SignupIllustration({ className = "" }) {
   return (
     <motion.svg
       viewBox="0 0 360 250"
-      className="signup-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px] md:max-h-[min(22vh,140px)] md:max-w-[200px]"
+      className={`signup-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px] md:max-h-[min(22vh,140px)] md:max-w-[200px] lg:max-h-none lg:max-w-none ${className}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useRef, useState } from "react";
-import BottomNav from "../../components/BottomNav";
+import AppShell from "../../components/AppShell";
 import ConfirmModal from "../../components/ConfirmModal";
 import AppBrand from "../../components/AppBrand";
 import LanguageSwitcher from "../../components/LanguageSwitcher";
@@ -176,18 +176,19 @@ export default function ProfilePage() {
     (bio.trim() || "") !== (user.bio || "").trim();
 
   return (
-    <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <MotionHeader className="flex items-center justify-center px-5 pt-6">
-          <div className="min-w-0 flex-1 px-12 text-center">
-            <AppBrand size="sm" showLogo={false} className="justify-center" />
-            <h1 className="mt-0.5 text-lg font-extrabold text-cs-ink">
+    <AppShell activeId="profile" showUpload={false}>
+        <MotionHeader className="flex items-center justify-center px-5 pt-6 lg:justify-between lg:px-6">
+          <div className="min-w-0 flex-1 px-12 text-center lg:px-0 lg:text-start">
+            <div className="app-header-brand">
+              <AppBrand size="sm" showLogo={false} className="justify-center lg:justify-start" />
+            </div>
+            <h1 className="mt-0.5 text-lg font-extrabold text-cs-ink lg:text-xl">
               {t("profile.title")}
             </h1>
           </div>
           <Link
             href="/dashboard"
-            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-blue shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-blue shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line lg:static lg:right-auto lg:top-auto"
             aria-label={t("common.back")}
           >
             <IconArrow className="size-5 rotate-180" />
@@ -366,9 +367,6 @@ export default function ProfilePage() {
           </motion.button>
         </MotionBlock>
 
-        <BottomNav activeId="profile" />
-      </div>
-
       <ConfirmModal
         open={removeOpen}
         title={t("profile.removeAvatarTitle")}
@@ -396,6 +394,6 @@ export default function ProfilePage() {
         }}
         onConfirm={confirmLogout}
       />
-    </main>
+    </AppShell>
   );
 }

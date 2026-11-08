@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { motion } from "motion/react";
-import BottomNav from "../../components/BottomNav";
+import AppShell from "../../components/AppShell";
 import EmptyState from "../../components/EmptyState";
 import AdvancedSearchModal from "../../components/AdvancedSearchModal";
 import AppBrand from "../../components/AppBrand";
@@ -134,34 +134,42 @@ export default function DashboardPage() {
   const visibleFolders = filteredFolders.slice(0, 4);
 
   return (
-    <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-32">
-        <header className="sticky top-0 z-30 flex items-center justify-center bg-[color-mix(in_srgb,var(--cs-surface)_90%,transparent)] px-5 pb-3 pt-6 backdrop-blur-md">
+    <AppShell activeId="files" folders={folders}>
+        <header className="sticky top-0 z-30 flex items-center justify-center bg-[color-mix(in_srgb,var(--cs-surface)_90%,transparent)] px-5 pb-3 pt-6 backdrop-blur-md lg:justify-between lg:rounded-b-3xl lg:px-6 lg:pt-7">
           <Link
             href="/profile"
-            className="absolute left-5 top-6"
+            className="absolute left-5 top-6 lg:static lg:left-auto lg:top-auto"
             aria-label={t("dashboard.menu")}
             title={user.fullName || user.email}
           >
             <UserAvatar user={user} />
           </Link>
 
-          <div>
+          <div className="app-header-brand">
             <AppBrand size="sm" stacked />
+          </div>
+
+          <div className="hidden min-w-0 lg:block">
+            <p className="text-sm leading-7 text-cs-muted">
+              {t("dashboard.hello")}{" "}
+              <span className="font-bold text-cs-ink">
+                {user.fullName || user.email}
+              </span>
+            </p>
           </div>
 
           <button
             type="button"
             onClick={() => router.push("/profile")}
-            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 items-center justify-center rounded-full bg-white text-cs-ink shadow-sm ring-1 ring-cs-line lg:static lg:right-auto lg:top-auto"
             aria-label={t("dashboard.menu")}
           >
             <IconMenu className="size-5" />
           </button>
         </header>
 
-        <MotionBlock className="px-5 pt-5" delay={0.12}>
-          <p className="mb-3 text-sm leading-7 text-cs-muted">
+        <MotionBlock className="px-5 pt-5 lg:px-6" delay={0.12}>
+          <p className="mb-3 text-sm leading-7 text-cs-muted lg:hidden">
             {t("dashboard.hello")}{" "}
             <span className="font-bold text-cs-ink">
               {user.fullName || user.email}
@@ -229,7 +237,7 @@ export default function DashboardPage() {
           onClick={() => {
             router.replace("/data-island");
           }}
-          className="px-5 pt-5"
+          className="px-5 pt-5 lg:px-6"
           delay={0.2}
           variant="scale"
           as="section"
@@ -292,7 +300,7 @@ export default function DashboardPage() {
           <PlansBanner className="px-5 pt-4" />
         </MotionBlock>
 
-        <MotionBlock className="px-5 pt-7" delay={0.32} as="section">
+        <MotionBlock className="px-5 pt-7 lg:px-6" delay={0.32} as="section">
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base font-extrabold leading-7 text-cs-ink">
@@ -329,7 +337,7 @@ export default function DashboardPage() {
             </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-3 lg:grid-cols-4 lg:gap-4">
             {(visibleFolders.length ? visibleFolders : []).map(
               (folder, index) => (
                 <Reveal
@@ -354,7 +362,7 @@ export default function DashboardPage() {
               ),
             )}
             {!folders.length ? (
-              <div className="col-span-2 space-y-3">
+              <div className="col-span-2 space-y-3 lg:col-span-4">
                 <EmptyState
                   variant="folders"
                   compact
@@ -371,14 +379,14 @@ export default function DashboardPage() {
                 </button>
               </div>
             ) : !visibleFolders.length ? (
-              <div className="col-span-2 rounded-2xl bg-white px-4 py-6 text-center text-sm text-cs-muted shadow-sm ring-1 ring-cs-line">
+              <div className="col-span-2 rounded-2xl bg-white px-4 py-6 text-center text-sm text-cs-muted shadow-sm ring-1 ring-cs-line lg:col-span-4">
                 {t("advancedSearch.empty")}
               </div>
             ) : null}
           </div>
         </MotionBlock>
 
-        <MotionBlock className="px-5 pt-7" delay={0.4} as="section">
+        <MotionBlock className="px-5 pt-7 lg:px-6 lg:pb-10" delay={0.4} as="section">
           <div className="mb-3.5 flex items-center justify-between gap-3">
             <div className="min-w-0">
               <h3 className="text-base font-extrabold leading-7 text-cs-ink">
@@ -401,7 +409,7 @@ export default function DashboardPage() {
             />
           </div>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3 xl:grid-cols-2">
             {filteredFiles.length ? (
               filteredFiles.slice(0, 8).map((file, index) => (
                 <Reveal
@@ -409,7 +417,7 @@ export default function DashboardPage() {
                   as="article"
                   delay={index * 55}
                   hover
-                  className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+                  className="pressable flex items-center gap-3 rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:-translate-y-0.5 hover:ring-cs-blue/30"
                 >
                   <button
                     type="button"
@@ -459,7 +467,6 @@ export default function DashboardPage() {
           </div>
         </MotionBlock>
 
-        <BottomNav activeId="files" folders={folders} />
         <AdvancedSearchModal
           open={searchOpen}
           onClose={() => setSearchOpen(false)}
@@ -475,7 +482,6 @@ export default function DashboardPage() {
           open={createFolderOpen}
           onClose={() => setCreateFolderOpen(false)}
         />
-      </div>
-    </main>
+    </AppShell>
   );
 }

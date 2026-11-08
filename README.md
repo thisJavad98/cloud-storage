@@ -25,10 +25,14 @@ npm run db:migrate
 npm run dev
 ```
 
-2. Frontend env (already in `.env.local`):
+2. Frontend env (`.env.local` for local, Vercel for prod):
 
 ```bash
+# local
 NEXT_PUBLIC_API_URL=http://localhost:4000/api
+
+# production (set on Vercel)
+# NEXT_PUBLIC_API_URL=https://cloud-storage-services.vercel.app/api
 ```
 
 Auth services live in `services/auth.js` and call:

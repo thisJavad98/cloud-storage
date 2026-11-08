@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import BottomNav from "../../components/BottomNav";
+import AppShell from "../../components/AppShell";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
 import AppBrand from "../../components/AppBrand";
@@ -174,13 +174,12 @@ export default function FoldersManagePage() {
   }
 
   return (
-    <main className="min-h-dvh dash-pattern">
-      <div className="phone-shell flex min-h-dvh flex-col pb-28">
-        <MotionHeader className="flex items-center justify-center px-5 pt-6">
+    <AppShell activeId="folders" folders={folders}>
+        <MotionHeader className="flex items-center justify-center px-5 pt-6 lg:justify-between lg:px-6">
           <motion.button
             type="button"
             onClick={() => setShowCreate((v) => !v)}
-            className="absolute left-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm"
+            className="absolute left-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-cs-blue text-white shadow-sm lg:static lg:left-auto lg:top-auto"
             aria-label={t("folders.newFolder")}
             whileHover={{ scale: 1.06, rotate: 90 }}
             whileTap={{ scale: 0.92 }}
@@ -188,15 +187,17 @@ export default function FoldersManagePage() {
           >
             <IconPlus className="size-5" />
           </motion.button>
-          <div className="min-w-0 px-12 text-center">
-            <AppBrand size="sm" showLogo={false} className="justify-center" />
-            <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink">
+          <div className="min-w-0 px-12 text-center lg:px-0 lg:text-start">
+            <div className="app-header-brand">
+              <AppBrand size="sm" showLogo={false} className="justify-center lg:justify-start" />
+            </div>
+            <h1 className="mt-0.5 text-base font-extrabold leading-7 text-cs-ink lg:text-xl">
               {t("folders.title")}
             </h1>
           </div>
           <Link
             href="/dashboard"
-            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+            className="absolute right-5 top-6 inline-flex size-10 shrink-0 items-center justify-center rounded-full bg-white text-cs-ink shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line lg:static lg:right-auto lg:top-auto"
             aria-label={t("common.back")}
           >
             <IconArrow className="size-5 rotate-180" />
@@ -266,14 +267,14 @@ export default function FoldersManagePage() {
             </span>
           </div>
 
-          <div className="space-y-3">
+          <div className="grid grid-cols-1 gap-3 lg:grid-cols-2 xl:grid-cols-3">
             {filteredFolders.map((folder, index) => (
               <Reveal
                 key={folder.id}
                 as="article"
                 delay={Math.min(index, 10) * 45}
                 hover
-                className="rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+                className="rounded-2xl bg-white p-3.5 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:-translate-y-0.5 hover:ring-cs-blue/30"
               >
                 <div className="flex items-center gap-3">
                   <Link
@@ -375,8 +376,6 @@ export default function FoldersManagePage() {
           </div>
         </MotionBlock>
 
-        <BottomNav activeId="folders" folders={folders} />
-
         <ConfirmModal
           open={Boolean(confirmAction)}
           title={confirmAction?.title}
@@ -389,7 +388,6 @@ export default function FoldersManagePage() {
           }}
           onConfirm={runDelete}
         />
-      </div>
-    </main>
+    </AppShell>
   );
 }
