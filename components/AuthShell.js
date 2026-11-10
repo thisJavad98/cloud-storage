@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { cloneElement, isValidElement } from "react";
 import { motion, useReducedMotion } from "motion/react";
 import AppBrand from "./AppBrand";
 import AuthAurora from "./AuthAurora";
@@ -39,6 +40,14 @@ export default function AuthShell({
           t("auth.desktopPointLogin"),
         ];
 
+  // Clone so mobile + desktop each get a real instance (unique SVG def ids).
+  const mobileIllustration = isValidElement(illustration)
+    ? cloneElement(illustration, { key: "auth-illu-mobile" })
+    : illustration;
+  const desktopIllustration = isValidElement(illustration)
+    ? cloneElement(illustration, { key: "auth-illu-desktop" })
+    : illustration;
+
   return (
     <main className="auth-screen hex-pattern auth-stage auth-desktop">
       {redirect}
@@ -47,7 +56,7 @@ export default function AuthShell({
       {/* Mobile / tablet — existing phone shell */}
       <div className="phone-shell auth-shell relative z-[1] flex h-full min-h-0 flex-col overflow-hidden lg:hidden">
         <div className="relative z-0 flex min-h-0 flex-1 flex-col items-center justify-center overflow-hidden px-6 pb-1 pt-6">
-          {illustration}
+          {mobileIllustration}
         </div>
 
         <motion.section
@@ -77,10 +86,10 @@ export default function AuthShell({
       </div>
 
       {/* Desktop — split brand stage + form panel */}
-      <div className="relative z-[1] mx-auto hidden h-full w-full max-w-[1200px] grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] overflow-hidden lg:grid lg:rounded-[2rem] lg:shadow-[0_32px_90px_rgba(4,18,60,0.4)]">
-        <aside className="auth-desktop-panel relative flex flex-col justify-between overflow-hidden p-10 xl:p-12">
+      <div className="relative z-[1] mx-auto hidden h-full min-h-0 w-full max-w-[1200px] grid-cols-[minmax(0,1.05fr)_minmax(0,0.95fr)] overflow-hidden lg:grid lg:rounded-[2rem] lg:shadow-[0_32px_90px_rgba(4,18,60,0.4)]">
+        <aside className="auth-desktop-panel relative flex min-h-0 flex-col overflow-hidden p-8 xl:p-10">
           <div className="pointer-events-none absolute inset-0 auth-desktop-panel__glow" aria-hidden />
-          <div className="relative z-[1] flex items-start justify-between gap-4">
+          <div className="relative z-[1] flex shrink-0 items-start justify-between gap-4">
             <Link href="/" className="inline-flex">
               <AppBrand tone="white" size="sm" animated={false} />
             </Link>
@@ -88,13 +97,15 @@ export default function AuthShell({
           </div>
 
           <motion.div
-            className="relative z-[1] flex flex-1 flex-col items-center justify-center py-8"
+            className="relative z-[1] flex min-h-0 flex-1 flex-col items-center justify-center gap-6 py-6"
             initial={reduce ? false : { opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, ease }}
           >
-            <div className="w-full max-w-[380px]">{illustration}</div>
-            <div className="mt-8 max-w-[34ch] text-center">
+            <div className="auth-desktop-illu flex w-full shrink-0 items-center justify-center">
+              {desktopIllustration}
+            </div>
+            <div className="mx-auto max-w-[34ch] shrink-0 text-center">
               <p className="font-brand text-3xl leading-none text-white xl:text-4xl">
                 {t("auth.welcome", { name: brandName })}
               </p>
@@ -104,7 +115,7 @@ export default function AuthShell({
             </div>
           </motion.div>
 
-          <ul className="relative z-[1] space-y-2.5">
+          <ul className="relative z-[1] shrink-0 space-y-2.5 pt-1">
             {points.map((point, index) => (
               <motion.li
                 key={point}

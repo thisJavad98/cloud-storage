@@ -1529,6 +1529,19 @@ body:has(.auth-screen) {
     opacity: 0.9;
   }
 
+  .auth-desktop-illu {
+    overflow: visible;
+  }
+
+  .auth-desktop-illu .login-illu,
+  .auth-desktop-illu .signup-illu {
+    display: block;
+    width: 100%;
+    max-width: min(100%, 380px);
+    height: auto;
+    max-height: min(36vh, 300px);
+  }
+
   html[dir="rtl"] .auth-screen.auth-stage.auth-desktop > .max-w-\[1200px\] {
     direction: rtl;
   }

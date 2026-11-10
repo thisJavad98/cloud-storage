@@ -38,7 +38,7 @@ export default function SignupPage() {
       mode="signup"
       title={t("auth.signupTo", { name: brandName })}
       backHref="/login"
-      illustration={<SignupIllustration className="lg:max-h-[min(42vh,320px)]" />}
+      illustration={<SignupIllustration />}
       footer={
         <p className="mt-6 text-center text-sm leading-7 text-cs-muted">
           {t("auth.haveAccount")}{" "}

@@ -40,7 +40,7 @@ export default function LoginPage() {
       title={t("auth.loginTo", { name: brandName })}
       backHref="/"
       redirect={<AuthRedirect />}
-      illustration={<LoginIllustration className="lg:max-h-[min(42vh,320px)]" />}
+      illustration={<LoginIllustration />}
       footer={
         <p className="mt-6 text-center text-sm leading-7 text-cs-muted">
           {t("auth.noAccount")}{" "}

@@ -1,5 +1,6 @@
 "use client";
 
+import { useId } from "react";
 import { motion } from "motion/react";
 
 const ease = [0.22, 1, 0.36, 1];
@@ -15,46 +16,57 @@ const pulse = (delay = 0) => ({
 });
 
 export function LoginIllustration({ className = "" }) {
+  const uid = useId().replace(/:/g, "");
+  const ids = {
+    arch: `lArch-${uid}`,
+    cloud: `lCloud-${uid}`,
+    ray: `lRay-${uid}`,
+    lock: `lLock-${uid}`,
+    glow: `lGlow-${uid}`,
+    shadow: `lShadow-${uid}`,
+  };
+
   return (
     <motion.svg
       viewBox="0 0 360 250"
-      className={`login-illu pointer-events-none mx-auto h-auto max-h-[min(38vh,230px)] w-full max-w-[320px] md:max-h-[min(22vh,140px)] md:max-w-[200px] lg:max-h-none lg:max-w-none ${className}`}
+      className={`login-illu pointer-events-none mx-auto h-auto w-full max-w-[320px] max-h-[min(38vh,230px)] md:max-h-[min(22vh,140px)] md:max-w-[200px] lg:max-h-[min(36vh,300px)] lg:max-w-[380px] ${className}`}
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
       aria-hidden="true"
-      overflow="hidden"
+      overflow="visible"
+      preserveAspectRatio="xMidYMid meet"
       initial={{ opacity: 0, y: 20, scale: 0.95 }}
       animate={{ opacity: 1, y: 0, scale: 1 }}
       transition={{ duration: 0.7, ease }}
     >
       <defs>
-        <linearGradient id="lArch" x1="180" y1="30" x2="180" y2="220" gradientUnits="userSpaceOnUse">
+        <linearGradient id={ids.arch} x1="180" y1="30" x2="180" y2="220" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" stopOpacity="0.96" />
           <stop offset="0.5" stopColor="#ffd7b0" stopOpacity="0.55" />
           <stop offset="1" stopColor="#f5a85a" stopOpacity="0.08" />
         </linearGradient>
-        <linearGradient id="lCloud" x1="180" y1="14" x2="180" y2="90" gradientUnits="userSpaceOnUse">
+        <linearGradient id={ids.cloud} x1="180" y1="14" x2="180" y2="90" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" />
           <stop offset="1" stopColor="#ffd7b0" />
         </linearGradient>
-        <linearGradient id="lRay" x1="180" y1="70" x2="180" y2="180" gradientUnits="userSpaceOnUse">
+        <linearGradient id={ids.ray} x1="180" y1="70" x2="180" y2="180" gradientUnits="userSpaceOnUse">
           <stop stopColor="#ffffff" stopOpacity="0.8" />
           <stop offset="1" stopColor="#ffffff" stopOpacity="0" />
         </linearGradient>
-        <linearGradient id="lLock" x1="0" y1="0" x2="1" y2="1">
+        <linearGradient id={ids.lock} x1="0" y1="0" x2="1" y2="1">
           <stop stopColor="#ffe08a" />
           <stop offset="1" stopColor="#efad20" />
         </linearGradient>
-        <radialGradient id="lGlow" cx="50%" cy="40%" r="52%">
+        <radialGradient id={ids.glow} cx="50%" cy="40%" r="52%">
           <stop stopColor="#fff" stopOpacity="0.3" />
           <stop offset="1" stopColor="#fff" stopOpacity="0" />
         </radialGradient>
-        <filter id="lShadow" x="-30%" y="-30%" width="160%" height="170%">
+        <filter id={ids.shadow} x="-30%" y="-30%" width="160%" height="170%">
           <feDropShadow dx="0" dy="6" stdDeviation="6.5" floodColor="#06153f" floodOpacity="0.3" />
         </filter>
       </defs>
 
-      <ellipse cx="180" cy="125" rx="150" ry="95" fill="url(#lGlow)" />
+      <ellipse cx="180" cy="125" rx="150" ry="95" fill={`url(#${ids.glow})`} />
       <motion.circle cx="36" cy="54" r="17" fill="#fff" opacity="0.09" {...floatY(0.2, 10, 4)} />
       <motion.circle cx="328" cy="70" r="22" fill="#fff" opacity="0.07" {...floatY(0.8, 12, 4.5)} />
 
@@ -69,11 +81,10 @@ export function LoginIllustration({ className = "" }) {
         transition={{ duration: 3.3, repeat: Infinity, ease: "easeInOut" }}
       />
 
-      {/* Vault cloud + lock */}
-      <motion.g filter="url(#lShadow)" {...floatY(0, 7, 3.2)}>
+      <motion.g filter={`url(#${ids.shadow})`} {...floatY(0, 7, 3.2)}>
         <path
           d="M112 70c0-16 13-30 30-30 5 0 10 1 14 4 6-12 18-20 32-20 20 0 37 16 37 36 0 1 0 2-.1 3h11c14 0 26 11 26 25s-12 25-26 25H124c-17 0-31-13-31-29 0-9 4-17 12-23 2-7 5-13 9-17Z"
-          fill="url(#lCloud)"
+          fill={`url(#${ids.cloud})`}
         />
         <path d="M132 62c8-10 20-14 30-9 4-9 13-15 24-15 14 0 26 10 27 23" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" opacity="0.4" />
         <motion.g
@@ -81,16 +92,15 @@ export function LoginIllustration({ className = "" }) {
           transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
           style={{ transformOrigin: "180px 58px" }}
         >
-          <rect x="164" y="50" width="32" height="24" rx="6" fill="url(#lLock)" />
+          <rect x="164" y="50" width="32" height="24" rx="6" fill={`url(#${ids.lock})`} />
           <path d="M171 50v-7c0-7 4.5-11 9-11s9 4 9 11v7" stroke="#fff" strokeWidth="2.8" strokeLinecap="round" fill="none" />
           <circle cx="180" cy="60" r="3.6" fill="#fff" />
           <rect x="178.4" y="62.5" width="3.2" height="6" rx="1.2" fill="#fff" />
         </motion.g>
       </motion.g>
 
-      {/* Arch doorway */}
       <path d="M96 220V102c0-42 30-70 84-70s84 28 84 70v118" stroke="#b8d0ff" strokeWidth="14" strokeLinecap="round" opacity="0.9" />
-      <path d="M114 220V106c0-34 24-56 66-56s66 22 66 56v114" fill="url(#lArch)" />
+      <path d="M114 220V106c0-34 24-56 66-56s66 22 66 56v114" fill={`url(#${ids.arch})`} />
       <path d="M114 220V106c0-34 24-56 66-56s66 22 66 56v114" stroke="#fff" strokeWidth="1.6" opacity="0.22" />
       <motion.path
         d="M180 88 C180 120 180 150 180 200"
@@ -101,7 +111,6 @@ export function LoginIllustration({ className = "" }) {
         animate={{ strokeDashoffset: [0, -24], opacity: [0.2, 0.65, 0.2] }}
         transition={{ duration: 2, repeat: Infinity, ease: "linear" }}
       />
-      {/* Door panel lines */}
       <motion.rect
         x="152"
         y="148"
@@ -119,15 +128,14 @@ export function LoginIllustration({ className = "" }) {
         animate={{ opacity: [0.3, 0.75, 0.3] }}
         transition={{ duration: 2.7, repeat: Infinity, ease: "easeInOut" }}
       >
-        <path d="M180 78 L142 184 L218 184 Z" fill="url(#lRay)" />
-        <path d="M180 90 L120 190 L240 190 Z" fill="url(#lRay)" opacity="0.5" />
+        <path d="M180 78 L142 184 L218 184 Z" fill={`url(#${ids.ray})`} />
+        <path d="M180 90 L120 190 L240 190 Z" fill={`url(#${ids.ray})`} opacity="0.5" />
       </motion.g>
 
       <ellipse cx="180" cy="216" rx="52" ry="7" fill="#fff" opacity="0.16" />
 
-      {/* Docs */}
       <motion.g
-        filter="url(#lShadow)"
+        filter={`url(#${ids.shadow})`}
         animate={{ y: [0, -8, 0], rotate: [-3, 3, -3] }}
         transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -140,7 +148,7 @@ export function LoginIllustration({ className = "" }) {
       </motion.g>
 
       <motion.g
-        filter="url(#lShadow)"
+        filter={`url(#${ids.shadow})`}
         animate={{ y: [0, -7, 0], rotate: [2, -3, 2] }}
         transition={{ duration: 3.5, delay: 0.4, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -152,9 +160,8 @@ export function LoginIllustration({ className = "" }) {
         <path d="M312.5 146 315 148.5 320.5 142.5" stroke="#fff" strokeWidth="1.7" strokeLinecap="round" />
       </motion.g>
 
-      {/* Floating key */}
       <motion.g
-        filter="url(#lShadow)"
+        filter={`url(#${ids.shadow})`}
         animate={{ y: [0, -12, 0], rotate: [0, 14, 0], x: [0, 4, 0] }}
         transition={{ duration: 3.6, repeat: Infinity, ease: "easeInOut" }}
       >
@@ -165,7 +172,6 @@ export function LoginIllustration({ className = "" }) {
         <rect x="286" y="154" width="3.5" height="6" rx="1.2" fill="#f6c344" />
       </motion.g>
 
-      {/* Person walking in */}
       <motion.g
         animate={{ x: [0, 8, 0] }}
         transition={{ duration: 4.2, repeat: Infinity, ease: "easeInOut" }}
