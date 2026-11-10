@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
+import FolderIcon from "./FolderIcon";
 import {
   FileGlyph,
   IconClose,
@@ -366,9 +367,7 @@ export default function AdvancedSearchModal({
                           : "hover:bg-white/80"
                       }`}
                     >
-                      <span className="inline-flex size-9 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4] text-cs-folder-dark">
-                        <IconFolder className="size-4 text-cs-folder" />
-                      </span>
+                      <FolderIcon icon={folder.icon} size="sm" />
                       <span className="min-w-0 flex-1">
                         <span className="block truncate text-sm font-bold text-cs-ink">
                           {folder.name}
@@ -417,9 +416,7 @@ export default function AdvancedSearchModal({
                       onClick={() => onClose?.()}
                       className="pressable flex items-center gap-3 rounded-2xl bg-cs-surface p-3 ring-1 ring-transparent transition hover:ring-cs-blue/25"
                     >
-                      <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]">
-                        <IconFolder className="size-5 text-cs-folder" />
-                      </span>
+                      <FolderIcon icon={folder.icon} size="sm" />
                       <span className="min-w-0 flex-1 text-start">
                         <span className="block truncate text-sm font-bold text-cs-ink">
                           {folder.name}

@@ -8,13 +8,13 @@ import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
 import FilePreviewModal from "../../components/FilePreviewModal";
 import AppBrand from "../../components/AppBrand";
+import FolderIcon from "../../components/FolderIcon";
 import {
   FileGlyph,
   IconArrow,
   IconDownload,
   IconEdit,
   IconEye,
-  IconFolder,
   IconPlus,
   IconSearch,
   IconTrash,
@@ -295,9 +295,7 @@ export default function FilesPage() {
                 hover
                 className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:ring-cs-blue/35"
               >
-                <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4]">
-                  <IconFolder className="size-7 text-cs-folder" />
-                </div>
+                <FolderIcon icon={folder.icon} />
                 <h3 className="mt-3 truncate text-sm font-bold leading-6 text-cs-ink">
                   {folder.name}
                 </h3>

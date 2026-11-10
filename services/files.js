@@ -193,21 +193,28 @@ export async function getFolder(id) {
   return payload.data.folder;
 }
 
-export async function createFolder({ name, parentId } = {}) {
+export async function createFolder({ name, parentId, icon } = {}) {
   const token = requireToken();
   const payload = await apiRequest("/files/folders", {
     method: "POST",
-    body: { name, parentId: parentId || null },
+    body: {
+      name,
+      parentId: parentId || null,
+      ...(icon ? { icon } : {}),
+    },
     token,
   });
   return afterMutation(payload.data.folder);
 }
 
-export async function updateFolder(id, { name }) {
+export async function updateFolder(id, { name, icon } = {}) {
   const token = requireToken();
+  const body = {};
+  if (name !== undefined) body.name = name;
+  if (icon !== undefined) body.icon = icon;
   const payload = await apiRequest(`/files/folders/${id}`, {
     method: "PATCH",
-    body: { name },
+    body,
     token,
   });
   return afterMutation(payload.data.folder);

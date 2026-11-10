@@ -1746,6 +1746,22 @@ html[data-theme="dark"] .ring-\[\#f3f5fa\] {
   --tw-ring-color: var(--cs-nav-ring) !important;
 }
 
+/* Folder icon picker — taste-skill hover lift lives in motion; surface here */
+.folder-icon-picker__grid {
+  background: color-mix(in srgb, var(--cs-surface) 92%, transparent);
+}
+
+.folder-icon {
+  isolation: isolate;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .folder-icon,
+  .folder-icon-picker button {
+    transition: none !important;
+  }
+}
+
 /* Icon + Persian label spacing helpers */
 .icon-label {
   display: inline-flex;

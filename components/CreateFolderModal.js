@@ -2,10 +2,13 @@
 
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { IconClose, IconFolder, IconPlus } from "./Icons";
+import { DEFAULT_FOLDER_ICON } from "../lib/folderIcons";
 import { useI18n } from "../lib/i18n/I18nProvider";
 import { notifyError, notifySuccess, notifyWarning } from "../lib/toast";
 import { createFolder, formatFileError } from "../services/files";
+import FolderIcon from "./FolderIcon";
+import FolderIconPicker from "./FolderIconPicker";
+import { IconClose, IconPlus } from "./Icons";
 
 export default function CreateFolderModal({
   open,
@@ -17,6 +20,7 @@ export default function CreateFolderModal({
   const inputRef = useRef(null);
   const [mounted, setMounted] = useState(false);
   const [name, setName] = useState("");
+  const [icon, setIcon] = useState(DEFAULT_FOLDER_ICON);
   const [busy, setBusy] = useState(false);
 
   useEffect(() => {
@@ -27,6 +31,7 @@ export default function CreateFolderModal({
     if (!open) return undefined;
 
     setName("");
+    setIcon(DEFAULT_FOLDER_ICON);
     setBusy(false);
     const timer = window.setTimeout(() => inputRef.current?.focus(), 40);
 
@@ -59,6 +64,7 @@ export default function CreateFolderModal({
       const folder = await createFolder({
         name: trimmed,
         parentId: parentId || null,
+        icon,
       });
       notifySuccess(t("folders.created"));
       onClose?.();
@@ -87,9 +93,7 @@ export default function CreateFolderModal({
         onClick={(event) => event.stopPropagation()}
       >
         <div className="flex items-start gap-3 px-5 pb-3 pt-5">
-          <div className="inline-flex size-12 shrink-0 items-center justify-center rounded-2xl bg-[#fff4d4] text-cs-folder">
-            <IconFolder className="size-6" />
-          </div>
+          <FolderIcon icon={icon} />
           <div className="min-w-0 flex-1 text-right">
             <h2
               id="create-folder-title"
@@ -112,7 +116,7 @@ export default function CreateFolderModal({
           </button>
         </div>
 
-        <div className="px-5 pb-4">
+        <div className="space-y-4 px-5 pb-4">
           <label className="block">
             <span className="mb-2 block text-sm font-bold text-cs-ink">
               {t("folders.namePlaceholder")}
@@ -126,6 +130,8 @@ export default function CreateFolderModal({
               className="h-12 w-full rounded-2xl bg-[#f1f3f8] px-4 text-sm outline-none ring-1 ring-transparent focus:ring-cs-blue/30 disabled:opacity-70"
             />
           </label>
+
+          <FolderIconPicker value={icon} onChange={setIcon} disabled={busy} />
         </div>
 
         <div className="grid grid-cols-2 gap-3 border-t border-cs-line px-5 py-4">

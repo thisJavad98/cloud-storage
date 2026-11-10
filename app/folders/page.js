@@ -7,10 +7,11 @@ import AppShell from "../../components/AppShell";
 import ConfirmModal from "../../components/ConfirmModal";
 import EmptyState from "../../components/EmptyState";
 import AppBrand from "../../components/AppBrand";
+import FolderIcon from "../../components/FolderIcon";
+import FolderIconPicker from "../../components/FolderIconPicker";
 import {
   IconArrow,
   IconEdit,
-  IconFolder,
   IconPlus,
   IconSearch,
   IconTrash,
@@ -18,6 +19,7 @@ import {
 import PageLoader from "../../components/PageLoader";
 import { MotionBlock, MotionHeader } from "../../components/PageMotion";
 import Reveal from "../../components/Reveal";
+import { DEFAULT_FOLDER_ICON, normalizeFolderIconId } from "../../lib/folderIcons";
 import { formatDigits } from "../../lib/format";
 import { useI18n } from "../../lib/i18n/I18nProvider";
 import { finishPageLoad } from "../../lib/pageLoading";
@@ -48,9 +50,11 @@ export default function FoldersManagePage() {
   const [busyId, setBusyId] = useState("");
   const [showCreate, setShowCreate] = useState(false);
   const [createName, setCreateName] = useState("");
+  const [createIcon, setCreateIcon] = useState(DEFAULT_FOLDER_ICON);
   const [editId, setEditId] = useState("");
   useLiveUser(setUser);
   const [editName, setEditName] = useState("");
+  const [editIcon, setEditIcon] = useState(DEFAULT_FOLDER_ICON);
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const bootRef = useRef(true);
@@ -108,8 +112,12 @@ export default function FoldersManagePage() {
 
     setBusyId("create");
     try {
-      await createFolder({ name: createName.trim() });
+      await createFolder({
+        name: createName.trim(),
+        icon: createIcon,
+      });
       setCreateName("");
+      setCreateIcon(DEFAULT_FOLDER_ICON);
       setShowCreate(false);
       notifySuccess(t("folders.created"));
     } catch (err) {
@@ -129,9 +137,13 @@ export default function FoldersManagePage() {
 
     setBusyId(editId);
     try {
-      await updateFolder(editId, { name: editName.trim() });
+      await updateFolder(editId, {
+        name: editName.trim(),
+        icon: editIcon,
+      });
       setEditId("");
       setEditName("");
+      setEditIcon(DEFAULT_FOLDER_ICON);
       notifySuccess(t("folders.renamed"));
     } catch (err) {
       notifyError(formatFileError(err));
@@ -160,6 +172,7 @@ export default function FoldersManagePage() {
       if (editId === confirmAction.folder.id) {
         setEditId("");
         setEditName("");
+        setEditIcon(DEFAULT_FOLDER_ICON);
       }
     } catch (err) {
       notifyError(formatFileError(err));
@@ -237,6 +250,7 @@ export default function FoldersManagePage() {
                   {t("folders.createTitle")}
                 </h2>
                 <div className="flex items-center gap-2">
+                  <FolderIcon icon={createIcon} size="sm" />
                   <input
                     value={createName}
                     onChange={(e) => setCreateName(e.target.value)}
@@ -252,6 +266,12 @@ export default function FoldersManagePage() {
                     {busyId === "create" ? t("folders.creating") : t("folders.create")}
                   </button>
                 </div>
+                <FolderIconPicker
+                  className="mt-3"
+                  value={createIcon}
+                  onChange={setCreateIcon}
+                  disabled={busyId === "create"}
+                />
               </form>
             </motion.section>
           ) : null}
@@ -279,10 +299,9 @@ export default function FoldersManagePage() {
                 <div className="flex items-center gap-3">
                   <Link
                     href={`/folders/${folder.id}`}
-                    className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]"
                     aria-label={t("folders.open", { name: folder.name })}
                   >
-                    <IconFolder className="size-7 text-cs-folder" />
+                    <FolderIcon icon={folder.icon} />
                   </Link>
 
                   <Link
@@ -301,21 +320,27 @@ export default function FoldersManagePage() {
                   <div className="flex shrink-0 items-center gap-1.5">
                     <button
                       type="button"
+                      disabled={busyId === folder.id}
                       onClick={() => {
                         setEditId(folder.id);
                         setEditName(folder.name);
+                        setEditIcon(normalizeFolderIconId(folder.icon));
                         setShowCreate(false);
                       }}
-                      className="inline-flex size-9 items-center justify-center rounded-xl bg-[#f1f3f8] text-cs-ink"
+                      className="inline-flex size-9 items-center justify-center rounded-xl bg-[#f1f3f8] text-cs-ink disabled:opacity-60"
                       aria-label={t("folders.rename")}
                     >
-                      <IconEdit className="size-4" />
+                      {busyId === folder.id && editId === folder.id ? (
+                        <span className="size-4 animate-spin rounded-full border-2 border-cs-muted/30 border-t-cs-ink" />
+                      ) : (
+                        <IconEdit className="size-4" />
+                      )}
                     </button>
                     <button
                       type="button"
                       disabled={busyId === folder.id}
                       onClick={() => askDelete(folder)}
-                      className="inline-flex size-9 items-center justify-center rounded-xl bg-red-50 text-red-500"
+                      className="inline-flex size-9 items-center justify-center rounded-xl bg-red-50 text-red-500 disabled:opacity-60"
                       aria-label={t("folders.delete")}
                     >
                       <IconTrash className="size-4" />
@@ -326,31 +351,51 @@ export default function FoldersManagePage() {
                 {editId === folder.id ? (
                   <form
                     onSubmit={handleEdit}
-                    className="mt-3 flex items-center gap-2 border-t border-cs-line pt-3"
+                    className="mt-3 space-y-3 border-t border-cs-line pt-3"
                   >
-                    <input
-                      value={editName}
-                      onChange={(e) => setEditName(e.target.value)}
-                      className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
-                      autoFocus
-                    />
-                    <button
-                      type="button"
-                      onClick={() => {
-                        setEditId("");
-                        setEditName("");
-                      }}
-                      className="h-11 shrink-0 rounded-xl bg-[#f1f3f8] px-3 text-sm font-semibold text-cs-muted"
-                    >
-                      {t("common.cancel")}
-                    </button>
-                    <button
-                      type="submit"
+                    <div className="flex items-center gap-2">
+                      <FolderIcon icon={editIcon} size="sm" />
+                      <input
+                        value={editName}
+                        onChange={(e) => setEditName(e.target.value)}
+                        disabled={busyId === folder.id}
+                        className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30 disabled:opacity-70"
+                        autoFocus
+                      />
+                    </div>
+                    <FolderIconPicker
+                      value={editIcon}
+                      onChange={setEditIcon}
                       disabled={busyId === folder.id}
-                      className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white disabled:opacity-70"
-                    >
-                      {t("common.save")}
-                    </button>
+                    />
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        disabled={busyId === folder.id}
+                        onClick={() => {
+                          setEditId("");
+                          setEditName("");
+                          setEditIcon(DEFAULT_FOLDER_ICON);
+                        }}
+                        className="h-11 shrink-0 rounded-xl bg-[#f1f3f8] px-3 text-sm font-semibold text-cs-muted disabled:opacity-60"
+                      >
+                        {t("common.cancel")}
+                      </button>
+                      <button
+                        type="submit"
+                        disabled={busyId === folder.id || !editName.trim()}
+                        className="inline-flex h-11 min-w-0 flex-1 items-center justify-center gap-2 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white disabled:opacity-70"
+                      >
+                        {busyId === folder.id ? (
+                          <>
+                            <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                            <span>{t("common.saving")}</span>
+                          </>
+                        ) : (
+                          t("common.save")
+                        )}
+                      </button>
+                    </div>
                   </form>
                 ) : null}
               </Reveal>

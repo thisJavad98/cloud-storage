@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { EmptyFoldersIllu, LoadingCloudIllu } from "./MotionIllustrations";
-import { IconFolder, IconPlus, IconUpload } from "./Icons";
+import FolderIcon from "./FolderIcon";
+import { IconPlus, IconUpload } from "./Icons";
 import { formatBytes, formatDigits } from "../lib/format";
 import { useI18n } from "../lib/i18n/I18nProvider";
 import { notifyError, notifySuccess, notifyWarning } from "../lib/toast";
@@ -352,9 +353,7 @@ export default function UploadModal({
                       : "hover:bg-white/80"
                   }`}
                 >
-                  <span className="inline-flex size-10 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]">
-                    <IconFolder className="size-5 text-cs-folder" />
-                  </span>
+                  <FolderIcon icon={folder.icon} size="sm" />
                   <span className="min-w-0 flex-1">
                     <span className="block truncate text-sm font-bold text-cs-ink">
                       {folder.name}

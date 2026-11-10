@@ -8,13 +8,14 @@ import ConfirmModal from "../../../components/ConfirmModal";
 import EmptyState from "../../../components/EmptyState";
 import FilePreviewModal from "../../../components/FilePreviewModal";
 import AppBrand from "../../../components/AppBrand";
+import FolderIcon from "../../../components/FolderIcon";
+import FolderIconPicker from "../../../components/FolderIconPicker";
 import {
   FileGlyph,
   IconArrow,
   IconDownload,
   IconEdit,
   IconEye,
-  IconFolder,
   IconPlus,
   IconSearch,
   IconTrash,
@@ -22,6 +23,10 @@ import {
 import PageLoader from "../../../components/PageLoader";
 import { MotionBlock, MotionHeader } from "../../../components/PageMotion";
 import Reveal from "../../../components/Reveal";
+import {
+  DEFAULT_FOLDER_ICON,
+  normalizeFolderIconId,
+} from "../../../lib/folderIcons";
 import { formatBytes, formatDate, formatDigits } from "../../../lib/format";
 import { readFocusFileIdFromLocation } from "../../../lib/filesNav";
 import { useI18n } from "../../../lib/i18n/I18nProvider";
@@ -76,8 +81,10 @@ export default function FolderDetailPage() {
   const [showFolderForm, setShowFolderForm] = useState(false);
   useLiveUser(setUser);
   const [folderName, setFolderName] = useState("");
+  const [subfolderIcon, setSubfolderIcon] = useState(DEFAULT_FOLDER_ICON);
   const [renameFolderOpen, setRenameFolderOpen] = useState(false);
   const [folderRenameValue, setFolderRenameValue] = useState("");
+  const [folderIconValue, setFolderIconValue] = useState(DEFAULT_FOLDER_ICON);
   const [confirmAction, setConfirmAction] = useState(null);
   const [confirmLoading, setConfirmLoading] = useState(false);
   const [previewFile, setPreviewFile] = useState(null);
@@ -107,6 +114,7 @@ export default function FolderDetailPage() {
       setSubfolders(childFolders || []);
       setFiles(fileResult?.files || []);
       setFolderRenameValue(folderData?.name || "");
+      setFolderIconValue(normalizeFolderIconId(folderData?.icon));
     } catch (err) {
       notifyError(formatFileError(err));
       if (err?.status === 401) router.replace("/login");
@@ -172,8 +180,13 @@ export default function FolderDetailPage() {
     }
     setBusyId("folder");
     try {
-      await createFolder({ name: folderName.trim(), parentId: folderId });
+      await createFolder({
+        name: folderName.trim(),
+        parentId: folderId,
+        icon: subfolderIcon,
+      });
       setFolderName("");
+      setSubfolderIcon(DEFAULT_FOLDER_ICON);
       setShowFolderForm(false);
       notifySuccess(t("folderDetail.subfolderCreated"));
     } catch (err) {
@@ -191,7 +204,10 @@ export default function FolderDetailPage() {
     }
     setBusyId("rename-folder");
     try {
-      await updateFolder(folderId, { name: folderRenameValue.trim() });
+      await updateFolder(folderId, {
+        name: folderRenameValue.trim(),
+        icon: folderIconValue,
+      });
       setRenameFolderOpen(false);
       notifySuccess(t("folders.renamed"));
     } catch (err) {
@@ -329,9 +345,7 @@ export default function FolderDetailPage() {
         <MotionBlock className="px-5 pt-5" delay={0.1} as="section" variant="scale">
           <div className="rounded-[1.4rem] bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line">
             <div className="flex items-center gap-3">
-              <div className="inline-flex size-12 shrink-0 items-center justify-center rounded-xl bg-[#fff4d4]">
-                <IconFolder className="size-7 text-cs-folder" />
-              </div>
+              <FolderIcon icon={folder.icon} />
               <div className="min-w-0 flex-1 text-right">
                 <p className="truncate text-sm font-bold leading-6 text-cs-ink">
                   {folder.name}
@@ -344,19 +358,22 @@ export default function FolderDetailPage() {
             <div className="mt-3 grid grid-cols-2 gap-2">
               <button
                 type="button"
+                disabled={busyId === "rename-folder"}
                 onClick={() => {
                   setFolderRenameValue(folder.name);
+                  setFolderIconValue(normalizeFolderIconId(folder.icon));
                   setRenameFolderOpen((v) => !v);
                 }}
-                className="icon-label justify-center rounded-xl bg-[#f1f3f8] px-3 py-2.5 text-xs font-semibold text-cs-ink"
+                className="icon-label justify-center rounded-xl bg-[#f1f3f8] px-3 py-2.5 text-xs font-semibold text-cs-ink disabled:opacity-60"
               >
                 <IconEdit className="size-4 shrink-0" />
                 <span>{t("folders.rename")}</span>
               </button>
               <button
                 type="button"
+                disabled={busyId === "rename-folder"}
                 onClick={askDeleteFolder}
-                className="icon-label justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600"
+                className="icon-label justify-center rounded-xl bg-red-50 px-3 py-2.5 text-xs font-semibold text-red-600 disabled:opacity-60"
               >
                 <IconTrash className="size-4 shrink-0" />
                 <span>{t("folders.delete")}</span>
@@ -364,19 +381,37 @@ export default function FolderDetailPage() {
             </div>
 
             {renameFolderOpen ? (
-              <form onSubmit={handleRenameFolder} className="mt-3 flex gap-2">
-                <input
-                  value={folderRenameValue}
-                  onChange={(e) => setFolderRenameValue(e.target.value)}
-                  className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
-                />
-                <button
-                  type="submit"
+              <form onSubmit={handleRenameFolder} className="mt-3 space-y-3">
+                <div className="flex gap-2">
+                  <FolderIcon icon={folderIconValue} size="sm" />
+                  <input
+                    value={folderRenameValue}
+                    onChange={(e) => setFolderRenameValue(e.target.value)}
+                    disabled={busyId === "rename-folder"}
+                    className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30 disabled:opacity-70"
+                  />
+                  <button
+                    type="submit"
+                    disabled={
+                      busyId === "rename-folder" || !folderRenameValue.trim()
+                    }
+                    className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white disabled:opacity-70"
+                  >
+                    {busyId === "rename-folder" ? (
+                      <>
+                        <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                        <span>{t("common.saving")}</span>
+                      </>
+                    ) : (
+                      t("common.save")
+                    )}
+                  </button>
+                </div>
+                <FolderIconPicker
+                  value={folderIconValue}
+                  onChange={setFolderIconValue}
                   disabled={busyId === "rename-folder"}
-                  className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
-                >
-                  {t("common.save")}
-                </button>
+                />
               </form>
             ) : null}
           </div>
@@ -415,21 +450,29 @@ export default function FolderDetailPage() {
           {showFolderForm ? (
             <form
               onSubmit={handleCreateSubfolder}
-              className="mb-3 flex items-center gap-2 rounded-2xl bg-white p-3 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
+              className="mb-3 space-y-3 rounded-2xl bg-white p-3 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line"
             >
-              <input
-                value={folderName}
-                onChange={(e) => setFolderName(e.target.value)}
-                placeholder={t("folderDetail.subfolderName")}
-                className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
-              />
-              <button
-                type="submit"
+              <div className="flex items-center gap-2">
+                <FolderIcon icon={subfolderIcon} size="sm" />
+                <input
+                  value={folderName}
+                  onChange={(e) => setFolderName(e.target.value)}
+                  placeholder={t("folderDetail.subfolderName")}
+                  className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
+                />
+                <button
+                  type="submit"
+                  disabled={busyId === "folder"}
+                  className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
+                >
+                  {t("folderDetail.create")}
+                </button>
+              </div>
+              <FolderIconPicker
+                value={subfolderIcon}
+                onChange={setSubfolderIcon}
                 disabled={busyId === "folder"}
-                className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
-              >
-                {t("folderDetail.create")}
-              </button>
+              />
             </form>
           ) : null}
 
@@ -443,9 +486,7 @@ export default function FolderDetailPage() {
                 hover
                 className="rounded-2xl bg-white p-4 shadow-[0_8px_24px_rgba(21,32,56,0.06)] ring-1 ring-cs-line transition hover:ring-cs-blue/35"
               >
-                <div className="inline-flex size-12 items-center justify-center rounded-xl bg-[#fff4d4]">
-                  <IconFolder className="size-7 text-cs-folder" />
-                </div>
+                <FolderIcon icon={item.icon} />
                 <h3 className="mt-3 truncate text-sm font-bold leading-6 text-cs-ink">
                   {item.name}
                 </h3>
@@ -597,14 +638,22 @@ export default function FolderDetailPage() {
                     <input
                       value={renameValue}
                       onChange={(e) => setRenameValue(e.target.value)}
-                      className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30"
+                      disabled={busyId === file.id}
+                      className="h-11 min-w-0 flex-1 rounded-xl bg-[#f1f3f8] px-3 text-sm outline-none focus:ring-1 focus:ring-cs-blue/30 disabled:opacity-70"
                     />
                     <button
                       type="submit"
-                      disabled={busyId === file.id}
-                      className="h-11 shrink-0 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white"
+                      disabled={busyId === file.id || !renameValue.trim()}
+                      className="inline-flex h-11 shrink-0 items-center justify-center gap-2 rounded-xl bg-cs-blue px-4 text-sm font-bold text-white disabled:opacity-70"
                     >
-                      {t("common.save")}
+                      {busyId === file.id ? (
+                        <>
+                          <span className="size-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                          <span>{t("common.saving")}</span>
+                        </>
+                      ) : (
+                        t("common.save")
+                      )}
                     </button>
                   </form>
                 ) : null}

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion, useMotionValue, useReducedMotion } from "motion/react";
+import { getFolderIcon } from "../../lib/folderIcons";
 import { easeOut } from "../../lib/motion";
 
 function filePalette(mimeType = "") {
@@ -235,7 +236,10 @@ export default function IslandNode({
   const dragY = useMotionValue(0);
   const [pos, setPos] = useState({ x, y });
   const accents = ["#f59e0b", "#fbbf24", "#eab308", "#f97316", "#d97706"];
-  const accent = accents[index % accents.length];
+  const accent =
+    kind === "folder"
+      ? getFolderIcon(item.icon).accent
+      : accents[index % accents.length];
   const uid = `isle-${kind}-${item.id || index}`;
 
   useEffect(() => {
